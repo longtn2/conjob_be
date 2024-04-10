@@ -1,5 +1,6 @@
 ﻿using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.DTOs.User;
+using ConJob.Domain.Files;
 using ConJob.Domain.Response;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,6 @@ namespace ConJob.Domain.Services
         Task<UserDTO?> GetUserByIdAsync(int id);
         Task<ServiceResponse<UserDTO>> SelectRole(SelectRoleDTO role,string? userid);
         Task<ServiceResponse<object>> changePassword(UPasswordDTO passwordDTO, string? id);
+        void updateAvatar(FileDTO fileDTO, string? id);
     }
 }

@@ -16,10 +16,12 @@ using ConJob.Entities;
 using ConJob.Data;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.Encryption;
+using System.Formats.Asn1;
+using ConJob.Domain.Files;
 
 namespace ConJob.Domain.Services
 {
-    public class UserServices :  IUserServices
+    public class UserServices : IUserServices
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
@@ -27,9 +29,10 @@ namespace ConJob.Domain.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IEmailServices _emailServices;
         private readonly AppDbContext _context;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context, IEmailServices emailServices)
         {
             _logger = logger;
             _mapper = mapper;
@@ -38,6 +41,7 @@ namespace ConJob.Domain.Services
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+            _emailServices = emailServices;
         }
 
         public async Task<UserDTO?> GetUserByIdAsync(int id)
@@ -84,13 +88,15 @@ namespace ConJob.Domain.Services
 
                 //await _context.User!.AddAsync(toAdd);
                 await _userRepository.AddAsync(toAdd);
+                await _emailServices.sendActivationEmail(toAdd);
                 //await _context.SaveChangesAsync();
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
+                
+                serviceResponse.Message = "Registered Successful! Please confirm your email in mailbox.";
             }
             catch (DbUpdateException ex)
             {
-                serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Email already taken by another User. Please reset or choose different.";
+                throw new DbUpdateException("Email already taken by another User. Please reset or choose different.");
             }
             catch { throw; }
             return serviceResponse;
@@ -181,6 +187,22 @@ namespace ConJob.Domain.Services
             }
             return serviceResponse;
         }
+
+        public async void updateAvatar(FileDTO fileDTO, string? id)
+        {
+            try
+            {
+                var userModel = _userRepository.GetById(int.Parse(id));
+
+                userModel.Avatar = $"{userModel.Id}/{fileDTO.file_type}/{fileDTO.file_name}";
+
+                await _context.SaveChangesAsync();
+            }catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
 
     }
 }

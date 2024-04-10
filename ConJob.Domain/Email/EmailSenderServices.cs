@@ -11,16 +11,19 @@ using System.Runtime;
 using Org.BouncyCastle.Asn1.Pkcs;
 using MailKit.Net.Smtp;
 using ConJob.Entities.Config;
+using Amazon.Runtime.Internal.Util;
+using Microsoft.Extensions.Logging;
 
 namespace DataLayer.Email
 {
     public class EmailSenderServices : IEmailSender
     {
         private readonly MailSettings _mailSettings;
-
-        public EmailSenderServices(IOptions<MailSettings> mailSettings)
+        private readonly ILogger<EmailSenderServices> _logger;  
+        public EmailSenderServices(IOptions<MailSettings> mailSettings, ILogger<EmailSenderServices> logger)
         {
             _mailSettings = mailSettings.Value;
+            _logger = logger;
         }
         public async Task SendEmailAsync(string email, string subject, string html)
         {
@@ -29,7 +32,7 @@ namespace DataLayer.Email
             {
                 using (MimeMessage emailMessage = new MimeMessage())
                 {
-                    MailboxAddress emailFrom = new MailboxAddress(_mailSettings.sendername, _mailSettings.senderemail);
+                    MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
                     emailMessage.From.Add(emailFrom);
 
                     MailboxAddress emailTo = new MailboxAddress(email, email);
@@ -44,8 +47,8 @@ namespace DataLayer.Email
 
                     using (SmtpClient mailClient = new SmtpClient())
                     {
-                        mailClient.Connect(_mailSettings.server, _mailSettings.port, MailKit.Security.SecureSocketOptions.StartTls);
-                        mailClient.Authenticate(_mailSettings.username, _mailSettings.password);
+                        mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                        mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
                         await mailClient.SendAsync(emailMessage);
                         mailClient.Disconnect(true);
                     }
@@ -55,7 +58,7 @@ namespace DataLayer.Email
             catch (Exception ex)
             {
                 // Exception Details
-
+                _logger.LogError($"Error Occured: {ex.Message}");
             }
         }
         

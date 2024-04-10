@@ -14,33 +14,39 @@ namespace ConJob.Domain.Services
         /// <summary>
         /// Verify Login information of user.
         /// </summary>
-        /// <param name="userdata">User login data include: Username, Password.</param>
+        /// <param name="user_data">User login data include: Username, Password.</param>
 
-        Task<ServiceResponse<CredentialDTO>> LoginAsync(UserLoginDTO userdata);
+        Task<ServiceResponse<CredentialDTO>> LoginAsync(UserLoginDTO user_data);
         /// <summary>
         /// Send an email with activation link to user email box.
         /// </summary>
-        /// <param name="userid">The id collect from Cookie of User request.</param>
+        /// <param name="user_id">The id collect from Cookie of User request.</param>
 
-        Task verifyEmailAsync(string userid);
+        Task verifyEmailAsync(string user_id);
         /// <summary>
         /// Verify token attach in mail box. If it's valid then change the user email confirm to True
         /// </summary>
-        /// <param name="Token">Token attach in the email box.</param>
+        /// <param name="token">Token attach in the email box.</param>
 
-        Task<ServiceResponse<Object>> activeEmailAsync(string Token);
+        Task<ServiceResponse<Object>> activeEmailAsync(string token);
 
         /// <summary>
         /// When ever token of user expire. This method verify refreshtoken to reissue new short term token.
         /// </summary>
-        /// <param name="reftoken">Long term token store in User storage.</param>
+        /// <param name="ref_token">Long term token store in User storage.</param>
 
-        Task<ServiceResponse<TokenDTO>> refreshTokenAsync(string reftoken);
+        Task<ServiceResponse<TokenDTO>> refreshTokenAsync(string ref_token);
 
         /// <summary>
         /// Send an email with forgot link to user email box;
         /// </summary>
-        /// <param name="usermail">Thông tin đăng nhập của người dùng</param>
-        Task<ServiceResponse<Object>> sendForgotEmailVerify(string useremail);
+        /// <param name="user_email">Thông tin đăng nhập của người dùng</param>
+        Task<ServiceResponse<Object>> sendForgotEmailVerify(string user_email);
+
+
+        Task<ServiceResponse<Object>> RecoverPassword(string Token, string new_password);
+
+
+        ServiceResponse<Object> Logout(string token);
     }
 }

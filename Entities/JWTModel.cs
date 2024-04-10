@@ -22,7 +22,7 @@ namespace ConJob.Entities
         [DataType(DataType.DateTime)]
         public DateTime ExpiredDate { get; set; }
 
-
+        public bool IsDelete {  get; set; } = false;
         public UserModel User { get; set; }
     }
 }
