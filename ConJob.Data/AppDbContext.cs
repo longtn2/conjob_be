@@ -1,7 +1,7 @@
 ﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Data.Entity.Validation;
+
 
 namespace ConJob.Data
 {
@@ -48,22 +48,16 @@ namespace ConJob.Data
                 .HasMany(e=>e.Reports).WithOne(e => e.User)
                 .HasForeignKey("UserId");
             modelBuilder.Entity<UserModel>()
-                .HasMany(e => e.Messages).WithOne(e => e.Sender_id)
-                .HasForeignKey("UserId");
-            modelBuilder.Entity<UserModel>()
-                .HasMany(e=>e.Messages).WithOne( e=> e.Receive_id)
-                .HasForeignKey("UserId");
-            modelBuilder.Entity<UserModel>()
                 .HasMany(e=>e.Likes).WithOne(e=>e.User)
                 .HasForeignKey("UserId");
             modelBuilder.Entity<UserModel>()
                 .HasMany(e=>e.Comments).WithOne(e => e.User)
                 .HasForeignKey("UserId");
             modelBuilder.Entity<UserModel>()
-                .HasMany(e=> e.Follows).WithOne(e=> e.FromUser)
+                .HasMany(e=> e.Followers).WithOne(e=> e.FromUser)
                 .HasForeignKey("UserId");
             modelBuilder.Entity<UserModel>()
-                .HasMany(e => e.Follows).WithOne(e => e.ToUser)
+                .HasMany(e => e.Followings).WithOne(e => e.ToUser)
                 .HasForeignKey("UserId");
             base.OnModelCreating(modelBuilder);
             new DbInitializer(modelBuilder).Seed();
