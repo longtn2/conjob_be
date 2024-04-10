@@ -2,6 +2,7 @@
 using ConJob.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ConJob.Domain.DTOs.User
 {
@@ -25,6 +26,7 @@ namespace ConJob.Domain.DTOs.User
         [StringLength(11, MinimumLength = 9)]
         public string PhoneNumber { get; set; }
         [Required]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Gender Gender { get; set; }
         [Required]
         [DataType(DataType.Date)]
@@ -32,7 +34,6 @@ namespace ConJob.Domain.DTOs.User
         [Required]
         public string Address { get; set; }
 
-        public string? FCMToken { get; set; }
         [Column(TypeName = "text")]
         public string? Avatar { get; set; }
     }

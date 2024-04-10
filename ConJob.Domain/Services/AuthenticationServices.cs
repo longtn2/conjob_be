@@ -1,7 +1,13 @@
 ﻿using AutoMapper;
+using ConJob.Data;
+using ConJob.Domain.Authentication;
+using ConJob.Domain.DTOs.Authentication;
+using ConJob.Domain.DTOs.User;
+using ConJob.Domain.Encryption;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,7 +29,6 @@ namespace ConJob.Domain.Services
     public class AuthenticationServices : IAuthenticationServices
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _pwHasher;
         private readonly IJWTHelper _jWTHelper;
@@ -42,12 +47,13 @@ namespace ConJob.Domain.Services
             _emailServies = emailServies;
             _context = context;
         }
+
         public async Task<ServiceResponse<CredentialDTO>> LoginAsync(UserLoginDTO userdata)
         {
             var serviceResponse = new ServiceResponse<CredentialDTO>();
             try
             {
-                var user = await _userRepository.getUserByEmail(userdata);
+                var user = await _userRepository.getUserByEmail(userdata.Email);
                 if (user != null)
                 {
                     var checkCredential = _pwHasher.verify(userdata.Password, user.Password);
@@ -92,7 +98,7 @@ namespace ConJob.Domain.Services
         }
         public async Task verifyEmailAsync(string userid)
         {
-            var u = await _context.User.FirstOrDefaultAsync(x => x.Id == int.Parse(userid));
+            var u = _userRepository.GetById(int.Parse(userid)); 
             if (u == null || u.IsEmailConfirmed == true)
             {
                 return;
@@ -110,7 +116,7 @@ namespace ConJob.Domain.Services
             {
                 var userid = claim.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-                var user = await _context.User.FirstOrDefaultAsync(x => x.Id == int.Parse(userid));
+                var user =  _userRepository.GetById(int.Parse(userid));
                 if (user == null)
                 {
                     serviceResponse.ResponseType = EResponseType.Unauthorized;
@@ -145,17 +151,16 @@ namespace ConJob.Domain.Services
             return serviceResponse;
 
         }
-
         public async Task<ServiceResponse<Object>> activeEmailAsync(string Token)
         {
             var serviceResponse = new ServiceResponse<Object>();
             try
             {
-               
                 var claim = _jWTHelper.ValidateToken(Token);
                 var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
                 var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
-                var user = await _context.User.FirstOrDefaultAsync(x=>x.Id == int.Parse(userid));
+
+                var user = _userRepository.GetById(int.Parse(userid));
                 if (user == null || action == null || user.IsEmailConfirmed == true) {
                     serviceResponse.ResponseType = EResponseType.Unauthorized;
                     serviceResponse.Message = "Could not found User or activated already.";
@@ -172,6 +177,29 @@ namespace ConJob.Domain.Services
                 }
             }
             catch (Exception ex)
+            {
+
+            }
+            return serviceResponse;
+        }
+        public async Task<ServiceResponse<object>> sendForgotEmailVerify(string useremail)
+        {
+            var serviceResponse = new ServiceResponse<Object>();
+            try
+            {
+                var user = await _userRepository.getUserByEmail(useremail);
+                if (user == null)
+                {
+                    serviceResponse.ResponseType = EResponseType.Unauthorized;
+                    serviceResponse.Message = "Could not found user";
+                }
+                else
+                {
+                    var request = _httpContextAccessor.HttpContext!.Request;
+                    await _emailServies.sendForgotPassword(user, $"{request.Scheme}://{request.Host}{request.PathBase}");
+                }
+            }
+            catch (Exception e)
             {
 
             }

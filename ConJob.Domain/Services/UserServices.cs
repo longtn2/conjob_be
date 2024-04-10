@@ -15,6 +15,7 @@ using static ConJob.Domain.Response.EServiceResponseTypes;
 using ConJob.Entities;
 using ConJob.Data;
 using ConJob.Domain.DTOs.Role;
+using ConJob.Domain.Encryption;
 
 namespace ConJob.Domain.Services
 {
@@ -22,17 +23,21 @@ namespace ConJob.Domain.Services
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private readonly IPasswordHasher _pwHasher;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly AppDbContext _context;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IUserRepository userRepository, IRoleRepository roleRepository, AppDbContext context)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context)
         {
             _logger = logger;
             _mapper = mapper;
+            _pwHasher = pwhasher;
             _context = context;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _userRoleRepository = userRoleRepository;
         }
 
         public async Task<UserDTO?> GetUserByIdAsync(int id)
@@ -69,6 +74,7 @@ namespace ConJob.Domain.Services
                 //var role = await _context.Role.FirstOrDefaultAsync(x => x.RoleName == "TimViec");
                 var role = _roleRepository.getRoleByName("TimViec");
 
+
                 if (role == null) ;
                 await _context.UserRole.AddAsync(new UserRoleModel()
                 {
@@ -77,14 +83,14 @@ namespace ConJob.Domain.Services
                 });
 
                 //await _context.User!.AddAsync(toAdd);
-                _userRepository.AddAsync(toAdd);
+                await _userRepository.AddAsync(toAdd);
                 //await _context.SaveChangesAsync();
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
             }
             catch (DbUpdateException ex)
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Username/Email already taken by another User. Please reset or choose different.";
+                serviceResponse.Message = "Email already taken by another User. Please reset or choose different.";
             }
             catch { throw; }
             return serviceResponse;
@@ -92,27 +98,25 @@ namespace ConJob.Domain.Services
 
         public async Task<ServiceResponse<UserDTO>> SelectRole(SelectRoleDTO Role, string? userid)
         {
-            //RoleModel selectedRole = await _context.Role.Where(x=>x.RoleAccessLevel == 1).FirstOrDefaultAsync(x => x.RoleName == Role.RoleName);
             RoleModel selectedRole = await _roleRepository.getRoleByLevel_NameAsync(1, Role.RoleName);
             var serviceResponse = new ServiceResponse<UserDTO>();
 
             try
             {
-                //var userModel = await _context.User.FirstOrDefaultAsync(x => x.Id == int.Parse(userid));
-                var userModel = (UserModel)_userRepository.Find(x => x.Id == int.Parse(userid));
-                if (await _context.UserRole.Where(x => x.User == userModel).Where(x=>x.Role == selectedRole).FirstOrDefaultAsync() != null)
+                var userModel = _userRepository.GetById(int.Parse(userid));
+                var userRole = _userRoleRepository.GetUserRoleAsync(userModel, selectedRole);
+                if (userRole != null)
                 {
                     serviceResponse.ResponseType = EResponseType.CannotUpdate;
                     serviceResponse.Message = "You have this role already.";
                 }
                 else
                 {
-                    await _context.UserRole.AddAsync(new UserRoleModel()
+                    await _userRoleRepository.AddAsync(new UserRoleModel()
                     {
                         Role = selectedRole,
                         User = userModel
                     });
-                    await _context.SaveChangesAsync();
                     serviceResponse.Data = _mapper.Map<UserDTO>(userModel);
                 }
             }
@@ -154,6 +158,29 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        
+        public async Task<ServiceResponse<object>> changePassword(UPasswordDTO passwordDTO, string? id)
+        {
+            var serviceResponse = new ServiceResponse<object>();
+            try
+            {
+                var userModel = _userRepository.GetById(int.Parse(id));
+                var checkPassword = _pwHasher.verify(passwordDTO.oldPassword, userModel.Password);
+                if (checkPassword)
+                {
+                    await _userRepository.changPasswordAsync(_pwHasher.Hash(passwordDTO.newPassword), userModel);
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.CannotUpdate;
+                    serviceResponse.Message = "Wrong old password.";
+                }
+            } catch (Exception ex)
+            {
+                serviceResponse.ResponseType = EResponseType.CannotUpdate;
+                serviceResponse.Message = "Something wrong.";
+            }
+            return serviceResponse;
+        }
+
     }
 }

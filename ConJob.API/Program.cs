@@ -18,12 +18,16 @@ using ConJob.Domain.AutoMapper;
 using ConJob.API;
 using ConJob.API.Policy;
 using Microsoft.AspNetCore.Authorization;
+using ConJob.Domain.Services.Interfaces;
+using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region Add Config 
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.Configure<S3Settings>(builder.Configuration.GetSection("S3Settings"));
 #endregion
 
 
@@ -60,6 +64,9 @@ builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
+builder.Services.AddScoped<IS3Services,  S3Services>();
+builder.Services.AddControllers()
+    .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
 
 #region Repositories

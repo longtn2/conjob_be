@@ -48,7 +48,7 @@ namespace ConJob.API.Controllers
             var serviceResponse = await _authService.LoginAsync(userdata);
             return serviceResponse.ResponseType switch
             {
-                EResponseType.Success => CreatedAtAction(nameof(Login), new { version = "1" }, serviceResponse.Data),
+                EResponseType.Success => Ok(serviceResponse.Data),
                 EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
                 EResponseType.BadRequest => BadRequest(serviceResponse.Message),    
                 _ => throw new NotImplementedException()
@@ -89,6 +89,20 @@ namespace ConJob.API.Controllers
             {
                 EResponseType.Success => CreatedAtAction(nameof(refreshToken), new { version = "1" }, serviceResponse.Data),
                 EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
+                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
+                _ => throw new NotImplementedException()
+            };
+        }
+        [Route("/forgot")]
+        [Produces("application/json")]
+        [HttpPost]
+        public async Task<ActionResult> forgotPassword(string email)
+        {
+
+            var serviceResponse = await _authService.sendForgotEmailVerify(email);
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse.Message),
                 EResponseType.BadRequest => BadRequest(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };

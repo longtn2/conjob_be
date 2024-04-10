@@ -4,6 +4,7 @@ using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,11 @@ namespace ConJob.Domain.Repository
     {
         public UserRoleRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
         {
+        }
+
+        public async Task<UserRoleModel> GetUserRoleAsync(UserModel user, RoleModel role)
+        {
+            return await _context.UserRole.Where(x => x.User == user).Where(x => x.Role == role).FirstOrDefaultAsync();
         }
     }
 }

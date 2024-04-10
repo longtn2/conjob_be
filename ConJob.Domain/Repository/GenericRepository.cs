@@ -21,12 +21,19 @@ namespace ConJob.Domain.Repository
             _context = context;
             _mapper = mapper;
         }
-        public async void AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
-            _context.SaveChanges();
+            try
+            {
+                await _context.Set<T>().AddAsync(entity);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException ex) {
+                throw;
+            }
+            
         }
-        public async void AddRangeAsync(IEnumerable<T> entities)
+        public async Task AddRangeAsync(IEnumerable<T> entities)
         {
             await _context.Set<T>().AddRangeAsync(entities);
             _context.SaveChanges();
@@ -43,15 +50,15 @@ namespace ConJob.Domain.Repository
         {
             return _context.Set<T>().Find(id);
         }
-        public void Remove(T entity)
+        public  Task RemoveAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
-            _context.SaveChanges();
+            return _context.SaveChangesAsync();
         }
-        public void RemoveRange(IEnumerable<T> entities)
+        public Task RemoveRangeAsync(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
-            _context.SaveChanges();
+            return _context.SaveChangesAsync();
         }
 
     }

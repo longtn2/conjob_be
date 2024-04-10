@@ -1,6 +1,7 @@
 ﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Data.Entity.Validation;
 
 namespace ConJob.Data
 {
@@ -44,16 +45,33 @@ namespace ConJob.Data
 
 
         #region Auto add created-time, updated-time
-        public override int SaveChanges()
+        public override int SaveChanges() 
         {
-            AddTimestamps();
-            return base.SaveChanges();
+
+            try
+            {
+                AddTimestamps();
+                return base.SaveChanges();
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                throw;
+            }
+
+
         }
 
         public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            AddTimestamps();
-            return await base.SaveChangesAsync(cancellationToken);
+            try
+            {
+                AddTimestamps();
+                return await base.SaveChangesAsync(cancellationToken);
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+                throw;
+            }
         }
         private void AddTimestamps()
         {

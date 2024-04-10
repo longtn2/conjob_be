@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json.Converters;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace ConJob.Entities
 {
+
     public enum Gender
     {
         male,
@@ -41,6 +43,7 @@ namespace ConJob.Entities
         public bool IsEmailConfirmed { get; set; } = false;
 
         [Required]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Gender Gender { get; set; }
         [Required]
         [DataType(DataType.Date)]
