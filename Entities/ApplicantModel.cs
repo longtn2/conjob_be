@@ -8,21 +8,15 @@ using System.Threading.Tasks;
 
 namespace ConJob.Entities
 {
-    public class JWTModel:BaseModel
+    public class ApplicantModel: BaseModel
     {
         [Key]
-
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        public string TokenHashValue { get; set; }
-        [DataType(DataType.DateTime)]
-        public DateTime ExpiredDate { get; set; }
-
-
-        public UserModel User { get; set; }
+        public ResumeModel Resume { get; set; }
+        public UserModel User{ get; set; }
+        public JobModel Job { get; set; }
+        public DateTime Apply_date { get; set; }
+        public string Status { get; set; }
     }
 }

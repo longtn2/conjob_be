@@ -8,21 +8,15 @@ using System.Threading.Tasks;
 
 namespace ConJob.Entities
 {
-    public class JWTModel:BaseModel
+    public class SkillModel
     {
         [Key]
-
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        public string TokenHashValue { get; set; }
-        [DataType(DataType.DateTime)]
-        public DateTime ExpiredDate { get; set; }
-
-
-        public UserModel User { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public DateTime Created_at { get; set; }
+        public DateTime Updated_at { get; set; }
+        public ICollection<Personal_skillModel> personal_SkillModels { get; set; }
     }
 }

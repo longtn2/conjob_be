@@ -8,21 +8,15 @@ using System.Threading.Tasks;
 
 namespace ConJob.Entities
 {
-    public class JWTModel:BaseModel
+    public class MessageModel: BaseModel
     {
         [Key]
-
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        public string TokenHashValue { get; set; }
-        [DataType(DataType.DateTime)]
-        public DateTime ExpiredDate { get; set; }
-
-
-        public UserModel User { get; set; }
+        public string Content { get; set; }
+        [ForeignKey("SenderID")]
+        public UserModel Sender_id { get; set; }
+        [ForeignKey("ReceiverID")]
+        public UserModel Receive_id { get; set; }
     }
 }
