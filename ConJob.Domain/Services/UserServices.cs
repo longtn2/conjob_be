@@ -27,9 +27,10 @@ namespace ConJob.Domain.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IEmailServices _emailServices;
         private readonly AppDbContext _context;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context, IEmailServices emailServices)
         {
             _logger = logger;
             _mapper = mapper;
@@ -38,6 +39,7 @@ namespace ConJob.Domain.Services
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+            _emailServices = emailServices;
         }
 
         public async Task<UserDTO?> GetUserByIdAsync(int id)
@@ -84,8 +86,11 @@ namespace ConJob.Domain.Services
 
                 //await _context.User!.AddAsync(toAdd);
                 await _userRepository.AddAsync(toAdd);
+                await _emailServices.sendActivationEmail(toAdd);
                 //await _context.SaveChangesAsync();
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
+                
+                serviceResponse.Message = "Registered Successful! Please confirm your email in mailbox.";
             }
             catch (DbUpdateException ex)
             {

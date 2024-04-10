@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ConJob.Domain.DTOs.Authentication;
 using ConJob.Domain.DTOs.Role;
+using ConJob.Domain.DTOs.Skill;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Encryption;
 using ConJob.Entities;
@@ -22,6 +23,8 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<UserModel, UserInfoDTO>().ReverseMap(); 
             CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.Roles, opt => opt.MapFrom(x => x.UserRoles.Select(y => y.Role).ToList())).ReverseMap();
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
+
+            CreateMap<SkillModel, SkillDTO>().ReverseMap();
         }
     }
 }

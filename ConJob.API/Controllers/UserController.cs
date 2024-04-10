@@ -11,12 +11,18 @@ using Amazon;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.DTOs.Authentication;
 using ConJob.Domain.Response;
+using ConJob.API.Error.ValidationError;
+using System.Drawing;
+using System.Text;
+using Asp.Versioning;
 
 namespace ConJob.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/users/")]
+    [ApiVersion("1.0")]
     [Authorize(Policy = "emailverified")]
     [ApiController]
+    [ValidateModel]
     public class UserController : ControllerBase
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
@@ -29,7 +35,7 @@ namespace ConJob.API.Controllers
             _w3Services = w3Services;
         }
 
-        [Route("/update")]
+        [Route("update")]
         [Produces("application/json")]
         [HttpPost]
 
@@ -41,13 +47,13 @@ namespace ConJob.API.Controllers
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
+                EResponseType.CannotUpdate => BadRequest(serviceResponse.getMessage()),
                 EResponseType.Forbid => Forbid(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
         }
 
-        [Route("/changePassword")]
+        [Route("change-password")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> changePassword(UPasswordDTO passwordDTO)
@@ -58,13 +64,13 @@ namespace ConJob.API.Controllers
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
+                EResponseType.CannotUpdate => BadRequest(serviceResponse.getMessage()),
                 EResponseType.Forbid => Forbid(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
         }
 
-        [Route("/me")]
+        [Route("me")]
         [Produces("application/json")]
         [HttpGet]
         public async Task<ActionResult> get()
@@ -74,23 +80,31 @@ namespace ConJob.API.Controllers
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.NotFound => BadRequest(serviceResponse.Message),
+                EResponseType.NotFound => BadRequest(serviceResponse.getMessage()),
                 EResponseType.Forbid => Forbid(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
         }
 
-        [Route("/avatar/upload")]
+        [Route("upload-avatar")]
         [Produces("application/json")]
         [HttpPost]
 
-        public async Task uploadAvatar(IFormFile file)
+        public async Task<ActionResult> uploadAvatar(IFormFile file)
         {
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var split = file.FileName.Split('.');
+            var filename = split[0];
+            var filetype = split[1];
+            var serviceResponse =  _w3Services.PresignedUpload(filename, filetype, userid);
 
-            await _w3Services.UploadImage(file);
-
-
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.NotFound => BadRequest(serviceResponse.getMessage()),
+                EResponseType.Forbid => Forbid(serviceResponse.Message),
+                _ => throw new NotImplementedException()
+            };
         }
 
 

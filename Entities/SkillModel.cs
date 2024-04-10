@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +16,9 @@ namespace ConJob.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
+        [JsonIgnore, Required]
+        public bool isDeleted { get; set; } = false;
         public DateTime Created_at { get; set; }
         public DateTime Updated_at { get; set; }
         public ICollection<Personal_skillModel> personal_SkillModels { get; set; }

@@ -7,8 +7,11 @@ namespace ConJob.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        
+        private int? user_id;
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {
 
+        }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +46,7 @@ namespace ConJob.Data
 
         public virtual DbSet<JWTModel> JWT { get; set; }
 
+        public virtual DbSet<SkillModel> Skill { get; set; }
 
         #region Auto add created-time, updated-time
         public override int SaveChanges() 
@@ -84,9 +88,11 @@ namespace ConJob.Data
 
                 if (entity.State == EntityState.Added)
                 {
-                    ((BaseModel)entity.Entity).CreatedAt = now;
+
+                    ((BaseModel)entity.Entity).created_at = now;
                 }
-                ((BaseModel)entity.Entity).UpdatedAt = now;
+                ((BaseModel)entity.Entity).updated_at= now;
+
             }
         }
         #endregion

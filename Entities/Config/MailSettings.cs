@@ -8,13 +8,13 @@ namespace ConJob.Entities.Config
 {
     public class MailSettings
     {
-        public string server { get; set; }   
-        public int port { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
+        public string Server { get; set; }   
+        public int Port { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
 
-        public string sendername {  get; set; }
+        public string SenderName {  get; set; }
 
-        public string senderemail {  get; set; }
+        public string SenderEmail {  get; set; }
     }
 }

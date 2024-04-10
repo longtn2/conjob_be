@@ -28,7 +28,6 @@ namespace ConJob.Domain.Services
 {
     public class AuthenticationServices : IAuthenticationServices
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _pwHasher;
         private readonly IJWTHelper _jWTHelper;
@@ -36,43 +35,42 @@ namespace ConJob.Domain.Services
         private readonly IEmailServices _emailServies;
         private readonly IJwtServices _jwtServices;
         private readonly AppDbContext _context;
-        public AuthenticationServices(IUserRepository userRepository, IPasswordHasher pwhasher, IJWTHelper jWTHelper, IMapper mapper, IJwtServices jwtServices, IHttpContextAccessor httpContextAccessor, IEmailServices emailServies, AppDbContext context)
+        public AuthenticationServices(IUserRepository userRepository, IPasswordHasher pwhasher, IJWTHelper jWTHelper, IMapper mapper, IJwtServices jwtServices, IEmailServices emailServies, AppDbContext context)
         {
             _userRepository = userRepository;
             _pwHasher = pwhasher;
             _jWTHelper = jWTHelper;
             _mapper = mapper;
             _jwtServices = jwtServices;
-            _httpContextAccessor = httpContextAccessor;
             _emailServies = emailServies;
             _context = context;
         }
 
-        public async Task<ServiceResponse<CredentialDTO>> LoginAsync(UserLoginDTO userdata)
+        public async Task<ServiceResponse<CredentialDTO>> LoginAsync(UserLoginDTO user_data)
         {
             var serviceResponse = new ServiceResponse<CredentialDTO>();
             try
             {
-                var user = await _userRepository.getUserByEmail(userdata.Email);
+                var user = await _userRepository.getUserByEmail(user_data.Email);
                 if (user != null)
                 {
-                    var checkCredential = _pwHasher.verify(userdata.Password, user.Password);
+                    var checkCredential = _pwHasher.verify(user_data.Password, user.Password);
                     if (checkCredential)
                     {
                         var userDTO = _mapper.Map<UserModel,UserDTO>(user);
                         string? token = await _jWTHelper.GenerateJWTToken(user.Id, DateTime.UtcNow.AddMinutes(10), userDTO);
-                        string? refreshToken = await _jWTHelper.GenerateJWTRefreshToken(user.Id, DateTime.UtcNow.AddMonths(6));
+                        string? refresh_token = await _jWTHelper.GenerateJWTRefreshToken(user.Id, DateTime.UtcNow.AddMonths(6));
 
 
                         await _jwtServices.InsertJWTToken(new JwtDTO()
                         {
                             User = user,
                             ExpiredDate = DateTime.UtcNow.AddMonths(6),
-                            Token = refreshToken,
+                            Token = refresh_token,
                         });
 
                         serviceResponse.Data = _mapper.Map<CredentialDTO>(user);
-                        serviceResponse.Data.RefreshToken = refreshToken;
+                        serviceResponse.Data.RefreshToken = refresh_token;
                         serviceResponse.Data.Token = token;
                     }
                     else
@@ -103,8 +101,8 @@ namespace ConJob.Domain.Services
             {
                 return;
             }
-            var request = _httpContextAccessor.HttpContext!.Request;
-            await _emailServies.sendActivationEmail(u, $"{request.Scheme}://{request.Host}{request.PathBase}");
+            
+            await _emailServies.sendActivationEmail(u);
         }
         public async Task<ServiceResponse<TokenDTO>> refreshTokenAsync(string reftoken)
         {
@@ -195,13 +193,57 @@ namespace ConJob.Domain.Services
                 }
                 else
                 {
-                    var request = _httpContextAccessor.HttpContext!.Request;
-                    await _emailServies.sendForgotPassword(user, $"{request.Scheme}://{request.Host}{request.PathBase}");
+                    await _emailServies.sendForgotPassword(user);
                 }
             }
             catch (Exception e)
             {
 
+            }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<object>> RecoverPassword(string token, string new_password)
+        {
+            var serviceResponse = new ServiceResponse<Object>();
+            try
+            {
+                var claim = _jWTHelper.ValidateToken(token);
+                var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+                var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
+
+                var user = _userRepository.GetById(int.Parse(userid));
+                if (user == null || action == null)
+                {
+                    serviceResponse.ResponseType = EResponseType.Unauthorized;
+                    serviceResponse.Message = "Could not found User or activated already.";
+                }
+                if (action == "forgot")
+                {
+                    await _userRepository.changPasswordAsync(_pwHasher.Hash(new_password), user);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Message = "Change Password Successful!";
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return serviceResponse;
+        }
+
+        public ServiceResponse<object> Logout(string token)
+        {
+            var serviceResponse = new ServiceResponse<Object>();
+            try
+            {
+                _jwtServices.InvalidateToken(token);
+                serviceResponse.ResponseType = EResponseType.Success;   
+            }
+            catch
+            {
+                throw;
             }
             return serviceResponse;
         }
