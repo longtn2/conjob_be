@@ -69,6 +69,19 @@ namespace ConJob.Entities
         public virtual ICollection<UserRoleModel> UserRoles { get; set; }
         [JsonIgnore]
         public virtual ICollection<JWTModel> Jwts { get; set; }
-
+        [JsonIgnore]
+        public virtual ICollection<PostModel> Posts { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<ApplicantModel> Applicants { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<JobModel> Jobs { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<ReportModel> Reports { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<MessageModel> Messages { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<LikeModel> Likes { get; set; }
+        public virtual ICollection<CommentModel> Comments { get; set; }
+        public virtual ICollection<FollowModel> Follows { get; set; }
     }
 }
