@@ -74,6 +74,8 @@ builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericReposi
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+builder.Services.AddTransient<IJwtRepository, JwtRepository>();
+builder.Services.AddTransient<IPostRepository, PostRepository>();
 #endregion
 
 builder.Services.AddControllers();
