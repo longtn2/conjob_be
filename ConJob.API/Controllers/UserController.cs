@@ -17,7 +17,7 @@ namespace ConJob.API.Controllers
     [Route("api/[controller]")]
     [Authorize(Policy = "emailverified")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private readonly IUserServices _userServices;

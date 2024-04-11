@@ -31,7 +31,6 @@ namespace ConJob.Data
                     .WithOne(e => e.User)
                     .HasForeignKey("UserId")
                     .IsRequired();
-
             base.OnModelCreating(modelBuilder);
             new DbInitializer(modelBuilder).Seed();
         }
@@ -42,6 +41,7 @@ namespace ConJob.Data
         public virtual DbSet<RoleModel> Role { get; set; }
 
         public virtual DbSet<JWTModel> JWT { get; set; }
+        public virtual DbSet<PostModel> Post { get; set; }
 
 
         #region Auto add created-time, updated-time

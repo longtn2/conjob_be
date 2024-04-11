@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using ConJob.Domain.DTOs.Post;
+using ConJob.Entities;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConJob.Domain.Filtering

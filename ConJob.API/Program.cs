@@ -37,7 +37,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 #endregion
 
 
-
 #region Add JWT Settings 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -53,6 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 #endregion
+
 // Add services to the container.
 #region Add Services 
 builder.Services.AddHttpContextAccessor();
@@ -60,6 +60,7 @@ builder.Services.AddSingleton<IPasswordHasher, Bcrypt>();
 builder.Services.AddSingleton<IJWTHelper, JWTHelper>();
 builder.Services.AddTransient<IEmailSender, EmailSenderServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
@@ -83,7 +84,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
-
 
 #region config Swagger 
 builder.Services.AddEndpointsApiExplorer();
