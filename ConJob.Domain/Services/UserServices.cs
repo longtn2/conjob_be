@@ -196,7 +196,7 @@ namespace ConJob.Domain.Services
                 var toAdd = _mapper.Map<FollowModel>(follow);
                 toAdd.FromUser = _userRepository.GetById(toAdd.FromUserID)!;
                 toAdd.ToUser = _userRepository.GetById(toAdd.ToUserID)!;
-                if (toAdd.ToUser == null)
+                if (toAdd.ToUser == null|| toAdd.FromUser==null)
                     serviceResponse.ResponseType = EResponseType.NotFound;
                 else
                 {

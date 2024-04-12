@@ -131,7 +131,8 @@ builder.Services.AddAuthorization(options =>
 #region Auto mapper
 builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 {
-    options.AddProfile(new MappingProfile(provider.GetService<IPasswordHasher>() ?? throw new InvalidOperationException("Service Not found!")));
+    options.AddProfile(new MappingProfile(provider.GetService<IPasswordHasher>() ?? throw new InvalidOperationException("Service Not found!")/*,
+                                          provider.GetService<IFollowRepository>() ?? throw new InvalidOperationException("Service Not found!")*/));
 })
 .CreateMapper());
 

@@ -303,6 +303,38 @@ namespace ConJob.Data.Migrations
                     b.ToTable("LikeModel");
                 });
 
+            modelBuilder.Entity("ConJob.Entities.Personal_skillModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Desciption")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Exp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SkillModelId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SkillModelId");
+
+                    b.ToTable("Personal_SkillModels");
+                });
+
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
                     b.Property<int>("Id")
@@ -447,6 +479,33 @@ namespace ConJob.Data.Migrations
                             RoleDescription = "Là tư bản đi kiếm những con chiêng ngoan đạo.",
                             RoleName = "PhatViec"
                         });
+                });
+
+            modelBuilder.Entity("ConJob.Entities.SkillModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("ConJob.Entities.UserModel", b =>
@@ -653,6 +712,13 @@ namespace ConJob.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ConJob.Entities.Personal_skillModel", b =>
+                {
+                    b.HasOne("ConJob.Entities.SkillModel", null)
+                        .WithMany("personal_SkillModels")
+                        .HasForeignKey("SkillModelId");
+                });
+
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
                     b.HasOne("ConJob.Entities.FileModel", "File")
@@ -730,6 +796,11 @@ namespace ConJob.Data.Migrations
             modelBuilder.Entity("ConJob.Entities.RoleModel", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.SkillModel", b =>
+                {
+                    b.Navigation("personal_SkillModels");
                 });
 
             modelBuilder.Entity("ConJob.Entities.UserModel", b =>

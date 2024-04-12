@@ -93,16 +93,17 @@ namespace ConJob.API.Controllers
 
 
         }
+        [AllowAnonymous]
         [Route("/follow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> followUser(string followUser)
+        public async Task<ActionResult> followUser(string following,string followUser)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var serviceResponse= await _userServices.followUser(new FollowDTO()
             {
-                FromUserID=int.Parse(userid!),
+                FromUserID=int.Parse(following),
                 ToUserID=int.Parse(followUser)
             });
             return serviceResponse.ResponseType switch
@@ -113,7 +114,7 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
-        [AllowAnonymous]
+
         [Route("/unfollow")]
         [Produces("application/json")]
         [HttpPost]

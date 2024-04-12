@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ConJob.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class _2 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,7 +55,7 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FollowModel",
+                name: "Follow",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -68,19 +68,19 @@ namespace ConJob.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FollowModel", x => x.Id);
+                    table.PrimaryKey("PK_Follow", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FollowModel_User_FromUserID",
+                        name: "FK_Follow_User_FromUserID",
                         column: x => x.FromUserID,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FollowModel_User_UserId",
+                        name: "FK_Follow_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +103,7 @@ namespace ConJob.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,7 +155,7 @@ namespace ConJob.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,7 +221,7 @@ namespace ConJob.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -250,7 +250,7 @@ namespace ConJob.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -279,7 +279,7 @@ namespace ConJob.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -308,13 +308,13 @@ namespace ConJob.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FollowModel_FromUserID",
-                table: "FollowModel",
+                name: "IX_Follow_FromUserID",
+                table: "Follow",
                 column: "FromUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FollowModel_UserId",
-                table: "FollowModel",
+                name: "IX_Follow_UserId",
+                table: "Follow",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -363,7 +363,7 @@ namespace ConJob.Data.Migrations
                 name: "CommentModel");
 
             migrationBuilder.DropTable(
-                name: "FollowModel");
+                name: "Follow");
 
             migrationBuilder.DropTable(
                 name: "LikeModel");

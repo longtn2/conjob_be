@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240412010846_initV2")]
-    partial class initV2
+    [Migration("20240412081410_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -185,7 +185,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FollowModel");
+                    b.ToTable("Follow");
                 });
 
             modelBuilder.Entity("ConJob.Entities.JWTModel", b =>
