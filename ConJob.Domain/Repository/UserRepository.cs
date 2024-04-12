@@ -12,7 +12,8 @@ using AutoMapper;
 
 namespace ConJob.Domain.Repository
 {
-    public class UserRepository: GenericRepository<UserModel>, IUserRepository
+
+    public class UserRepository : GenericRepository<UserModel>, IUserRepository
     {
 
         public UserRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
@@ -52,6 +53,13 @@ namespace ConJob.Domain.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<UserModel> findUserPostAsync(int user_id)
+        {
+            return await _context.User
+                    .Include(c => c.Posts)
+                    .FirstAsync(c => c.Id == user_id);
         }
     }
 }

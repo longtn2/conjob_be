@@ -42,11 +42,52 @@ namespace ConJob.API.Controllers
         [HttpPost]
         public async Task<ActionResult> AddPost(PostDTO newPost)
         {
-            var serviceResponse = await _postService.save(newPost);
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = await _postService.save(int.Parse(userid), newPost);
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => CreatedAtAction(nameof(AddPost), new { version = "1" }, serviceResponse.Data),
                 EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> FindPostById(int id)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = await _postService.FindByIdAsync(int.Parse(userid), id);
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.NotFound => NotFound(),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateUserPost(int id, PostDTO post)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = await _postService.UpdateAsync(int.Parse(userid), id, post);
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.NotFound => NotFound(serviceResponse.Message),
+                EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteUserProject(int id)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = await _postService.DeleteAsync(int.Parse(userid), id);
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => NoContent(),
+                EResponseType.NotFound => NotFound(),
                 _ => throw new NotImplementedException()
             };
         }

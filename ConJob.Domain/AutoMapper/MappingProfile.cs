@@ -23,7 +23,12 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<UserModel, UserInfoDTO>().ReverseMap(); 
             CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.Roles, opt => opt.MapFrom(x => x.UserRoles.Select(y => y.Role).ToList())).ReverseMap();
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
-            CreateMap<PostDTO, PostModel>().ReverseMap();
+            CreateMap<PostModel, PostDTO> ().ForMember(dto => dto.NameFile, opt => opt.MapFrom(x => x.File.Name))
+                                            .ForMember(dto => dto.Type_File, opt => opt.MapFrom(x => x.File.Type))
+                                            .ForMember(dto => dto.Author, opt => opt.MapFrom(x => x.User.LastName)).ReverseMap();
+            CreateMap<PostModel, PostDetailsDTO>()
+                                            .ForMember(dto => dto.NameFile, opt => opt.MapFrom(x => x.File.Name))
+                                            .ForMember(dto => dto.Type_File, opt => opt.MapFrom(x => x.File.Type)).ReverseMap();
         }
     }
 }

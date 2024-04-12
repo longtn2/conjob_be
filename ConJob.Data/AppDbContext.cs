@@ -10,7 +10,6 @@ namespace ConJob.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserModel>().HasIndex(p => p.Email).IsUnique();
@@ -40,40 +39,53 @@ namespace ConJob.Data
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.Applicants)
                 .WithOne(e => e.User)
-                .HasForeignKey("UserId");
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
-                .HasMany(e=>e.Jobs).WithOne(e => e.User)
-                .HasForeignKey("UserId");
+                .HasMany(e => e.Jobs).WithOne(e => e.User)
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
-                .HasMany(e=>e.Reports).WithOne(e => e.User)
-                .HasForeignKey("UserId");
+                .HasMany(e => e.Reports).WithOne(e => e.User)
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
-                .HasMany(e=>e.Likes).WithOne(e=>e.User)
-                .HasForeignKey("UserId");
+                .HasMany(e => e.Likes).WithOne(e => e.User)
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
-                .HasMany(e=>e.Comments).WithOne(e => e.User)
-                .HasForeignKey("UserId");
+                .HasMany(e => e.Comments).WithOne(e => e.User)
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
-                .HasMany(e=> e.Followers).WithOne(e=> e.FromUser)
-                .HasForeignKey("UserId");
+                .HasMany(e => e.Followers)
+                .WithOne(e => e.FromUser)
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
-                .HasMany(e => e.Followings).WithOne(e => e.ToUser)
-                .HasForeignKey("UserId");
+                .HasMany(e => e.Followings)
+                .WithOne(e => e.ToUser)
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
             new DbInitializer(modelBuilder).Seed();
         }
 
 
         public virtual DbSet<UserModel> User { get; set; }
-        public virtual DbSet<UserRoleModel> UserRole {  get; set; }
+        public virtual DbSet<UserRoleModel> UserRole { get; set; }
         public virtual DbSet<RoleModel> Role { get; set; }
+        public virtual DbSet<ApplicantModel> Applicant { get; set; }
+        public virtual DbSet<CategoryModel> Category { get; set; }
+        public virtual DbSet<CommentModel> Comment { get; set; }
+        public virtual DbSet<FileModel> File { get; set; }
+        public virtual DbSet<FollowModel> Follow { get; set; }
+        public virtual DbSet<JobModel> Job { get; set; }
 
         public virtual DbSet<JWTModel> JWT { get; set; }
+        public virtual DbSet<LikeModel> Like { get; set; }
+        public virtual DbSet<NotificationModel> Notification { get; set; }
         public virtual DbSet<PostModel> Post { get; set; }
+        public virtual DbSet<ReportModel> Report { get; set; }
+        public virtual DbSet<ResumeModel> Resume { get; set; }
+        public virtual DbSet<SkillModel> Skill { get; set; }
 
 
         #region Auto add created-time, updated-time
-        public override int SaveChanges() 
+        public override int SaveChanges()
         {
 
             try
@@ -95,7 +107,8 @@ namespace ConJob.Data
             {
                 AddTimestamps();
                 return await base.SaveChangesAsync(cancellationToken);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error saving changes: {ex.Message}");
                 throw;
@@ -120,3 +133,4 @@ namespace ConJob.Data
         #endregion
     }
 }
+

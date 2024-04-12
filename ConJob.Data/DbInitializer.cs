@@ -73,6 +73,15 @@ namespace ConJob.Data
                     RoleDescription = "Là tư bản đi kiếm những con chiêng ngoan đạo."
                 }
                );
+            modelBuilder.Entity<FileModel>().HasData(
+                new FileModel()
+                {
+                    Id = 1,
+                    Name = "file",
+                    Type = FileEnum.Img,
+                    Size = 100,
+                }
+                );
         }
     }
 }
