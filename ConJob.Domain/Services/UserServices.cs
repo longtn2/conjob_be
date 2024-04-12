@@ -16,10 +16,12 @@ using ConJob.Entities;
 using ConJob.Data;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.Encryption;
+using ConJob.Domain.DTOs.Follow;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ConJob.Domain.Services
 {
-    public class UserServices :  IUserServices
+    public class UserServices : IUserServices
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
@@ -27,9 +29,10 @@ namespace ConJob.Domain.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IFollowRepository _followRepository;
         private readonly AppDbContext _context;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context, IFollowRepository followRepository)
         {
             _logger = logger;
             _mapper = mapper;
@@ -38,13 +41,14 @@ namespace ConJob.Domain.Services
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+            _followRepository = followRepository;
         }
 
         public async Task<UserDTO?> GetUserByIdAsync(int id)
         {
             //var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             var user = _userRepository.GetById(id);
-            return _mapper.Map<UserDTO>(user); 
+            return _mapper.Map<UserDTO>(user);
         }
 
         public async Task<ServiceResponse<UserInfoDTO>> GetUserInfoAsync(string? id)
@@ -134,7 +138,8 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<UserDTO>();
 
 
-            try {
+            try
+            {
 
                 var user = _userRepository.GetById(int.Parse(id));
                 if (user == null)
@@ -174,7 +179,8 @@ namespace ConJob.Domain.Services
                     serviceResponse.ResponseType = EResponseType.CannotUpdate;
                     serviceResponse.Message = "Wrong old password.";
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 serviceResponse.ResponseType = EResponseType.CannotUpdate;
                 serviceResponse.Message = "Something wrong.";
@@ -182,5 +188,56 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<FollowDTO>> followUser(FollowDTO follow)
+        {
+            var serviceResponse = new ServiceResponse<FollowDTO>();
+            try
+            {
+                var toAdd = _mapper.Map<FollowModel>(follow);
+                toAdd.FromUser = _userRepository.GetById(toAdd.FromUserID)!;
+                toAdd.ToUser = _userRepository.GetById(toAdd.ToUserID)!;
+                if (toAdd.ToUser == null)
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                else
+                {
+                    await _followRepository.AddAsync(toAdd);
+                    serviceResponse.Data = _mapper.Map<FollowDTO>(toAdd);
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                serviceResponse.ResponseType = EResponseType.CannotCreate;
+                serviceResponse.Message = "Somthing wrong." + ex.Message;
+            }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<FollowDTO>> unfollowUser(FollowDTO follow)
+        {
+            var serviceResponse = new ServiceResponse<FollowDTO>();
+            try
+            {
+                var toRemove = _mapper.Map<FollowModel>(follow);
+                toRemove.FromUser = _userRepository.GetById(toRemove.FromUserID)!;
+                toRemove.ToUser = _userRepository.GetById(toRemove.ToUserID)!;
+                /*var result = await _followRepository.GetFollowbyUser(toRemove.FromUser, toRemove.ToUser);*/
+                var result = await _context.Follow.Where(e => e.FromUserID == follow.FromUserID && e.ToUserID == follow.ToUserID).FirstOrDefaultAsync();
+                if (result == null)
+                {
+                    serviceResponse.ResponseType= EResponseType.NotFound;
+                }
+                else
+                {
+                    await _followRepository.RemoveAsync(result!);
+                    serviceResponse.Data = _mapper.Map<FollowDTO>(toRemove);
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                serviceResponse.ResponseType = EResponseType.CannotCreate;
+                serviceResponse.Message = "Somthing wrong.";
+            }
+            return serviceResponse;
+        }
     }
 }

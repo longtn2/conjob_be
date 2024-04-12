@@ -11,6 +11,7 @@ using Amazon;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.DTOs.Authentication;
 using ConJob.Domain.Response;
+using ConJob.Domain.DTOs.Follow;
 
 namespace ConJob.API.Controllers
 {
@@ -92,7 +93,46 @@ namespace ConJob.API.Controllers
 
 
         }
+        [Route("/follow")]
+        [Produces("application/json")]
+        [HttpPost]
+        public async Task<ActionResult> followUser(string followUser)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-
+            var serviceResponse= await _userServices.followUser(new FollowDTO()
+            {
+                FromUserID=int.Parse(userid!),
+                ToUserID=int.Parse(followUser)
+            });
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.NotFound => BadRequest(serviceResponse.Message),
+                EResponseType.Forbid => Forbid(serviceResponse.Message),
+                _ => throw new NotImplementedException()
+            };
+        }
+        [AllowAnonymous]
+        [Route("/unfollow")]
+        [Produces("application/json")]
+        [HttpPost]
+        public async Task<ActionResult> unfollowUser(string followUser, string following)
+        {
+        /*    var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+*/
+            var serviceResponse = await _userServices.unfollowUser(new FollowDTO()
+            {
+                FromUserID = int.Parse(following!),
+                ToUserID = int.Parse(followUser),
+            });
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.NotFound => BadRequest(serviceResponse.Message),
+                EResponseType.Forbid => Forbid(serviceResponse.Message),
+                _ => throw new NotImplementedException()
+            };
+        }
     }
 }

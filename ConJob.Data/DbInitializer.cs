@@ -46,8 +46,6 @@ namespace ConJob.Data
             //           PhoneNumber = "0354596415",
             //           Password = "7f45928bce3ba52d77dee0cf1a8bbfdf"
             //       }
-    
-
             //);
 
             modelBuilder.Entity<RoleModel>().HasData(

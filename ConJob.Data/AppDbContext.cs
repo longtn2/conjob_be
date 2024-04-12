@@ -40,25 +40,25 @@ namespace ConJob.Data
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.Applicants)
                 .WithOne(e => e.User)
-                .HasForeignKey("UserId");
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(e=>e.Jobs).WithOne(e => e.User)
-                .HasForeignKey("UserId");
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(e=>e.Reports).WithOne(e => e.User)
-                .HasForeignKey("UserId");
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(e=>e.Likes).WithOne(e=>e.User)
-                .HasForeignKey("UserId");
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(e=>e.Comments).WithOne(e => e.User)
-                .HasForeignKey("UserId");
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(e=> e.Followers).WithOne(e=> e.FromUser)
-                .HasForeignKey("UserId");
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.Followings).WithOne(e => e.ToUser)
-                .HasForeignKey("UserId");
+                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
             new DbInitializer(modelBuilder).Seed();
         }
@@ -69,6 +69,8 @@ namespace ConJob.Data
         public virtual DbSet<RoleModel> Role { get; set; }
 
         public virtual DbSet<JWTModel> JWT { get; set; }
+
+        public virtual DbSet<FollowModel> Follow { get; set; }
 
 
         #region Auto add created-time, updated-time
