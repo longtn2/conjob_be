@@ -30,7 +30,7 @@ namespace ConJob.Domain.AutoMapper
 
             CreateMap<FollowModel, FollowDTO>()
             .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.FromUserID))
-            .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.ToUserID));
+            .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.ToUserID)).ReverseMap();
 
 /*            CreateMap<FollowDTO, FollowModel>()
                 .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.FromUserID))

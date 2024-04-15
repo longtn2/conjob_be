@@ -8,6 +8,7 @@ namespace ConJob.Domain.DTOs.Report
 {
     public class ReportByUserDTO
     {
+        public int id {get; set;}
         public string reason { get; set; }
         public int post_id { get; set; }
     }

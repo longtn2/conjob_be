@@ -196,9 +196,9 @@ namespace ConJob.Domain.Services
                 var tofollow = _mapper.Map<FollowModel>(follow);
                 tofollow.FromUser = _userRepository.GetById(tofollow.FromUserID)!;
                 tofollow.ToUser = _userRepository.GetById(tofollow.ToUserID)!;
-                var checkfollow= _context.Follow.Where(e=>e.ToUserID==tofollow.ToUserID && e.FromUserID==tofollow.FromUserID).FirstOrDefaultAsync();
+                var checkfollow=await _context.Follow.Where(e=>e.ToUser.Id==tofollow.ToUser.Id && e.FromUser.Id==tofollow.FromUser.Id).FirstOrDefaultAsync();
                 if (tofollow.ToUser == null|| tofollow.FromUser==null)
-                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.ResponseType = EResponseType.BadRequest;
                 else if(checkfollow==null)
                 {
                     await _followRepository.AddAsync(tofollow);

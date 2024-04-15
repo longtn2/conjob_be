@@ -64,7 +64,6 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
-
         [Route("/me")]
         [Produces("application/json")]
         [HttpGet]
@@ -97,20 +96,22 @@ namespace ConJob.API.Controllers
         [Route("/follow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> followUser([FromBody] string following,string followUser)
+        public async Task<ActionResult> followUser([FromBody] FollowerDTO followUser)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var serviceResponse= await _userServices.followUser(new FollowDTO()
+            var serviceResponse = await _userServices.followUser(new FollowDTO()
             {
-                FromUserID=int.Parse(following),
-                ToUserID=int.Parse(followUser)
+                FromUserID = 4 /*int.Parse(userid!)*/,
+                ToUserID = int.Parse(followUser.toUser)
             });
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.NotFound => BadRequest(serviceResponse.Message),
+                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
                 EResponseType.Forbid => Forbid(serviceResponse.Message),
+                EResponseType.CannotCreate=> BadRequest(serviceResponse.Message),
+                EResponseType.NotFound => NotFound(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
         }
@@ -118,20 +119,22 @@ namespace ConJob.API.Controllers
         [Route("/unfollow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> unfollowUser([FromBody] string followUser, string following)
+        public async Task<ActionResult> unfollowUser([FromBody] FollowerDTO followUser)
         {
-        /*    var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-*/
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             var serviceResponse = await _userServices.unfollowUser(new FollowDTO()
             {
-                FromUserID = int.Parse(following!),
-                ToUserID = int.Parse(followUser),
+                FromUserID = int.Parse(userid!),
+                ToUserID = int.Parse(followUser.toUser),
             });
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.NotFound => BadRequest(serviceResponse.Message),
+                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
                 EResponseType.Forbid => Forbid(serviceResponse.Message),
+                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
+                EResponseType.NotFound => NotFound(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
         }

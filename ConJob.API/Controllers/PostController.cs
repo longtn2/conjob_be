@@ -37,8 +37,10 @@ namespace ConJob.API.Controllers
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
                 EResponseType.BadRequest => BadRequest(serviceResponse.Message),
+                EResponseType.Forbid => Forbid(serviceResponse.Message),
+                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
+                EResponseType.NotFound => NotFound(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
         }
