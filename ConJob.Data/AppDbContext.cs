@@ -115,6 +115,12 @@ namespace ConJob.Data
         public virtual DbSet<ReportModel> Reports { get; set; }
         public virtual DbSet<SkillModel> Skills { get; set; }
 
+        public virtual DbSet<FollowModel> Follow { get; set; }
+
+        public virtual DbSet<ReportModel> Report { get; set; }
+        public virtual DbSet<Personal_skillModel> Personal_SkillModels { get; set; }
+        public virtual DbSet<SkillModel> Skills { get; set; }
+
 
         #region Auto add created-time, updated-time
         public override int SaveChanges()
