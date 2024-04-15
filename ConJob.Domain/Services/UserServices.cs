@@ -193,15 +193,21 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<FollowDTO>();
             try
             {
-                var toAdd = _mapper.Map<FollowModel>(follow);
-                toAdd.FromUser = _userRepository.GetById(toAdd.FromUserID)!;
-                toAdd.ToUser = _userRepository.GetById(toAdd.ToUserID)!;
-                if (toAdd.ToUser == null|| toAdd.FromUser==null)
+                var tofollow = _mapper.Map<FollowModel>(follow);
+                tofollow.FromUser = _userRepository.GetById(tofollow.FromUserID)!;
+                tofollow.ToUser = _userRepository.GetById(tofollow.ToUserID)!;
+                var checkfollow= _context.Follow.Where(e=>e.ToUserID==tofollow.ToUserID && e.FromUserID==tofollow.FromUserID).FirstOrDefaultAsync();
+                if (tofollow.ToUser == null|| tofollow.FromUser==null)
                     serviceResponse.ResponseType = EResponseType.NotFound;
+                else if(checkfollow==null)
+                {
+                    await _followRepository.AddAsync(tofollow);
+                    serviceResponse.Data = _mapper.Map<FollowDTO>(tofollow);
+                }
                 else
                 {
-                    await _followRepository.AddAsync(toAdd);
-                    serviceResponse.Data = _mapper.Map<FollowDTO>(toAdd);
+                    serviceResponse.ResponseType = EResponseType.BadRequest;
+                    serviceResponse.Message = "User is followed";
                 }
             }
             catch (DbUpdateException ex)

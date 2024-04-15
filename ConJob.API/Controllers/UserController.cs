@@ -97,7 +97,7 @@ namespace ConJob.API.Controllers
         [Route("/follow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> followUser(string following,string followUser)
+        public async Task<ActionResult> followUser([FromBody] string following,string followUser)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -118,7 +118,7 @@ namespace ConJob.API.Controllers
         [Route("/unfollow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> unfollowUser(string followUser, string following)
+        public async Task<ActionResult> unfollowUser([FromBody] string followUser, string following)
         {
         /*    var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 */

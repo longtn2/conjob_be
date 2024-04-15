@@ -13,6 +13,7 @@ namespace ConJob.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [RegularExpression("\"([a-zA-Z0-9_]+)\"\n\n(.*[^\n])\n")]
         public string Reason { get; set; }
         public PostModel Post { get; set; }
         public UserModel User { get; set; }

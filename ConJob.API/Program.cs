@@ -67,6 +67,7 @@ builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
 builder.Services.AddScoped<IS3Services,  S3Services>();
+builder.Services.AddScoped<IReportServices, ReportServices>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
@@ -79,6 +80,8 @@ builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IJwtRepository, JwtRepository>();
 builder.Services.AddTransient<IPostRepository, PostRepository>();
 builder.Services.AddTransient<IFollowRepository, FollowRepository>();
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
+
 #endregion
 
 builder.Services.AddControllers();
@@ -131,8 +134,7 @@ builder.Services.AddAuthorization(options =>
 #region Auto mapper
 builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 {
-    options.AddProfile(new MappingProfile(provider.GetService<IPasswordHasher>() ?? throw new InvalidOperationException("Service Not found!")/*,
-                                          provider.GetService<IFollowRepository>() ?? throw new InvalidOperationException("Service Not found!")*/));
+    options.AddProfile(new MappingProfile(provider.GetService<IPasswordHasher>() ?? throw new InvalidOperationException("Service Not found!")));
 })
 .CreateMapper());
 

@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace ConJob.Domain.Repository.Interfaces
 {
-    public interface IFollowRepository: IGenericRepository<FollowModel>
+    public interface IReportRepository:IGenericRepository<ReportModel>
     {
-        Task<FollowModel> GetFollowbyUser(UserModel fromUser, UserModel toUser);
-        Task<int> CountFollower(int userid);
+        Task<ReportModel> GetReport( UserModel user, PostModel post);
     }
 }

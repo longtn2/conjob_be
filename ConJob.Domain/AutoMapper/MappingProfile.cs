@@ -42,6 +42,9 @@ namespace ConJob.Domain.AutoMapper
                   .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.Post.Id)) 
                   .ForMember(dest => dest.user_id, opt => opt.MapFrom(src => src.User.Id)) 
                   .ReverseMap();
+            CreateMap<ReportModel, ReportByUserDTO>()
+              .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.Post.Id))
+              .ReverseMap();
         }
     }
 }

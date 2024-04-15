@@ -21,5 +21,11 @@ namespace ConJob.Domain.Repository
         {
             return await _context.Follow.Where(e => e.ToUserID == toUser.Id && e.FromUserID == fromUser.Id).FirstOrDefaultAsync();
         }
+
+        public async Task<int> CountFollower(int userid)
+        {
+            return await _context.Follow.Where(e=> e.ToUser.Id==userid).CountAsync();
+        }
+
     }
 }
