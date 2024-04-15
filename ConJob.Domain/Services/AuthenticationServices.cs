@@ -66,9 +66,9 @@ namespace ConJob.Domain.Services
 
                         await _jwtServices.InsertJWTToken(new JwtDTO()
                         {
-                            User = user,
-                            ExpiredDate = DateTime.UtcNow.AddMonths(6),
-                            Token = refreshToken,
+                            users = user,
+                            expiredDate = DateTime.UtcNow.AddMonths(6),
+                            token = refreshToken,
                         });
 
                         serviceResponse.Data = _mapper.Map<CredentialDTO>(user);
@@ -137,7 +137,7 @@ namespace ConJob.Domain.Services
                     else
                     {
                         TokenDTO _tokendto = new TokenDTO();
-                        _tokendto.Token = token;
+                        _tokendto.token = token;
                         serviceResponse.Data = _tokendto;
                     }
                     

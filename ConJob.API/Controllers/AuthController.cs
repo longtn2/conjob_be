@@ -84,7 +84,7 @@ namespace ConJob.API.Controllers
         [HttpPost]
         public async Task<ActionResult> refreshToken(TokenDTO token)
         {
-            var serviceResponse = await _authService.refreshTokenAsync(token.Token);
+            var serviceResponse = await _authService.refreshTokenAsync(token.token);
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => CreatedAtAction(nameof(refreshToken), new { version = "1" }, serviceResponse.Data),

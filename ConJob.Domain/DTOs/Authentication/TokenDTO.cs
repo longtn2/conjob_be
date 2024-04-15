@@ -8,6 +8,6 @@ namespace ConJob.Domain.DTOs.Authentication
 {
     public class TokenDTO
     {
-        public string Token { get; set; }   
+        public string token { get; set; }   
     }
 }
