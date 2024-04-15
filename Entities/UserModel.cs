@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 namespace ConJob.Entities
 {
 
+
     public enum Gender
     {
         male,
@@ -17,53 +18,83 @@ namespace ConJob.Entities
         [Key]
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int id { get; set; }
    
         [Required]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "First Name must contain at least 1 character and maximum to 50 character")]
-        public string FirstName { get; set; }
+        public string first_name { get; set; }
 
 
         [Required]
         [StringLength(10, MinimumLength = 1, ErrorMessage = "Last Name must contain at least 1 character and maximum to 10 character")]
-        public string LastName { get; set; }
+        public string last_name { get; set; }
 
         [Required]
         [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Email format is not Valid!")]
         [StringLength(70, MinimumLength = 5, ErrorMessage = "Email length must between 5 and 70 character")]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [JsonIgnore]
         [Required]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must contain atleast 8 character")]
-        public string Password { get; set; }
+        public string password { get; set; }
 
         [JsonIgnore]
         [Required]
-        public bool IsEmailConfirmed { get; set; } = false;
+        public bool is_email_confirmed { get; set; } = false;
 
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Gender Gender { get; set; }
+        public Gender gender { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        public DateTime DOB {  get; set; }
+        public DateTime dob {  get; set; }
         [Required]
-        public string Address {  get; set; }
+        public string address {  get; set; }
 
-        public string? FCMToken {  get; set; }
+        public string? fcm_token {  get; set; }
 
         [Required]
         [RegularExpression("([84|0])([3|5|7|8|9])+([0-9]{8})", ErrorMessage = "Phone number is not valid format!")]
         [StringLength(11, MinimumLength = 9)]
-        public string PhoneNumber { get; set; }
+        public string phone_number { get; set; }
 
         [Column(TypeName = "text")]
-        public string? Avatar { get; set; }
+        public string? avatar { get; set; }
 
 
         [JsonIgnore, Required]
-        public bool isDeleted { get; set; } = false;
+        public bool is_deleted { get; set; } = false;
+        [JsonIgnore]
+        public virtual ICollection<UserRoleModel> user_roles { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Personal_skillModel> personal_skills { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<JWTModel> jwts { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<PostModel> posts { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<ApplicantModel> applicants { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<JobModel> jobs { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<ReportModel> reports { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<LikeModel> likes { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<CommentModel> comments { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<FollowModel> followers { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<FollowModel> following { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<NotificationModel> from_user_notiofications { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<NotificationModel> to_user_notiofications { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<MessageModel> send_users { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<MessageModel> receive_users { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<UserRoleModel> UserRoles { get; set; }

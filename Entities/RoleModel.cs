@@ -13,12 +13,10 @@ namespace ConJob.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string RoleName { get; set; }
-        public string RoleDescription { get; set; } = string.Empty;
-
-        public byte RoleAccessLevel { get; set; }
+        public int id { get; set; }
+        public string role_name { get; set; }
         [JsonIgnore]
-        public virtual ICollection<UserRoleModel> UserRoles { get; set; }
+        public string role_description { get; set; }
+        public virtual ICollection<UserRoleModel> user_roles { get; set; }
     }
 }

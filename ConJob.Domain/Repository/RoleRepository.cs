@@ -18,14 +18,14 @@ namespace ConJob.Domain.Repository
         {
         }
 
-        public async Task<RoleModel> getRoleByLevel_NameAsync(int level, string roleName)
+        public async Task<RoleModel> getRoleExceptAdmin(string roleName)
         {
-            return await _context.Role.Where(r => r.RoleAccessLevel == level).FirstOrDefaultAsync(r => r.RoleName == roleName);
+            return await _context.Roles.Where(r => !r.role_name.Equals("admin", StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync(r => r.role_name == roleName);
         }
 
         public RoleModel getRoleByName(string roleName)
         {
-            return _context.Role.FirstOrDefault(r => r.RoleName == roleName);
+            return _context.Roles.FirstOrDefault(r => r.role_name == roleName);
         }
     }
 }

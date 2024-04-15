@@ -76,10 +76,10 @@ namespace ConJob.Domain.Services
 
 
                 if (role == null) ;
-                await _context.UserRole.AddAsync(new UserRoleModel()
+                await _context.UserRoles.AddAsync(new UserRoleModel()
                 {
-                    Role = role,
-                    User = toAdd
+                    roles = role,
+                    users = toAdd
                 });
 
                 //await _context.User!.AddAsync(toAdd);
@@ -98,7 +98,7 @@ namespace ConJob.Domain.Services
 
         public async Task<ServiceResponse<UserDTO>> SelectRole(SelectRoleDTO Role, string? userid)
         {
-            RoleModel selectedRole = await _roleRepository.getRoleByLevel_NameAsync(1, Role.RoleName);
+            RoleModel selectedRole = await _roleRepository.getRoleExceptAdmin(Role.RoleName);
             var serviceResponse = new ServiceResponse<UserDTO>();
 
             try
@@ -114,8 +114,8 @@ namespace ConJob.Domain.Services
                 {
                     await _userRoleRepository.AddAsync(new UserRoleModel()
                     {
-                        Role = selectedRole,
-                        User = userModel
+                        roles = selectedRole,
+                        users = userModel
                     });
                     serviceResponse.Data = _mapper.Map<UserDTO>(userModel);
                 }
@@ -164,7 +164,7 @@ namespace ConJob.Domain.Services
             try
             {
                 var userModel = _userRepository.GetById(int.Parse(id));
-                var checkPassword = _pwHasher.verify(passwordDTO.oldPassword, userModel.Password);
+                var checkPassword = _pwHasher.verify(passwordDTO.oldPassword, userModel.password);
                 if (checkPassword)
                 {
                     await _userRepository.changPasswordAsync(_pwHasher.Hash(passwordDTO.newPassword), userModel);

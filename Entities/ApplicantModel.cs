@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ConJob.Entities
@@ -12,11 +13,16 @@ namespace ConJob.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public ResumeModel Resume { get; set; }
-        public UserModel User{ get; set; }
-        public JobModel Job { get; set; }
-        public DateTime Apply_date { get; set; }
-        public string Status { get; set; }
+        public int id { get; set; }
+        public int user_id {  get; set; }   
+        [JsonIgnore]
+        [ForeignKey("user_id")]
+        public UserModel users { get; set; }
+        public int job_id { get; set; }
+        [JsonIgnore]
+        [ForeignKey("job_id")]
+        public JobModel jobs { get; set; }
+        public DateTime apply_date { get; set; }
+        public string status { get; set; }
     }
 }

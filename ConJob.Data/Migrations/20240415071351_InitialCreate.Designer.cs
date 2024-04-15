@@ -4,6 +4,7 @@ using ConJob.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240415071351_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,169 +26,6 @@ namespace ConJob.Data.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("ConJob.Entities.ApplicantModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Apply_date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ResumeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JobId");
-
-                    b.HasIndex("ResumeId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ApplicantModel");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.CategoryModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CategoryModel");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("CommentModel");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.FileModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<double>("Size")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FileModel");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.FollowModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FromUserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ToUserID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FromUserID");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FollowModel");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.JWTModel", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -222,187 +62,510 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("job_id");
 
-                    b.ToTable("JWT");
+                    b.HasIndex("user_id");
+
+                    b.ToTable("Applicants");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.JobModel", b =>
+            modelBuilder.Entity("ConJob.Entities.CategoryModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<double>("Budget")
-                        .HasColumnType("float");
-
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("change_on")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("create_on")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Expired_Day")
+                    b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Job_type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Location")
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Quanlity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime?>("updated_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.HasKey("id");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("JobModel");
+                    b.ToTable("Categorys");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.LikeModel", b =>
+            modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
+                    b.Property<int>("change_on")
                         .HasColumnType("int");
+
+                    b.Property<string>("content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("post_id")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("user_id")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("post_id");
 
-                    b.ToTable("LikeModel");
+                    b.HasIndex("user_id");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.FileModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<double>("size")
+                        .HasColumnType("float");
+
+                    b.Property<int>("type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.FollowModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("from_user_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("to_user_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("from_user_id");
+
+                    b.HasIndex("to_user_id");
+
+                    b.ToTable("Follows");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.JWTModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("expired_date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("token_hash_value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("JWTs");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.JobModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<double>("budget")
+                        .HasColumnType("float");
+
+                    b.Property<int>("category_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("expired_day")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("job_type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("quanlity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("category_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.LikeModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("post_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("post_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.MessageModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
+
+                    b.Property<string>("content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("receive_user_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("send_user_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("receive_user_id");
+
+                    b.HasIndex("send_user_id");
+
+                    b.ToTable("MessageModel");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.NotificationModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
+
+                    b.Property<string>("content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("from_user_notifi_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("is_accept")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("to_user_notifi_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("to_user_notiofi_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("from_user_notifi_id");
+
+                    b.HasIndex("to_user_notifi_id");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("ConJob.Entities.Personal_skillModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("desciption")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("exp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("skill_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("skill_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("Personal_skillModel");
                 });
 
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("Caption")
+                    b.Property<string>("caption")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FileId")
+                    b.Property<int>("change_on")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("create_on")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("file_id")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<bool>("is_actived")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("FileId");
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("UserId");
+                    b.Property<int>("job_id")
+                        .HasColumnType("int");
 
-                    b.ToTable("PostModel");
+                    b.Property<DateTime?>("updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("file_id");
+
+                    b.HasIndex("job_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("ConJob.Entities.ReportModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PostId")
+                    b.Property<int>("change_on")
                         .HasColumnType("int");
 
-                    b.Property<string>("Reason")
+                    b.Property<DateTime>("create_on")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("post_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("reason")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime?>("updated_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("user_id")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("post_id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("user_id");
 
-                    b.ToTable("ReportModel");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.ResumeModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Cv_url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ResumeModel");
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("ConJob.Entities.RoleModel", b =>
@@ -435,7 +598,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -569,7 +732,25 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("email")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 6,
+                            address = "Hue",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "admin@com.com",
+                            first_name = "Admin",
+                            gender = 0,
+                            is_deleted = false,
+                            is_email_confirmed = false,
+                            last_name = "Dat",
+                            password = "$2a$11$Y1F5FkGMA6GFI3xWgqF4F./ofjy7wCn3ag/nnej0YJKMg1ey2axJ2",
+                            phone_number = "0335487991"
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.UserRoleModel", b =>
@@ -600,72 +781,78 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("UserRole");
+                    b.HasIndex("role_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            role_id = 1,
+                            user_id = 6
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.ApplicantModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.JobModel", "Job")
-                        .WithMany("Applicants")
-                        .HasForeignKey("JobId")
+                    b.HasOne("ConJob.Entities.JobModel", "jobs")
+                        .WithMany("applicants")
+                        .HasForeignKey("job_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.ResumeModel", "Resume")
-                        .WithMany()
-                        .HasForeignKey("ResumeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("ConJob.Entities.UserModel", "users")
+                        .WithMany("applicants")
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "User")
-                        .WithMany("Applicants")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("jobs");
 
-                    b.Navigation("Job");
-
-                    b.Navigation("Resume");
-
-                    b.Navigation("User");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.PostModel", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
+                    b.HasOne("ConJob.Entities.PostModel", "posts")
+                        .WithMany("comments")
+                        .HasForeignKey("post_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("ConJob.Entities.UserModel", "users")
+                        .WithMany("comments")
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Post");
+                    b.Navigation("posts");
 
-                    b.Navigation("User");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("ConJob.Entities.FollowModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.UserModel", "FromUser")
-                        .WithMany("Followers")
-                        .HasForeignKey("FromUserID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("ConJob.Entities.UserModel", "from_user_follows")
+                        .WithMany("followers")
+                        .HasForeignKey("from_user_id")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "ToUser")
-                        .WithMany("Followings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("ConJob.Entities.UserModel", "to_user_follows")
+                        .WithMany("following")
+                        .HasForeignKey("to_user_id")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("FromUser");
+                    b.Navigation("from_user_follows");
 
-                    b.Navigation("ToUser");
+                    b.Navigation("to_user_follows");
                 });
 
             modelBuilder.Entity("ConJob.Entities.JWTModel", b =>
@@ -820,74 +1007,6 @@ namespace ConJob.Data.Migrations
                     b.Navigation("users");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.JobModel", b =>
-                {
-                    b.HasOne("ConJob.Entities.CategoryModel", "Category")
-                        .WithMany("Jobs")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConJob.Entities.UserModel", "User")
-                        .WithMany("Jobs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.LikeModel", b =>
-                {
-                    b.HasOne("ConJob.Entities.UserModel", "User")
-                        .WithMany("Likes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.PostModel", b =>
-                {
-                    b.HasOne("ConJob.Entities.FileModel", "File")
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConJob.Entities.UserModel", "User")
-                        .WithMany("Posts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("File");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.ReportModel", b =>
-                {
-                    b.HasOne("ConJob.Entities.PostModel", "Post")
-                        .WithMany("Reports")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConJob.Entities.UserModel", "User")
-                        .WithMany("Reports")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ConJob.Entities.UserRoleModel", b =>
                 {
                     b.HasOne("ConJob.Entities.RoleModel", "roles")
@@ -933,23 +1052,6 @@ namespace ConJob.Data.Migrations
                     b.Navigation("reports");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.CategoryModel", b =>
-                {
-                    b.Navigation("Jobs");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.JobModel", b =>
-                {
-                    b.Navigation("Applicants");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.PostModel", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Reports");
-                });
-
             modelBuilder.Entity("ConJob.Entities.RoleModel", b =>
                 {
                     b.Navigation("user_roles");
@@ -962,25 +1064,35 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.UserModel", b =>
                 {
-                    b.Navigation("Applicants");
+                    b.Navigation("applicants");
 
-                    b.Navigation("Comments");
+                    b.Navigation("comments");
 
-                    b.Navigation("Followers");
+                    b.Navigation("followers");
 
-                    b.Navigation("Followings");
+                    b.Navigation("following");
 
-                    b.Navigation("Jobs");
+                    b.Navigation("from_user_notiofications");
 
-                    b.Navigation("Jwts");
+                    b.Navigation("jobs");
 
-                    b.Navigation("Likes");
+                    b.Navigation("jwts");
 
-                    b.Navigation("Posts");
+                    b.Navigation("likes");
 
-                    b.Navigation("Reports");
+                    b.Navigation("personal_skills");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("posts");
+
+                    b.Navigation("receive_users");
+
+                    b.Navigation("reports");
+
+                    b.Navigation("send_users");
+
+                    b.Navigation("to_user_notiofications");
+
+                    b.Navigation("user_roles");
                 });
 #pragma warning restore 612, 618
         }
