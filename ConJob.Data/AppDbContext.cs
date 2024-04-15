@@ -29,6 +29,7 @@ namespace ConJob.Data
                     .HasForeignKey("job_id")
                     .IsRequired();
 
+
             modelBuilder.Entity<UserModel>()
                     .HasMany(e => e.jwts)
                     .WithOne(e => e.users)
@@ -102,10 +103,9 @@ namespace ConJob.Data
         public virtual DbSet<UserRoleModel> UserRoles { get; set; }
         public virtual DbSet<RoleModel> Roles { get; set; }
         public virtual DbSet<ApplicantModel> Applicants { get; set; }
-        public virtual DbSet<CategoryModel> Categorys { get; set; }
+        public virtual DbSet<CategoryModel> Categories { get; set; }
 
         public virtual DbSet<FileModel> Files { get; set; }
-        public virtual DbSet<FollowModel> Follows { get; set; }
         public virtual DbSet<JobModel> Jobs { get; set; }
 
         public virtual DbSet<JWTModel> JWTs { get; set; }
@@ -115,11 +115,10 @@ namespace ConJob.Data
         public virtual DbSet<ReportModel> Reports { get; set; }
         public virtual DbSet<SkillModel> Skills { get; set; }
 
-        public virtual DbSet<FollowModel> Follow { get; set; }
+        public virtual DbSet<FollowModel> Follows { get; set; }
 
         public virtual DbSet<ReportModel> Report { get; set; }
         public virtual DbSet<Personal_skillModel> Personal_SkillModels { get; set; }
-        public virtual DbSet<SkillModel> Skills { get; set; }
 
 
         #region Auto add created-time, updated-time

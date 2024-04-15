@@ -43,10 +43,10 @@ namespace ConJob.Domain.Services
                 try
                 {
                     var report = _mapper.Map<ReportModel>(reportDTO);
-                    report.Post = _postRepository.GetById(reportDTO.post_id)!;
-                    report.User = _userRepository.GetById(reportDTO.user_id)!;
-                    var checkReport = _reportRespository.GetReport(report.User.Id, report.Post.Id);
-                    if (report.User == null || report.Post == null)
+                    report.posts = _postRepository.GetById(reportDTO.post_id)!;
+                    report.users = _userRepository.GetById(reportDTO.user_id)!;
+                    var checkReport = _reportRespository.GetReport(report.users.id, report.posts.id);
+                    if (report.users == null || report.posts == null)
                     {
                         serviceReponse.ResponseType = EResponseType.CannotCreate;
                     }

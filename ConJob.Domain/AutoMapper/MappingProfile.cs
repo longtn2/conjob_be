@@ -20,7 +20,7 @@ namespace ConJob.Domain.AutoMapper
         public MappingProfile(IPasswordHasher pwdHasher)
         {
             _pwdHasher = pwdHasher;
-            CreateMap<UserRegisterDTO, UserModel>().ForMember(dest => dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.Password)));
+            CreateMap<UserRegisterDTO, UserModel>().ForMember(dest => dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.password)));
             CreateMap<UserModel, UserDTO>()
                  .ForMember(dto => dto.Roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.roles).ToList()));
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.Hash(src.Token)));
@@ -30,25 +30,19 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
 
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
-            CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.Roles, opt => opt.MapFrom(x => x.UserRoles.Select(y => y.Role).ToList())).ReverseMap();
-            CreateMap<RoleModel, RolesDTO>().ReverseMap();
 
             CreateMap<FollowModel, FollowDTO>()
-            .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.FromUserID))
-            .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.ToUserID)).ReverseMap();
+            .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.from_user_follows.id))
+            .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.from_user_follows.id)).ReverseMap();
 
-/*            CreateMap<FollowDTO, FollowModel>()
-                .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.FromUserID))
-                .ForMember(dest => dest.FromUser, opt => opt.MapFrom(scr => _followRepository.GetById(scr.FromUserID)))
-                .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.ToUserID))
-                .ForMember(dest => dest.ToUser, opt => opt.MapFrom(scr => _followRepository.GetById(scr.ToUserID)));*/
+
 
             CreateMap<ReportModel, ReportDTO>()
-                  .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.Post.Id)) 
-                  .ForMember(dest => dest.user_id, opt => opt.MapFrom(src => src.User.Id)) 
+                  .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.posts.id)) 
+                  .ForMember(dest => dest.user_id, opt => opt.MapFrom(src => src.users.id)) 
                   .ReverseMap();
             CreateMap<ReportModel, ReportByUserDTO>()
-              .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.Post.Id))
+              .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.posts.id))
               .ReverseMap();
         }
     }

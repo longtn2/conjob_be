@@ -94,7 +94,7 @@ namespace ConJob.Domain.Services
             catch (DbUpdateException ex)
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Email already taken by another User. Please reset or choose different.";
+                serviceResponse.Message = "Email already taken by another User. Please reset or choose different."+ex.ToString();
             }
             catch { throw; }
             return serviceResponse;
@@ -194,12 +194,12 @@ namespace ConJob.Domain.Services
             try
             {
                 var tofollow = _mapper.Map<FollowModel>(follow);
-                tofollow.FromUser = _userRepository.GetById(tofollow.FromUserID)!;
-                tofollow.ToUser = _userRepository.GetById(tofollow.ToUserID)!;
-                var checkfollow=await _context.Follow.Where(e=>e.ToUser.Id==tofollow.ToUser.Id && e.FromUser.Id==tofollow.FromUser.Id).FirstOrDefaultAsync();
-                if (tofollow.ToUser == null|| tofollow.FromUser==null)
+                tofollow.from_user_follows = _userRepository.GetById(tofollow.from_user_id)!;
+                tofollow.to_user_follows = _userRepository.GetById(tofollow.to_user_id)!;
+                var checkfollow = await _context.Follows.Where(e => e.to_user_follows.id == tofollow.to_user_follows.id && e.from_user_follows.id == tofollow.from_user_follows.id).FirstOrDefaultAsync();
+                if (tofollow.to_user_follows == null || tofollow.from_user_follows == null)
                     serviceResponse.ResponseType = EResponseType.BadRequest;
-                else if(checkfollow==null)
+                else if (checkfollow == null)
                 {
                     await _followRepository.AddAsync(tofollow);
                     serviceResponse.Data = _mapper.Map<FollowDTO>(tofollow);
@@ -224,13 +224,13 @@ namespace ConJob.Domain.Services
             try
             {
                 var toRemove = _mapper.Map<FollowModel>(follow);
-                toRemove.FromUser = _userRepository.GetById(toRemove.FromUserID)!;
-                toRemove.ToUser = _userRepository.GetById(toRemove.ToUserID)!;
+                toRemove.from_user_follows = _userRepository.GetById(toRemove.from_user_id)!;
+                toRemove.to_user_follows = _userRepository.GetById(toRemove.to_user_id)!;
                 /*var result = await _followRepository.GetFollowbyUser(toRemove.FromUser, toRemove.ToUser);*/
-                var result = await _context.Follow.Where(e => e.FromUserID == follow.FromUserID && e.ToUserID == follow.ToUserID).FirstOrDefaultAsync();
+                var result = await _context.Follows.Where(e => e.from_user_id == follow.FromUserID && e.to_user_id == follow.ToUserID).FirstOrDefaultAsync();
                 if (result == null)
                 {
-                    serviceResponse.ResponseType= EResponseType.NotFound;
+                    serviceResponse.ResponseType = EResponseType.NotFound;
                 }
                 else
                 {

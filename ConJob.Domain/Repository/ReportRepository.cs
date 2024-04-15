@@ -20,7 +20,7 @@ namespace ConJob.Domain.Repository
 
         public ReportModel GetReport(int user_id, int post_id)
         {
-            return _context.Report.Where(e => e.User.Id == user_id && e.Post.Id == post_id).FirstOrDefault()!;
+            return _context.Report.Where(e => e.users.id == user_id && e.posts.id == post_id).FirstOrDefault()!;
         }
     }
 }
