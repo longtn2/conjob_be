@@ -82,8 +82,6 @@ namespace ConJob.Entities
         [JsonIgnore]
         public virtual ICollection<LikeModel> likes { get; set; }
         [JsonIgnore]
-        public virtual ICollection<CommentModel> comments { get; set; }
-        [JsonIgnore]
         public virtual ICollection<FollowModel> followers { get; set; }
         [JsonIgnore]
         public virtual ICollection<FollowModel> following { get; set; }
@@ -112,8 +110,5 @@ namespace ConJob.Entities
 
         [JsonIgnore]
         public virtual ICollection<LikeModel> Likes { get; set; }
-        public virtual ICollection<CommentModel> Comments { get; set; }
-        public virtual ICollection<FollowModel> Followers { get; set; }
-        public virtual ICollection<FollowModel> Followings { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240415071351_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240415102623_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("UserModelid")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("apply_date")
                         .HasColumnType("datetime2");
@@ -59,6 +62,8 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("UserModelid");
 
                     b.HasIndex("job_id");
 
@@ -98,45 +103,6 @@ namespace ConJob.Data.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Categorys");
-                });
-
-            modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<int>("change_on")
-                        .HasColumnType("int");
-
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("create_on")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("created_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("post_id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("updated_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("post_id");
-
-                    b.HasIndex("user_id");
-
-                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ConJob.Entities.FileModel", b =>
@@ -222,6 +188,9 @@ namespace ConJob.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("UserModelid")
+                        .HasColumnType("int");
+
                     b.Property<int>("change_on")
                         .HasColumnType("int");
 
@@ -246,6 +215,8 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("UserModelid");
+
                     b.HasIndex("user_id");
 
                     b.ToTable("JWTs");
@@ -258,6 +229,9 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("UserModelid")
+                        .HasColumnType("int");
 
                     b.Property<double>("budget")
                         .HasColumnType("float");
@@ -307,6 +281,8 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("UserModelid");
+
                     b.HasIndex("category_id");
 
                     b.HasIndex("user_id");
@@ -321,6 +297,9 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("UserModelid")
+                        .HasColumnType("int");
 
                     b.Property<int>("change_on")
                         .HasColumnType("int");
@@ -341,6 +320,8 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("UserModelid");
 
                     b.HasIndex("post_id");
 
@@ -487,6 +468,9 @@ namespace ConJob.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("UserModelid")
+                        .HasColumnType("int");
+
                     b.Property<string>("caption")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -520,6 +504,8 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("UserModelid");
+
                     b.HasIndex("file_id");
 
                     b.HasIndex("job_id");
@@ -536,6 +522,9 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("UserModelid")
+                        .HasColumnType("int");
 
                     b.Property<int>("change_on")
                         .HasColumnType("int");
@@ -560,6 +549,8 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("UserModelid");
 
                     b.HasIndex("post_id");
 
@@ -748,7 +739,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$Y1F5FkGMA6GFI3xWgqF4F./ofjy7wCn3ag/nnej0YJKMg1ey2axJ2",
+                            password = "$2a$11$qbODg6Uhp91P15xF5j7hd.cRbm6tC0Dt7IjNTQVHme.B9iUeDLPT.",
                             phone_number = "0335487991"
                         });
                 });
@@ -760,6 +751,9 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("UserModelid")
+                        .HasColumnType("int");
 
                     b.Property<int>("change_on")
                         .HasColumnType("int");
@@ -781,6 +775,8 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("UserModelid");
+
                     b.HasIndex("role_id");
 
                     b.HasIndex("user_id");
@@ -800,6 +796,10 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.ApplicantModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.UserModel", null)
+                        .WithMany("Applicants")
+                        .HasForeignKey("UserModelid");
+
                     b.HasOne("ConJob.Entities.JobModel", "jobs")
                         .WithMany("applicants")
                         .HasForeignKey("job_id")
@@ -817,25 +817,6 @@ namespace ConJob.Data.Migrations
                     b.Navigation("users");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
-                {
-                    b.HasOne("ConJob.Entities.PostModel", "posts")
-                        .WithMany("comments")
-                        .HasForeignKey("post_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConJob.Entities.UserModel", "users")
-                        .WithMany("comments")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("posts");
-
-                    b.Navigation("users");
-                });
-
             modelBuilder.Entity("ConJob.Entities.FollowModel", b =>
                 {
                     b.HasOne("ConJob.Entities.UserModel", "from_user_follows")
@@ -847,7 +828,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.UserModel", "to_user_follows")
                         .WithMany("following")
                         .HasForeignKey("to_user_id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("from_user_follows");
@@ -857,6 +838,10 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.JWTModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.UserModel", null)
+                        .WithMany("Jwts")
+                        .HasForeignKey("UserModelid");
+
                     b.HasOne("ConJob.Entities.UserModel", "users")
                         .WithMany("jwts")
                         .HasForeignKey("user_id")
@@ -868,6 +853,10 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.JobModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.UserModel", null)
+                        .WithMany("Jobs")
+                        .HasForeignKey("UserModelid");
+
                     b.HasOne("ConJob.Entities.CategoryModel", "categorys")
                         .WithMany("jobs")
                         .HasForeignKey("category_id")
@@ -887,6 +876,10 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.LikeModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.UserModel", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("UserModelid");
+
                     b.HasOne("ConJob.Entities.PostModel", "post")
                         .WithMany("likes")
                         .HasForeignKey("post_id")
@@ -896,7 +889,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.UserModel", "users")
                         .WithMany("likes")
                         .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("post");
@@ -963,6 +956,10 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.UserModel", null)
+                        .WithMany("Posts")
+                        .HasForeignKey("UserModelid");
+
                     b.HasOne("ConJob.Entities.FileModel", "files")
                         .WithMany("oosts")
                         .HasForeignKey("file_id")
@@ -978,7 +975,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.UserModel", "users")
                         .WithMany("posts")
                         .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("files");
@@ -990,6 +987,10 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.ReportModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.UserModel", null)
+                        .WithMany("Reports")
+                        .HasForeignKey("UserModelid");
+
                     b.HasOne("ConJob.Entities.PostModel", "posts")
                         .WithMany("reports")
                         .HasForeignKey("post_id")
@@ -1009,6 +1010,10 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.UserRoleModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.UserModel", null)
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserModelid");
+
                     b.HasOne("ConJob.Entities.RoleModel", "roles")
                         .WithMany("user_roles")
                         .HasForeignKey("role_id")
@@ -1045,8 +1050,6 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
-                    b.Navigation("comments");
-
                     b.Navigation("likes");
 
                     b.Navigation("reports");
@@ -1064,9 +1067,21 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.UserModel", b =>
                 {
-                    b.Navigation("applicants");
+                    b.Navigation("Applicants");
 
-                    b.Navigation("comments");
+                    b.Navigation("Jobs");
+
+                    b.Navigation("Jwts");
+
+                    b.Navigation("Likes");
+
+                    b.Navigation("Posts");
+
+                    b.Navigation("Reports");
+
+                    b.Navigation("UserRoles");
+
+                    b.Navigation("applicants");
 
                     b.Navigation("followers");
 

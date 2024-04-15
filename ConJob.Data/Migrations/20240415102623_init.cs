@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ConJob.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -142,7 +142,7 @@ namespace ConJob.Data.Migrations
                         column: x => x.to_user_id,
                         principalTable: "Users",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,6 +161,7 @@ namespace ConJob.Data.Migrations
                     status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     category_id = table.Column<int>(type: "int", nullable: false),
                     user_id = table.Column<int>(type: "int", nullable: false),
+                    UserModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -175,6 +176,11 @@ namespace ConJob.Data.Migrations
                         principalTable: "Categorys",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Jobs_Users_UserModelid",
+                        column: x => x.UserModelid,
+                        principalTable: "Users",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Jobs_Users_user_id",
                         column: x => x.user_id,
@@ -192,6 +198,7 @@ namespace ConJob.Data.Migrations
                     token_hash_value = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     expired_date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     user_id = table.Column<int>(type: "int", nullable: false),
+                    UserModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -200,6 +207,11 @@ namespace ConJob.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_JWTs", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_JWTs_Users_UserModelid",
+                        column: x => x.UserModelid,
+                        principalTable: "Users",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_JWTs_Users_user_id",
                         column: x => x.user_id,
@@ -313,6 +325,7 @@ namespace ConJob.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     user_id = table.Column<int>(type: "int", nullable: false),
                     role_id = table.Column<int>(type: "int", nullable: false),
+                    UserModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -327,6 +340,11 @@ namespace ConJob.Data.Migrations
                         principalTable: "Roles",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Users_UserModelid",
+                        column: x => x.UserModelid,
+                        principalTable: "Users",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_UserRoles_Users_user_id",
                         column: x => x.user_id,
@@ -345,6 +363,7 @@ namespace ConJob.Data.Migrations
                     job_id = table.Column<int>(type: "int", nullable: false),
                     apply_date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -359,6 +378,11 @@ namespace ConJob.Data.Migrations
                         principalTable: "Jobs",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Applicants_Users_UserModelid",
+                        column: x => x.UserModelid,
+                        principalTable: "Users",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Applicants_Users_user_id",
                         column: x => x.user_id,
@@ -379,6 +403,7 @@ namespace ConJob.Data.Migrations
                     user_id = table.Column<int>(type: "int", nullable: false),
                     job_id = table.Column<int>(type: "int", nullable: false),
                     file_id = table.Column<int>(type: "int", nullable: false),
+                    UserModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -400,38 +425,12 @@ namespace ConJob.Data.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Posts_Users_user_id",
-                        column: x => x.user_id,
+                        name: "FK_Posts_Users_UserModelid",
+                        column: x => x.UserModelid,
                         principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    user_id = table.Column<int>(type: "int", nullable: false),
-                    post_id = table.Column<int>(type: "int", nullable: false),
-                    change_on = table.Column<int>(type: "int", nullable: false),
-                    create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.id);
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Comments_Posts_post_id",
-                        column: x => x.post_id,
-                        principalTable: "Posts",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Comments_Users_user_id",
+                        name: "FK_Posts_Users_user_id",
                         column: x => x.user_id,
                         principalTable: "Users",
                         principalColumn: "id",
@@ -446,6 +445,7 @@ namespace ConJob.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     user_id = table.Column<int>(type: "int", nullable: false),
                     post_id = table.Column<int>(type: "int", nullable: false),
+                    UserModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -461,11 +461,16 @@ namespace ConJob.Data.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Likes_Users_UserModelid",
+                        column: x => x.UserModelid,
+                        principalTable: "Users",
+                        principalColumn: "id");
+                    table.ForeignKey(
                         name: "FK_Likes_Users_user_id",
                         column: x => x.user_id,
                         principalTable: "Users",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -477,6 +482,7 @@ namespace ConJob.Data.Migrations
                     reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     post_id = table.Column<int>(type: "int", nullable: false),
                     user_id = table.Column<int>(type: "int", nullable: false),
+                    UserModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -491,6 +497,11 @@ namespace ConJob.Data.Migrations
                         principalTable: "Posts",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reports_Users_UserModelid",
+                        column: x => x.UserModelid,
+                        principalTable: "Users",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Reports_Users_user_id",
                         column: x => x.user_id,
@@ -512,12 +523,12 @@ namespace ConJob.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "id", "address", "avatar", "change_on", "create_on", "created_at", "dob", "email", "fcm_token", "first_name", "gender", "is_deleted", "is_email_confirmed", "last_name", "password", "phone_number", "updated_at" },
-                values: new object[] { 6, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@com.com", null, "Admin", 0, false, false, "Dat", "$2a$11$Y1F5FkGMA6GFI3xWgqF4F./ofjy7wCn3ag/nnej0YJKMg1ey2axJ2", "0335487991", null });
+                values: new object[] { 6, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@com.com", null, "Admin", 0, false, false, "Dat", "$2a$11$qbODg6Uhp91P15xF5j7hd.cRbm6tC0Dt7IjNTQVHme.B9iUeDLPT.", "0335487991", null });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",
-                columns: new[] { "id", "change_on", "create_on", "created_at", "role_id", "updated_at", "user_id" },
-                values: new object[] { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, null, 6 });
+                columns: new[] { "id", "UserModelid", "change_on", "create_on", "created_at", "role_id", "updated_at", "user_id" },
+                values: new object[] { 1, null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, null, 6 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applicants_job_id",
@@ -530,14 +541,9 @@ namespace ConJob.Data.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_post_id",
-                table: "Comments",
-                column: "post_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_user_id",
-                table: "Comments",
-                column: "user_id");
+                name: "IX_Applicants_UserModelid",
+                table: "Applicants",
+                column: "UserModelid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Follows_from_user_id",
@@ -560,9 +566,19 @@ namespace ConJob.Data.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Jobs_UserModelid",
+                table: "Jobs",
+                column: "UserModelid");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_JWTs_user_id",
                 table: "JWTs",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JWTs_UserModelid",
+                table: "JWTs",
+                column: "UserModelid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Likes_post_id",
@@ -573,6 +589,11 @@ namespace ConJob.Data.Migrations
                 name: "IX_Likes_user_id",
                 table: "Likes",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Likes_UserModelid",
+                table: "Likes",
+                column: "UserModelid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MessageModel_receive_user_id",
@@ -620,6 +641,11 @@ namespace ConJob.Data.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Posts_UserModelid",
+                table: "Posts",
+                column: "UserModelid");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reports_post_id",
                 table: "Reports",
                 column: "post_id");
@@ -630,6 +656,11 @@ namespace ConJob.Data.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reports_UserModelid",
+                table: "Reports",
+                column: "UserModelid");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_role_id",
                 table: "UserRoles",
                 column: "role_id");
@@ -638,6 +669,11 @@ namespace ConJob.Data.Migrations
                 name: "IX_UserRoles_user_id",
                 table: "UserRoles",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_UserModelid",
+                table: "UserRoles",
+                column: "UserModelid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_email",
@@ -651,9 +687,6 @@ namespace ConJob.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Applicants");
-
-            migrationBuilder.DropTable(
-                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Follows");

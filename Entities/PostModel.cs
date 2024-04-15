@@ -33,7 +33,6 @@ namespace ConJob.Entities
         public FileModel files { get; set; }
 
         public virtual ICollection<ReportModel> reports { get; set; }
-        public virtual ICollection<CommentModel> comments { get; set; }
 
     }
 }

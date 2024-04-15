@@ -1,5 +1,5 @@
 ﻿using ConJob.Entities;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConJob.Data
 {
@@ -39,7 +39,11 @@ namespace ConJob.Data
                 .HasMany(e => e.posts)
                 .WithOne(e => e.users)
                 .HasForeignKey("user_id");
-
+            modelBuilder.Entity<UserModel>()
+                .HasMany(e=>e.likes)
+                .WithOne(e => e.users)
+                .HasForeignKey("user_id");
+             
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.applicants)
                 .WithOne(e => e.users)
@@ -53,20 +57,42 @@ namespace ConJob.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserModel>()
-                .HasMany(e=>e.Likes).WithOne(e=>e.User)
-                .HasForeignKey("UserId");
+                .HasMany(e=>e.from_user_notiofications)
+                .WithOne(e=>e.from_user_notifications)
+                .HasForeignKey("from_user_notifi_id")
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<UserModel>()
-               .HasMany(u => u.followers)
-               .WithOne(u => u.from_user_follows)
-               .HasForeignKey("from_user_id")
+               .HasMany(e => e.to_user_notiofications)
+               .WithOne(e => e.to_user_notiofications)
+               .HasForeignKey("to_user_notifi_id")
                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserModel>()
-                .HasMany(e=> e.Followers).WithOne(e=> e.FromUser)
-                .HasForeignKey("UserId");
+                .HasMany(u => u.followers)
+               .WithOne(u => u.from_user_follows)
+               .HasForeignKey("from_user_id")
+               .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
-                .HasMany(e => e.Followings).WithOne(e => e.ToUser)
-                .HasForeignKey("UserId");
+                .HasMany(u=>u.posts)
+                .WithOne(u=>u.users)
+                .HasForeignKey("user_id")
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserModel>()
+                .HasMany(u=>u.reports)
+                .WithOne(u=>u.users)
+                .HasForeignKey("user_id")
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserModel>()
+                .HasMany(u=>u.send_users)
+                .WithOne(u=>u.send_users)
+                .HasForeignKey("send_user_id")
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserModel>()
+                .HasMany(u => u.receive_users)
+                .WithOne(u => u.receive_users)
+                .HasForeignKey("receive_user_id")
+                .OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
             new DbInitializer(modelBuilder).Seed();
         }
@@ -77,7 +103,7 @@ namespace ConJob.Data
         public virtual DbSet<RoleModel> Roles { get; set; }
         public virtual DbSet<ApplicantModel> Applicants { get; set; }
         public virtual DbSet<CategoryModel> Categorys { get; set; }
-        public virtual DbSet<CommentModel> Comments { get; set; }
+
         public virtual DbSet<FileModel> Files { get; set; }
         public virtual DbSet<FollowModel> Follows { get; set; }
         public virtual DbSet<JobModel> Jobs { get; set; }
