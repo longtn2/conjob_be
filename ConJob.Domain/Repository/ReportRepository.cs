@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConJob.Domain.Repository
 {
@@ -17,9 +18,9 @@ namespace ConJob.Domain.Repository
         {
         }
 
-        public async Task<ReportModel> GetReport(UserModel user, PostModel post)
+        public ReportModel GetReport(int user_id, int post_id)
         {
-            return await _context.Report.Where(e=> e.User.Id==user.Id && e.Post.Id==post.Id).FirstOrDefaultAsync();
+            return _context.Report.Where(e => e.User.Id == user_id && e.Post.Id == post_id).FirstOrDefault()!;
         }
     }
 }

@@ -10,6 +10,6 @@ namespace ConJob.Domain.Repository.Interfaces
 {
     public interface IReportRepository:IGenericRepository<ReportModel>
     {
-        Task<ReportModel> GetReport( UserModel user, PostModel post);
+        ReportModel GetReport( int user_id, int post_id);
     }
 }

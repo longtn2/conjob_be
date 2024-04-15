@@ -22,7 +22,7 @@ namespace ConJob.Domain.Services
         private readonly IPostRepository _postRepository;
         private readonly AppDbContext _context;
 
-        public ReportServices(IMapper mapper, IReportRepository reportRespository, IUserRepository userRepository, IPostRepository postRepository,AppDbContext context)
+        public ReportServices(IMapper mapper, IReportRepository reportRespository, IUserRepository userRepository, IPostRepository postRepository, AppDbContext context)
         {
             _mapper = mapper;
             _reportRespository = reportRespository;
@@ -45,12 +45,12 @@ namespace ConJob.Domain.Services
                     var report = _mapper.Map<ReportModel>(reportDTO);
                     report.Post = _postRepository.GetById(reportDTO.post_id)!;
                     report.User = _userRepository.GetById(reportDTO.user_id)!;
-                    var checkReport =_reportRespository.GetReport(report.User,report.Post);
+                    var checkReport = _reportRespository.GetReport(report.User.Id, report.Post.Id);
                     if (report.User == null || report.Post == null)
                     {
                         serviceReponse.ResponseType = EResponseType.CannotCreate;
                     }
-                    else if(checkReport == null)
+                    else if (checkReport == null)
                     {
                         await _reportRespository.AddAsync(report);
                         serviceReponse.ResponseType = EResponseType.Success;
@@ -59,7 +59,7 @@ namespace ConJob.Domain.Services
                     else
                     {
                         serviceReponse.Message = "The post is reported";
-                        serviceReponse.ResponseType= EResponseType.BadRequest;
+                        serviceReponse.ResponseType = EResponseType.BadRequest;
                     }
 
                 }
