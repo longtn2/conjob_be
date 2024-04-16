@@ -10,7 +10,7 @@ namespace ConJob.Domain.Repository.Interfaces
 {
     public interface IFollowRepository: IGenericRepository<FollowModel>
     {
-        Task<FollowModel> GetFollowbyUser(UserModel fromUser, UserModel toUser);
+        FollowModel GetFollowbyUser(UserModel fromUser, UserModel toUser);
         Task<int> CountFollower(int userid);
     }
 }

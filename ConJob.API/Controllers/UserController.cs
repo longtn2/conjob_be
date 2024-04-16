@@ -102,7 +102,7 @@ namespace ConJob.API.Controllers
 
             var serviceResponse = await _userServices.followUser(new FollowDTO()
             {
-                FromUserID = 4 /*int.Parse(userid!)*/,
+                FromUserID = 13 /*int.Parse(userid!)*/,
                 ToUserID = int.Parse(followUser.toUser)
             });
             return serviceResponse.ResponseType switch
@@ -115,7 +115,7 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
-
+        [AllowAnonymous]
         [Route("/unfollow")]
         [Produces("application/json")]
         [HttpPost]
@@ -125,7 +125,7 @@ namespace ConJob.API.Controllers
 
             var serviceResponse = await _userServices.unfollowUser(new FollowDTO()
             {
-                FromUserID = int.Parse(userid!),
+                FromUserID = 13,
                 ToUserID = int.Parse(followUser.toUser),
             });
             return serviceResponse.ResponseType switch

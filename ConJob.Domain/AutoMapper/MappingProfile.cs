@@ -32,9 +32,11 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
 
             CreateMap<FollowModel, FollowDTO>()
-            .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.from_user_follows.id))
-            .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.from_user_follows.id)).ReverseMap();
-
+                .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.from_user_follows.id))
+                .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.from_user_follows.id)).ReverseMap();
+            CreateMap<FollowModel, FollowDTO>()
+                .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.from_user_id))
+                .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.to_user_id)).ReverseMap();
 
 
             CreateMap<ReportModel, ReportDTO>()

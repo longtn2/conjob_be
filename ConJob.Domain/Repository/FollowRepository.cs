@@ -17,9 +17,9 @@ namespace ConJob.Domain.Repository
         {
         }
 
-        public async Task<FollowModel> GetFollowbyUser(UserModel fromUser, UserModel toUser)
+        public  FollowModel GetFollowbyUser(UserModel fromUser, UserModel toUser)
         {
-            return await _context.Follows.Where(e => e.to_user_follows.id == toUser.id && e.from_user_follows.id == fromUser.id).FirstOrDefaultAsync();
+            return  _context.Follows.Where(e => e.to_user_follows.id == toUser.id && e.from_user_follows.id == fromUser.id).FirstOrDefault()!;
         }
 
         public async Task<int> CountFollower(int userid)
