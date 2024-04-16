@@ -21,17 +21,17 @@ namespace ConJob.Domain.Repository
 
         public async Task<UserModel> getUserByEmail(string email)
         {
-            var user =  await _context.User.Where(x => x.Email == email).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync();
+            var user =  await _context.Users.Where(x => x.email == email).Include(x => x.user_roles).ThenInclude(x => x.roles).FirstOrDefaultAsync();
             return user;
         }
 
         public async Task<bool> updateAvatar(string? userid, string avatar)
         {
-            var user = await _context.User.FirstOrDefaultAsync(x => x.Id == int.Parse(userid));
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.id == int.Parse(userid));
 
             if (user != null)
             {
-                user.Avatar = avatar;
+                user.avatar = avatar;
             }
             else
         {
@@ -45,7 +45,7 @@ namespace ConJob.Domain.Repository
         {
             try
             {
-                user.Password = newPassword;
+                user.password = newPassword;
                 await _context.SaveChangesAsync();
                 return true;
             } catch (Exception ex)

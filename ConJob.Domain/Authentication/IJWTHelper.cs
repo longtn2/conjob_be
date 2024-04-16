@@ -3,6 +3,7 @@ using System.Security.Claims;
 
 namespace ConJob.Domain.Authentication
 {
+    
     public interface IJWTHelper
     {
         Task<string> GenerateJWTToken(int id, DateTime expire, UserDTO user);

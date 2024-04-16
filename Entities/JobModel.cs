@@ -22,18 +22,25 @@ namespace ConJob.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public double Budget { get; set; }
+        public int id { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }
+        public double budget { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public job_typeenum Job_type { get; set; }
-        public string Location { get; set; }
-        public DateTime Expired_Day { get; set; }
-        public int Quanlity { get; set; }
-        public string Status { get; set; }
-        public ICollection<ApplicantModel> Applicants { get; set; }
-        public CategoryModel Category { get; set; }
-        public UserModel User { get; set; }
+        public job_typeenum job_type { get; set; }
+        public string location { get; set; }
+        public DateTime expired_day { get; set; }
+        public int quanlity { get; set; }
+        public string status { get; set; }
+        public virtual ICollection<ApplicantModel> applicants { get; set; }
+        public virtual ICollection<PostModel> posts { get; set; }
+        public int category_id { get; set; }
+        [JsonIgnore]
+        [ForeignKey("category_id")]
+        public CategoryModel categorys { get; set; }
+        public int user_id { get; set; }
+        [JsonIgnore]
+        [ForeignKey("user_id")]
+        public UserModel users { get; set; }
     }
 }

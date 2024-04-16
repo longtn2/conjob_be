@@ -4,6 +4,7 @@ using ConJob.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240415071351_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,7 +136,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("CommentModel");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ConJob.Entities.FileModel", b =>
@@ -745,7 +748,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$0Bsk8PsPDiV.gW.zGW3EQuKb8LRnQUGysw/2N9HReIPp8NgbP4.KW",
+                            password = "$2a$11$Y1F5FkGMA6GFI3xWgqF4F./ofjy7wCn3ag/nnej0YJKMg1ey2axJ2",
                             phone_number = "0335487991"
                         });
                 });
@@ -825,7 +828,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.UserModel", "users")
                         .WithMany("comments")
                         .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("posts");
@@ -844,7 +847,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.UserModel", "to_user_follows")
                         .WithMany("following")
                         .HasForeignKey("to_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("from_user_follows");
@@ -893,7 +896,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.UserModel", "users")
                         .WithMany("likes")
                         .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("post");
@@ -975,7 +978,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.UserModel", "users")
                         .WithMany("posts")
                         .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("files");

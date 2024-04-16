@@ -23,26 +23,26 @@ namespace ConJob.Domain.Services
 
         public async Task sendActivationEmail(UserModel user, string baseurl)
         {
-            var token = await _jWTHelper.GenerateJWTMailAction(user.Id, DateTime.UtcNow.AddDays(1), "confirm");
+            var token = await _jWTHelper.GenerateJWTMailAction(user.id, DateTime.UtcNow.AddDays(1), "confirm");
             
 
             string filePath = Directory.GetCurrentDirectory() + "\\Email\\Templates\\Verified.html";
             string emailTemplateText = File.ReadAllText(filePath);
 
-            emailTemplateText = string.Format(emailTemplateText, user.Email, baseurl+"/verify/"+ WebUtility.UrlEncode(token));
-            BackgroundJob.Enqueue(() => _mailSender.SendEmailAsync(user.Email, "Confirm Your Email", emailTemplateText));
+            emailTemplateText = string.Format(emailTemplateText, user.email, baseurl+"/verify/"+ WebUtility.UrlEncode(token));
+            BackgroundJob.Enqueue(() => _mailSender.SendEmailAsync(user.email, "Confirm Your Email", emailTemplateText));
         }
         public async Task sendForgotPassword(UserModel user, string baseurl)
         {
-            var token = await _jWTHelper.GenerateJWTMailAction(user.Id, DateTime.UtcNow.AddDays(1), "forgot");
+            var token = await _jWTHelper.GenerateJWTMailAction(user.id, DateTime.UtcNow.AddDays(1), "forgot");
 
             string filePath = Directory.GetCurrentDirectory() + "\\Email\\Templates\\Forgot.html";
 
             string emailTemplateText = File.ReadAllText(filePath);
 
-            emailTemplateText = string.Format(emailTemplateText, user.Email, baseurl + "/forgot/" + WebUtility.UrlEncode(token));
+            emailTemplateText = string.Format(emailTemplateText, user.email, baseurl + "/forgot/" + WebUtility.UrlEncode(token));
 
-            BackgroundJob.Enqueue(() => _mailSender.SendEmailAsync(user.Email, "Recover Your Password", emailTemplateText));
+            BackgroundJob.Enqueue(() => _mailSender.SendEmailAsync(user.email, "Recover Your Password", emailTemplateText));
         }
     }
 }

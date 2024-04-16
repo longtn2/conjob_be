@@ -10,7 +10,7 @@ namespace ConJob.Domain.Repository.Interfaces
 {
     public interface IRoleRepository : IGenericRepository<RoleModel>
     {
-        Task<RoleModel> getRoleByLevel_NameAsync(int level, string roleName);
+        Task<RoleModel> getRoleExceptAdmin( string roleName);
         RoleModel getRoleByName(string roleName);
     }
 }

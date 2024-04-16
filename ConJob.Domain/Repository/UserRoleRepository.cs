@@ -19,7 +19,7 @@ namespace ConJob.Domain.Repository
 
         public async Task<UserRoleModel> GetUserRoleAsync(UserModel user, RoleModel role)
         {
-            return await _context.UserRole.Where(x => x.User == user).Where(x => x.Role == role).FirstOrDefaultAsync();
+            return await _context.UserRoles.Where(x => x.users == user).Where(x => x.roles == role).FirstOrDefaultAsync();
         }
     }
 }
