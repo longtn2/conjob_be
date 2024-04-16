@@ -18,11 +18,11 @@ namespace ConJob.Entities
         public int user_id { get; set; }
         [JsonIgnore]
         [ForeignKey("user_id")]
-        public UserModel users { get; set; }
+        public UserModel user { get; set; }
         public int post_id { get; set; }
         [JsonIgnore]
         [ForeignKey("post_id")]
-        public PostModel posts { get; set; }
+        public PostModel post { get; set; }
 
     }
 }

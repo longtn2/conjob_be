@@ -19,10 +19,10 @@ namespace ConJob.Entities
         public string desciption { get; set; }
         [JsonIgnore]
         [ForeignKey("user_id")]
-        public UserModel users { get; set; }
+        public UserModel user { get; set; }
         public int skill_id { get; set; }
         [JsonIgnore]
         [ForeignKey("skill_id")]
-        public SkillModel skills { get; set; }
+        public SkillModel skill { get; set; }
     }
 }

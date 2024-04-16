@@ -17,11 +17,11 @@ namespace ConJob.Entities
         public int from_user_id { get; set; }
         [JsonIgnore]
         [ForeignKey("from_user_id")]
-        public UserModel from_user_follows { get; set; }
+        public UserModel from_user_follow { get; set; }
         public int to_user_id { get; set; }
         [JsonIgnore]
         [ForeignKey("to_user_id")]
-        public UserModel to_user_follows { get; set; }
+        public UserModel to_user_follow { get; set; }
 
     }
 }

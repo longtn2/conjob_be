@@ -15,83 +15,78 @@ namespace ConJob.Data
             modelBuilder.Entity<UserModel>().HasIndex(p => p.email).IsUnique();
             modelBuilder.Entity<UserModel>()
                         .HasMany(e => e.user_roles)
-                        .WithOne(e => e.users)
+                        .WithOne(e => e.user)
                         .HasForeignKey("user_id")
                         .IsRequired();
 
             modelBuilder.Entity<RoleModel>()
                     .HasMany(e => e.user_roles)
-                    .WithOne(e => e.roles)
+                    .WithOne(e => e.role)
                     .HasForeignKey("role_id")
                     .IsRequired();
 
             modelBuilder.Entity<JobModel>()
                     .HasMany(e => e.posts)
-                    .WithOne(e => e.jobs)
+                    .WithOne(e => e.job)
                     .HasForeignKey("job_id")
                     .IsRequired();
 
             modelBuilder.Entity<UserModel>()
                     .HasMany(e => e.jwts)
-                    .WithOne(e => e.users)
+                    .WithOne(e => e.user)
                     .HasForeignKey("user_id")
                     .IsRequired();
 
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.posts)
-                .WithOne(e => e.users)
+                .WithOne(e => e.user)
                 .HasForeignKey("user_id");
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.likes)
-                .WithOne(e => e.users)
+                .WithOne(e => e.user)
                 .HasForeignKey("user_id");
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.applicants)
-                .WithOne(e => e.users)
+                .WithOne(e => e.user)
                 .HasForeignKey("user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.jobs)
-                .WithOne(e => e.users)
+                .WithOne(e => e.user)
                 .HasForeignKey("user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.from_user_notiofications)
-                .WithOne(e => e.from_user_notifications)
+                .WithOne(e => e.from_user_notification)
                 .HasForeignKey("from_user_notifi_id")
                 .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<UserModel>()
-               .HasMany(e => e.to_user_notiofications)
-               .WithOne(e => e.to_user_notiofications)
-               .HasForeignKey("to_user_notifi_id")
-               .OnDelete(DeleteBehavior.Restrict);
+            
 
             modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.followers)
-               .WithOne(u => u.from_user_follows)
+               .WithOne(u => u.from_user_follow)
                .HasForeignKey("from_user_id")
                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.posts)
-                .WithOne(u => u.users)
+                .WithOne(u => u.user)
                 .HasForeignKey("user_id")
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.reports)
-                .WithOne(u => u.users)
+                .WithOne(u => u.user)
                 .HasForeignKey("user_id")
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.send_users)
-                .WithOne(u => u.send_users)
+                .WithOne(u => u.send_user)
                 .HasForeignKey("send_user_id")
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.receive_users)
-                .WithOne(u => u.receive_users)
+                .WithOne(u => u.receive_user)
                 .HasForeignKey("receive_user_id")
                 .OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);

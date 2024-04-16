@@ -28,7 +28,7 @@ namespace ConJob.Entities
         public FileEnum type { get; set; }
         public double size { get; set; }
         public string url { get; set; }
-        public virtual ICollection<PostModel> oosts { get; set; }
+        public virtual ICollection<PostModel> posts { get; set; }
         
 
     }

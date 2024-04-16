@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ConJob.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class change_naming_convention : Migration
+    public partial class all : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -214,7 +214,7 @@ namespace ConJob.Data.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    message_content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     send_user_id = table.Column<int>(type: "int", nullable: false),
                     receive_user_id = table.Column<int>(type: "int", nullable: false),
                     change_on = table.Column<int>(type: "int", nullable: false),
@@ -245,12 +245,11 @@ namespace ConJob.Data.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    notifi_content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     status = table.Column<bool>(type: "bit", nullable: false),
                     is_accept = table.Column<bool>(type: "bit", nullable: false),
                     from_user_notifi_id = table.Column<int>(type: "int", nullable: false),
-                    to_user_notiofi_id = table.Column<int>(type: "int", nullable: false),
-                    to_user_notifi_id = table.Column<int>(type: "int", nullable: false),
+                    UserModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -260,14 +259,13 @@ namespace ConJob.Data.Migrations
                 {
                     table.PrimaryKey("PK_Notifications", x => x.id);
                     table.ForeignKey(
+                        name: "FK_Notifications_Users_UserModelid",
+                        column: x => x.UserModelid,
+                        principalTable: "Users",
+                        principalColumn: "id");
+                    table.ForeignKey(
                         name: "FK_Notifications_Users_from_user_notifi_id",
                         column: x => x.from_user_notifi_id,
-                        principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Notifications_Users_to_user_notifi_id",
-                        column: x => x.to_user_notifi_id,
                         principalTable: "Users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -377,6 +375,7 @@ namespace ConJob.Data.Migrations
                     is_deleted = table.Column<bool>(type: "bit", nullable: false),
                     is_actived = table.Column<bool>(type: "bit", nullable: false),
                     user_id = table.Column<int>(type: "int", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     job_id = table.Column<int>(type: "int", nullable: false),
                     file_id = table.Column<int>(type: "int", nullable: false),
                     change_on = table.Column<int>(type: "int", nullable: false),
@@ -500,6 +499,25 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Categorys",
+                columns: new[] { "id", "change_on", "create_on", "created_at", "description", "name", "updated_at" },
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "các ngành liên quan đến truyền thông", "media", null },
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Đây là cách gọi chung nhất cho người viết mã, sử dụng các ngôn ngữ lập trình để tạo ra các chương trình máy tính.", "Programmer", null },
+                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, " Đây là cách gọi chung cho những người tạo ra nội dung, bao gồm bài viết, hình ảnh, video, âm nhạc, v.v. Nội dung này có thể được sử dụng cho mục đích giải trí, giáo dục, quảng cáo hoặc kinh doanh", "Content creator", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Files",
+                columns: new[] { "id", "change_on", "create_on", "created_at", "name", "size", "type", "updated_at", "url" },
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "anh datvila", 100.0, 1, null, "https://media.2dep.vn/upload/thucquyen/2022/05/19/dat-villa-la-ai-hot-tiktoker-9x-trieu-view-co-chuyen-tinh-xuyen-bien-gioi-voi-ban-gai-indonesia-social-1652941149.jpg" },
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "anh thong soai ca", 100.0, 1, null, "https://newsmd2fr.keeng.vn/tiin/archive/imageslead/2023/06/14/90_c373d5ac0433257417f21a0a5e07fa11.jpg" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "id", "change_on", "create_on", "created_at", "role_description", "role_name", "updated_at" },
                 values: new object[,]
@@ -510,14 +528,128 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Skills",
+                columns: new[] { "id", "change_on", "create_on", "created_at", "description", "name", "updated_at" },
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Content Creator là người sáng tạo nội dung cho các nền tảng như mạng xã hội, blog, website, YouTube, v.v. Họ có thể viết bài viết, quay video, chụp ảnh, livestream để thu hút người theo dõi và truyền tải thông điệp đến đông đảo người dùng", "Content Creator", null },
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Viết mã HTML, CSS và JavaScript: Đây là những ngôn ngữ lập trình cơ bản để xây dựng giao diện web. HTML tạo cấu trúc cho trang web, CSS định dạng giao diện và JavaScript tạo tính năng tương tác cho người dùng.", "Front-end developer", null },
+                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Người mẫu ảnh là những người có ngoại hình ưa nhìn, vóc dáng cân đối, làn da khỏe đẹp và thần thái cuốn hút. Họ được đào tạo bài bản về cách tạo dáng, biểu cảm trước ống kính máy ảnh để có thể truyền tải thông điệp của nhiếp ảnh gia hoặc thương hiệu một cách hiệu quả nhất.", "Fashion Model", null },
+                    { 4, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "người sử dụng máy ảnh để ghi lại hình ảnh, khoảnh khắc, sự kiện, v.v. Họ sử dụng kỹ năng và óc sáng tạo để tạo ra những bức ảnh đẹp mắt, truyền tải thông điệp hoặc lưu giữ kỷ niệm.", "Photograper", null },
+                    { 5, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "những người biểu diễn nghệ thuật múa, sử dụng chuyển động cơ thể, biểu cảm gương mặt và ngôn ngữ cơ thể để truyền tải thông điệp, cảm xúc và kể chuyện", "Dance", null },
+                    { 6, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "nhà sản xuất âm nhạc, hay còn được ví như người họa nên sản phẩm âm nhạc chất lượng.", "Music Producer", null }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "id", "address", "avatar", "change_on", "create_on", "created_at", "dob", "email", "fcm_token", "first_name", "gender", "is_deleted", "is_email_confirmed", "last_name", "password", "phone_number", "updated_at" },
-                values: new object[] { 6, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@com.com", null, "Admin", 0, false, false, "Dat", "$2a$11$0Bsk8PsPDiV.gW.zGW3EQuKb8LRnQUGysw/2N9HReIPp8NgbP4.KW", "0335487991", null });
+                values: new object[,]
+                {
+                    { 1, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@com.com", null, "Admin", 0, false, false, "Dat", "$2a$11$ERlFL0E9VPW.24fHfytRv.eo51TgL4j//w0d1fu.boxNomLOVx71m", "0335487991", null },
+                    { 2, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "apeacocke1@google.ca", null, "Fawnia", 0, false, false, "Alexandros", "$2a$11$5T3O2uJBd4cthDWGLjhy1OyzWLa/RwfCpUbs4m70ALMIzEdlkitku", "0354579415", null },
+                    { 3, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cpancoast2@wsj.com", null, "Cazzie", 0, false, false, "Pancoast", "$2a$11$KSS1SkxNCDrR2dBZRs4TzuXSeMvX77zD0hPAPvN0EHXV.T.QKGpwm", "0354596415", null },
+                    { 4, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datmarri@google.ca", null, "Marri", 0, false, false, "Dat", "$2a$11$XAilPha6UXTNJefGNpNG7ubKjWwGOCrwtxS9/PC1YRAPfiBPX8DoO", "0354579415", null },
+                    { 5, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datkhongchin@google.ca", null, "Dat", 0, false, false, "khong chin", "$2a$11$zCYBsNWgdDje.5rnne2UfOGs8kfA0/jqNVTnf9WrKCOTRxDmC9n5e", "0354579415", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Follows",
+                columns: new[] { "id", "change_on", "create_on", "created_at", "from_user_id", "to_user_id", "updated_at" },
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, 3, null },
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, 4, null },
+                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3, 4, null },
+                    { 4, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3, 5, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Jobs",
+                columns: new[] { "id", "budget", "category_id", "change_on", "create_on", "created_at", "description", "expired_day", "job_type", "location", "quanlity", "status", "title", "updated_at", "user_id" },
+                values: new object[,]
+                {
+                    { 1, 2000.0, 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "photograper làm để chụp ảnh cá xấu đang ăn", new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "Bắc băng dương", 20, "gần đầy", "Đây là công việc về media", null, 3 },
+                    { 2, 5000.0, 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Code dự án Web trong 2 tháng", new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "Ấn độ dương", 1, "không một ai ", "Đây là công việc liên quan đến Backend", null, 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "MessageModel",
+                columns: new[] { "id", "change_on", "create_on", "created_at", "message_content", "receive_user_id", "send_user_id", "updated_at" },
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "ê tao có công việc này ngon nè ", 3, 2, null },
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Việc gì vậy?", 2, 3, null },
+                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Đi múa lân 2 ngày cho lân sư đoàn, giá cả thương lượng", 3, 2, null },
+                    { 4, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Nghe cũng okela á.Tao muốn due giá là 200k cho 1 ngày . Mày chốt không", 2, 3, null },
+                    { 5, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Oke thôi.2h ngày 12th 5 nhé ", 3, 2, null },
+                    { 6, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "oke chốt", 2, 3, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Notifications",
+                columns: new[] { "id", "UserModelid", "change_on", "create_on", "created_at", "from_user_notifi_id", "is_accept", "notifi_content", "status", "updated_at" },
+                values: new object[,]
+                {
+                    { 1, null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, false, "node ", false, null },
+                    { 2, null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3, false, "node", false, null },
+                    { 3, null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 4, false, "node", false, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Personal_skillModel",
+                columns: new[] { "id", "change_on", "create_on", "created_at", "desciption", "exp", "skill_id", "updated_at", "user_id" },
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Trong suốt 2 năm làm nghề thì tôi khá tự tin với tài năng của mình", "2 năm ", 1, null, 3 },
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "I'am The Best", "3 năm ", 2, null, 2 },
+                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Tôi là một người đa tài", "10 năm", 3, null, 3 },
+                    { 4, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Người có năng khiếu từ nhỏ , siêu vippro", "từ lúc sinh ra ", 4, null, 4 }
+                });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",
                 columns: new[] { "id", "change_on", "create_on", "created_at", "role_id", "updated_at", "user_id" },
-                values: new object[] { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, null, 6 });
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, null, 1 },
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, null, 2 },
+                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3, null, 3 },
+                    { 4, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, null, 4 },
+                    { 5, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 3, null, 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Applicants",
+                columns: new[] { "id", "apply_date", "change_on", "create_on", "created_at", "job_id", "status", "updated_at", "user_id" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, "Mới nộp", null, 2 },
+                    { 2, new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, "Mới nộp", null, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Posts",
+                columns: new[] { "id", "caption", "change_on", "create_on", "created_at", "file_id", "is_actived", "is_deleted", "job_id", "title", "updated_at", "user_id" },
+                values: new object[,]
+                {
+                    { 1, "Là một người có trách nghiệm tôi luồn hoàn thành mọi việc một cách hoàn hảo", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, false, false, 1, "Luôn là người có trách nghiệm , I'am vippro", null, 2 },
+                    { 2, "Là một người đỉnh cao tôi tự tin , khoe cá tính", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, false, false, 2, "Ai tuyển tôi không", null, 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Likes",
+                columns: new[] { "id", "change_on", "create_on", "created_at", "post_id", "updated_at", "user_id" },
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, null, 4 },
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, null, 3 },
+                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, null, 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Reports",
+                columns: new[] { "id", "change_on", "create_on", "created_at", "post_id", "reason", "updated_at", "user_id" },
+                values: new object[] { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, "lừa đảo ", null, 5 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applicants_job_id",
@@ -590,9 +722,9 @@ namespace ConJob.Data.Migrations
                 column: "from_user_notifi_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_to_user_notifi_id",
+                name: "IX_Notifications_UserModelid",
                 table: "Notifications",
-                column: "to_user_notifi_id");
+                column: "UserModelid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Personal_skillModel_skill_id",

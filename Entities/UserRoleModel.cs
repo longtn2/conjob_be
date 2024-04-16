@@ -19,9 +19,9 @@ namespace ConJob.Entities
         public int role_id { get; set; }
         [JsonIgnore]
         [ForeignKey("user_id")]
-        public virtual UserModel users { get; set; }
+        public virtual UserModel user { get; set; }
         [JsonIgnore]
         [ForeignKey("role_id")]
-        public virtual RoleModel roles { get; set;}
+        public virtual RoleModel role { get; set;}
     }
 }

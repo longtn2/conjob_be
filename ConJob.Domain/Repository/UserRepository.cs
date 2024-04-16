@@ -21,7 +21,7 @@ namespace ConJob.Domain.Repository
 
         public async Task<UserModel> getUserByEmail(string email)
         {
-            var user =  await _context.Users.Where(x => x.email == email).Include(x => x.user_roles).ThenInclude(x => x.roles).FirstOrDefaultAsync();
+            var user =  await _context.Users.Where(x => x.email == email).Include(x => x.user_roles).ThenInclude(x => x.role).FirstOrDefaultAsync();
             return user;
         }
 

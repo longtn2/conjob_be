@@ -21,16 +21,17 @@ namespace ConJob.Entities
         public int user_id { get; set; }    
         [JsonIgnore]
         [ForeignKey("user_id")]
-        public UserModel users { get; set; }
+        public UserModel user { get; set; }
+        public string title { get; set; }
         public int job_id { get; set; }
         [JsonIgnore]
         [ForeignKey("job_id")]
-        public JobModel jobs { get; set; }
+        public JobModel job { get; set; }
         public virtual ICollection<LikeModel> likes { get; set; }
         public int file_id { get; set; }
         [JsonIgnore]
         [ForeignKey("file_id")]
-        public FileModel files { get; set; }
+        public FileModel file { get; set; }
 
         public virtual ICollection<ReportModel> reports { get; set; }
         public virtual ICollection<CommentModel> comments { get; set; }

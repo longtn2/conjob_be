@@ -78,8 +78,8 @@ namespace ConJob.Domain.Services
                 if (role == null) ;
                 await _context.UserRoles.AddAsync(new UserRoleModel()
                 {
-                    roles = role,
-                    users = toAdd
+                    role = role,
+                    user = toAdd
                 });
 
                 //await _context.User!.AddAsync(toAdd);
@@ -114,8 +114,8 @@ namespace ConJob.Domain.Services
                 {
                     await _userRoleRepository.AddAsync(new UserRoleModel()
                     {
-                        roles = selectedRole,
-                        users = userModel
+                        role = selectedRole,
+                        user = userModel
                     });
                     serviceResponse.Data = _mapper.Map<UserDTO>(userModel);
                 }

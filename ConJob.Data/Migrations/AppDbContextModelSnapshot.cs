@@ -62,6 +62,28 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("user_id");
 
                     b.ToTable("Applicants");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            apply_date = new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            job_id = 1,
+                            status = "Mới nộp",
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 2,
+                            apply_date = new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            job_id = 2,
+                            status = "Mới nộp",
+                            user_id = 4
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.CategoryModel", b =>
@@ -95,6 +117,32 @@ namespace ConJob.Data.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Categorys");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "các ngành liên quan đến truyền thông",
+                            name = "media"
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Đây là cách gọi chung nhất cho người viết mã, sử dụng các ngôn ngữ lập trình để tạo ra các chương trình máy tính.",
+                            name = "Programmer"
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = " Đây là cách gọi chung cho những người tạo ra nội dung, bao gồm bài viết, hình ảnh, video, âm nhạc, v.v. Nội dung này có thể được sử dụng cho mục đích giải trí, giáo dục, quảng cáo hoặc kinh doanh",
+                            name = "Content creator"
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
@@ -174,6 +222,28 @@ namespace ConJob.Data.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Files");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            name = "anh datvila",
+                            size = 100.0,
+                            type = 1,
+                            url = "https://media.2dep.vn/upload/thucquyen/2022/05/19/dat-villa-la-ai-hot-tiktoker-9x-trieu-view-co-chuyen-tinh-xuyen-bien-gioi-voi-ban-gai-indonesia-social-1652941149.jpg"
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            name = "anh thong soai ca",
+                            size = 100.0,
+                            type = 1,
+                            url = "https://newsmd2fr.keeng.vn/tiin/archive/imageslead/2023/06/14/90_c373d5ac0433257417f21a0a5e07fa11.jpg"
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.FollowModel", b =>
@@ -209,6 +279,40 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("to_user_id");
 
                     b.ToTable("Follows");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            from_user_id = 2,
+                            to_user_id = 3
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            from_user_id = 2,
+                            to_user_id = 4
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            from_user_id = 3,
+                            to_user_id = 4
+                        },
+                        new
+                        {
+                            id = 4,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            from_user_id = 3,
+                            to_user_id = 5
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.JWTModel", b =>
@@ -309,6 +413,40 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("user_id");
 
                     b.ToTable("Jobs");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            budget = 2000.0,
+                            category_id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "photograper làm để chụp ảnh cá xấu đang ăn",
+                            expired_day = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            job_type = 1,
+                            location = "Bắc băng dương",
+                            quanlity = 20,
+                            status = "gần đầy",
+                            title = "Đây là công việc về media",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 2,
+                            budget = 5000.0,
+                            category_id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Code dự án Web trong 2 tháng",
+                            expired_day = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            job_type = 1,
+                            location = "Ấn độ dương",
+                            quanlity = 1,
+                            status = "không một ai ",
+                            title = "Đây là công việc liên quan đến Backend",
+                            user_id = 5
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.LikeModel", b =>
@@ -344,6 +482,32 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("user_id");
 
                     b.ToTable("Likes");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            post_id = 1,
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            post_id = 1,
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            post_id = 1,
+                            user_id = 5
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.MessageModel", b =>
@@ -357,15 +521,15 @@ namespace ConJob.Data.Migrations
                     b.Property<int>("change_on")
                         .HasColumnType("int");
 
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("create_on")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("message_content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("receive_user_id")
                         .HasColumnType("int");
@@ -383,6 +547,62 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("send_user_id");
 
                     b.ToTable("MessageModel");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            message_content = "ê tao có công việc này ngon nè ",
+                            receive_user_id = 3,
+                            send_user_id = 2
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            message_content = "Việc gì vậy?",
+                            receive_user_id = 2,
+                            send_user_id = 3
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            message_content = "Đi múa lân 2 ngày cho lân sư đoàn, giá cả thương lượng",
+                            receive_user_id = 3,
+                            send_user_id = 2
+                        },
+                        new
+                        {
+                            id = 4,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            message_content = "Nghe cũng okela á.Tao muốn due giá là 200k cho 1 ngày . Mày chốt không",
+                            receive_user_id = 2,
+                            send_user_id = 3
+                        },
+                        new
+                        {
+                            id = 5,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            message_content = "Oke thôi.2h ngày 12th 5 nhé ",
+                            receive_user_id = 3,
+                            send_user_id = 2
+                        },
+                        new
+                        {
+                            id = 6,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            message_content = "oke chốt",
+                            receive_user_id = 2,
+                            send_user_id = 3
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.NotificationModel", b =>
@@ -393,12 +613,11 @@ namespace ConJob.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("change_on")
+                    b.Property<int?>("UserModelid")
                         .HasColumnType("int");
 
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("change_on")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("create_on")
                         .HasColumnType("datetime2");
@@ -412,25 +631,55 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_accept")
                         .HasColumnType("bit");
 
+                    b.Property<string>("notifi_content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("status")
                         .HasColumnType("bit");
-
-                    b.Property<int>("to_user_notifi_id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("to_user_notiofi_id")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("updated_at")
                         .HasColumnType("datetime2");
 
                     b.HasKey("id");
 
+                    b.HasIndex("UserModelid");
+
                     b.HasIndex("from_user_notifi_id");
 
-                    b.HasIndex("to_user_notifi_id");
-
                     b.ToTable("Notifications");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            from_user_notifi_id = 2,
+                            is_accept = false,
+                            notifi_content = "node ",
+                            status = false
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            from_user_notifi_id = 3,
+                            is_accept = false,
+                            notifi_content = "node",
+                            status = false
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            from_user_notifi_id = 4,
+                            is_accept = false,
+                            notifi_content = "node",
+                            status = false
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.Personal_skillModel", b =>
@@ -474,6 +723,48 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("user_id");
 
                     b.ToTable("Personal_skillModel");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            desciption = "Trong suốt 2 năm làm nghề thì tôi khá tự tin với tài năng của mình",
+                            exp = "2 năm ",
+                            skill_id = 1,
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            desciption = "I'am The Best",
+                            exp = "3 năm ",
+                            skill_id = 2,
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            desciption = "Tôi là một người đa tài",
+                            exp = "10 năm",
+                            skill_id = 3,
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 4,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            desciption = "Người có năng khiếu từ nhỏ , siêu vippro",
+                            exp = "từ lúc sinh ra ",
+                            skill_id = 4,
+                            user_id = 4
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
@@ -509,6 +800,10 @@ namespace ConJob.Data.Migrations
                     b.Property<int>("job_id")
                         .HasColumnType("int");
 
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("updated_at")
                         .HasColumnType("datetime2");
 
@@ -524,6 +819,34 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("user_id");
 
                     b.ToTable("Posts");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            caption = "Là một người có trách nghiệm tôi luồn hoàn thành mọi việc một cách hoàn hảo",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 1,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 1,
+                            title = "Luôn là người có trách nghiệm , I'am vippro",
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 2,
+                            caption = "Là một người đỉnh cao tôi tự tin , khoe cá tính",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 2,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 2,
+                            title = "Ai tuyển tôi không",
+                            user_id = 5
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.ReportModel", b =>
@@ -563,6 +886,17 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("user_id");
 
                     b.ToTable("Reports");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            post_id = 1,
+                            reason = "lừa đảo ",
+                            user_id = 5
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.RoleModel", b =>
@@ -655,6 +989,56 @@ namespace ConJob.Data.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Skills");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Content Creator là người sáng tạo nội dung cho các nền tảng như mạng xã hội, blog, website, YouTube, v.v. Họ có thể viết bài viết, quay video, chụp ảnh, livestream để thu hút người theo dõi và truyền tải thông điệp đến đông đảo người dùng",
+                            name = "Content Creator"
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Viết mã HTML, CSS và JavaScript: Đây là những ngôn ngữ lập trình cơ bản để xây dựng giao diện web. HTML tạo cấu trúc cho trang web, CSS định dạng giao diện và JavaScript tạo tính năng tương tác cho người dùng.",
+                            name = "Front-end developer"
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Người mẫu ảnh là những người có ngoại hình ưa nhìn, vóc dáng cân đối, làn da khỏe đẹp và thần thái cuốn hút. Họ được đào tạo bài bản về cách tạo dáng, biểu cảm trước ống kính máy ảnh để có thể truyền tải thông điệp của nhiếp ảnh gia hoặc thương hiệu một cách hiệu quả nhất.",
+                            name = "Fashion Model"
+                        },
+                        new
+                        {
+                            id = 4,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "người sử dụng máy ảnh để ghi lại hình ảnh, khoảnh khắc, sự kiện, v.v. Họ sử dụng kỹ năng và óc sáng tạo để tạo ra những bức ảnh đẹp mắt, truyền tải thông điệp hoặc lưu giữ kỷ niệm.",
+                            name = "Photograper"
+                        },
+                        new
+                        {
+                            id = 5,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "những người biểu diễn nghệ thuật múa, sử dụng chuyển động cơ thể, biểu cảm gương mặt và ngôn ngữ cơ thể để truyền tải thông điệp, cảm xúc và kể chuyện",
+                            name = "Dance"
+                        },
+                        new
+                        {
+                            id = 6,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "nhà sản xuất âm nhạc, hay còn được ví như người họa nên sản phẩm âm nhạc chất lượng.",
+                            name = "Music Producer"
+                        });
                 });
 
             modelBuilder.Entity("ConJob.Entities.UserModel", b =>
@@ -734,7 +1118,7 @@ namespace ConJob.Data.Migrations
                     b.HasData(
                         new
                         {
-                            id = 6,
+                            id = 1,
                             address = "Hue",
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -745,8 +1129,72 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$0Bsk8PsPDiV.gW.zGW3EQuKb8LRnQUGysw/2N9HReIPp8NgbP4.KW",
+                            password = "$2a$11$ERlFL0E9VPW.24fHfytRv.eo51TgL4j//w0d1fu.boxNomLOVx71m",
                             phone_number = "0335487991"
+                        },
+                        new
+                        {
+                            id = 2,
+                            address = "Hue",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "apeacocke1@google.ca",
+                            first_name = "Fawnia",
+                            gender = 0,
+                            is_deleted = false,
+                            is_email_confirmed = false,
+                            last_name = "Alexandros",
+                            password = "$2a$11$5T3O2uJBd4cthDWGLjhy1OyzWLa/RwfCpUbs4m70ALMIzEdlkitku",
+                            phone_number = "0354579415"
+                        },
+                        new
+                        {
+                            id = 3,
+                            address = "Hue",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "cpancoast2@wsj.com",
+                            first_name = "Cazzie",
+                            gender = 0,
+                            is_deleted = false,
+                            is_email_confirmed = false,
+                            last_name = "Pancoast",
+                            password = "$2a$11$KSS1SkxNCDrR2dBZRs4TzuXSeMvX77zD0hPAPvN0EHXV.T.QKGpwm",
+                            phone_number = "0354596415"
+                        },
+                        new
+                        {
+                            id = 4,
+                            address = "Hue",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "datmarri@google.ca",
+                            first_name = "Marri",
+                            gender = 0,
+                            is_deleted = false,
+                            is_email_confirmed = false,
+                            last_name = "Dat",
+                            password = "$2a$11$XAilPha6UXTNJefGNpNG7ubKjWwGOCrwtxS9/PC1YRAPfiBPX8DoO",
+                            phone_number = "0354579415"
+                        },
+                        new
+                        {
+                            id = 5,
+                            address = "Hue",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "datkhongchin@google.ca",
+                            first_name = "Dat",
+                            gender = 0,
+                            is_deleted = false,
+                            is_email_confirmed = false,
+                            last_name = "khong chin",
+                            password = "$2a$11$zCYBsNWgdDje.5rnne2UfOGs8kfA0/jqNVTnf9WrKCOTRxDmC9n5e",
+                            phone_number = "0354579415"
                         });
                 });
 
@@ -791,7 +1239,39 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             role_id = 1,
-                            user_id = 6
+                            user_id = 1
+                        },
+                        new
+                        {
+                            id = 2,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            role_id = 2,
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            role_id = 3,
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 4,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            role_id = 2,
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 5,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            role_id = 3,
+                            user_id = 5
                         });
                 });
 
@@ -922,21 +1402,17 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.NotificationModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.UserModel", null)
+                        .WithMany("to_user_notiofications")
+                        .HasForeignKey("UserModelid");
+
                     b.HasOne("ConJob.Entities.UserModel", "from_user_notifications")
                         .WithMany("from_user_notiofications")
                         .HasForeignKey("from_user_notifi_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "to_user_notiofications")
-                        .WithMany("to_user_notiofications")
-                        .HasForeignKey("to_user_notifi_id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("from_user_notifications");
-
-                    b.Navigation("to_user_notiofications");
                 });
 
             modelBuilder.Entity("ConJob.Entities.Personal_skillModel", b =>
