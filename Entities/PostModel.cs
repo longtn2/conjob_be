@@ -10,10 +10,11 @@ namespace ConJob.Entities
 {
     public class PostModel : BaseModel
     {
-        
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
+        public string title { get; set; }
         public string caption { get; set; }
         public bool is_deleted { get; set; }
         public bool is_actived {  get; set; }

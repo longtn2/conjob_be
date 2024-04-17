@@ -26,7 +26,7 @@ namespace ConJob.Domain.Authentication
                 new Claim(ClaimTypes.NameIdentifier, id.ToString())
             };
             
-            foreach ( var role in user.Roles )
+            foreach ( var role in user.roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role.role_name));
             }

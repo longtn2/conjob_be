@@ -53,5 +53,12 @@ namespace ConJob.Domain.Repository
                 return false;
             }
         }
+
+        public async Task<UserModel> findUserPostAsync(int user_id)
+        {
+            return await _context.Users
+                    .Include(c => c.posts)
+                    .FirstAsync(c => c.id == user_id);
+        }
     }
 }

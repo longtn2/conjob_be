@@ -20,6 +20,9 @@ using ConJob.API.Policy;
 using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using System.Text.Json.Serialization;
+using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Post;
+using Asp.Versioning;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,13 +33,26 @@ builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("AppS
 builder.Services.Configure<S3Settings>(builder.Configuration.GetSection("S3Settings"));
 #endregion
 
+#region add Version
+var apiVersioningBuilder = builder.Services.AddApiVersioning(o =>
+{
+    o.AssumeDefaultVersionWhenUnspecified = true;
+    o.DefaultApiVersion = new ApiVersion(1, 0);
+    o.ReportApiVersions = true;
+});
+
+apiVersioningBuilder.AddApiExplorer(
+    options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
+#endregion
 
 #region Add DB service
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.")));
 #endregion
-
-
 
 #region Add JWT Settings 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -69,6 +85,10 @@ builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
 
+#region  Paging & Sorting on Web-Request
+builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
+#endregion
+
 #region Repositories
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -76,9 +96,12 @@ builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IJwtRepository, JwtRepository>();
 builder.Services.AddTransient<IPostRepository, PostRepository>();
+builder.Services.AddTransient<ILikeRepository, LikeRepository>();
 #endregion
 
 builder.Services.AddControllers();
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

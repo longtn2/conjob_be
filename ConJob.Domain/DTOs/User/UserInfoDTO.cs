@@ -9,13 +9,13 @@ namespace ConJob.Domain.DTOs.User
 {
     public class UserInfoDTO
     {
-        public string FirstName { get; set; }
+        public string first_name { get; set; }
         [Required]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Last Name must contain at least 1 character and maximum to 50 character")]
-        public string LastName { get; set; }
+        public string last_name { get; set; }
         [Required]
         [RegularExpression("(84|0)[3|5|7|8|9]([0-9]{8})", ErrorMessage = "Phone number is not valid format!")]
         [StringLength(11, MinimumLength = 9)]
-        public string PhoneNumber { get; set; }
+        public string phone_number { get; set; }
     }
 }

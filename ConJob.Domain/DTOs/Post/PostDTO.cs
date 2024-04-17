@@ -13,10 +13,12 @@ namespace ConJob.Domain.DTOs.Post
     }
     public class PostDTO
     {
-        public string Caption { get; set; }
-        public string Author { get; set; }
-        public FileEnum Type_File { get; set; }
-        public string NameFile { get; set; }
+        public string title { get; set; }
+        public string caption { get; set; }
+        public string author { get; set; }
+        public FileEnum type_file { get; set; }
+        public string name_file { get; set; }
+        public string url_file { get; set; }
 
     }
 }

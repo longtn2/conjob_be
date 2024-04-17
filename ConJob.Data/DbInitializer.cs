@@ -676,8 +676,20 @@ namespace ConJob.Data
                     reason = "lừa đảo ",
                     post_id = 1,
                     user_id = 5,
+                    id = 1,
+                    name = "file",
+                    type = FileEnum.Img,
+                    size = 100,
+                    url = "file.jpeg"
                 }
                 );
+            modelBuilder.Entity<UserRoleModel>().HasData(
+            new UserRoleModel()
+            {
+                id = 2,
+                user_id = 6,
+                role_id = 1,
+            });
         }
     }
 }

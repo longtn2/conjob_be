@@ -17,13 +17,22 @@ namespace ConJob.Domain.Repository
         public RoleRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
+        public async Task<RoleModel> getRoleByLevel_NameAsync(int level, string roleName)
+        {
+            return await _context.Roles.FirstOrDefaultAsync(r => r.role_name == roleName);
+        }
+
+        public async Task<RoleModel> getRoleByNameAsync(string roleName)
+        {
+            return await _context.Roles.FirstOrDefaultAsync(r => r.role_name == roleName);
+        }
 
         public async Task<RoleModel> getRoleExceptAdmin(string roleName)
         {
             return await _context.Roles.Where(r => !r.role_name.Equals("admin", StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync(r => r.role_name == roleName);
         }
 
-        public RoleModel getRoleByName(string roleName)
+        public async Task<RoleModel> getRoleByNameAsync(string roleName)
         {
             return _context.Roles.FirstOrDefault(r => r.role_name == roleName);
         }

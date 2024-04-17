@@ -53,10 +53,10 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<CredentialDTO>();
             try
             {
-                var user = await _userRepository.getUserByEmail(userdata.Email);
+                var user = await _userRepository.getUserByEmail(userdata.email);
                 if (user != null)
                 {
-                    var checkCredential = _pwHasher.verify(userdata.Password, user.password);
+                    var checkCredential = _pwHasher.verify(userdata.password, user.password);
                     if (checkCredential)
                     {
                         var userDTO = _mapper.Map<UserModel,UserDTO>(user);
@@ -66,7 +66,7 @@ namespace ConJob.Domain.Services
 
                         await _jwtServices.InsertJWTToken(new JwtDTO()
                         {
-                            User = user,
+                            users = user,
                             ExpiredDate = DateTime.UtcNow.AddMonths(6),
                             Token = refreshToken,
                         });

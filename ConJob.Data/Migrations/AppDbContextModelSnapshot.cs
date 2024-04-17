@@ -1525,6 +1525,13 @@ namespace ConJob.Data.Migrations
                     b.Navigation("reports");
                 });
 
+            modelBuilder.Entity("ConJob.Entities.PostModel", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Reports");
+                });
+
             modelBuilder.Entity("ConJob.Entities.RoleModel", b =>
                 {
                     b.Navigation("user_roles");

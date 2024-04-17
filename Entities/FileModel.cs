@@ -15,7 +15,7 @@ namespace ConJob.Entities
         Img
     }
     public class FileModel:BaseModel
-    { 
+    {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }

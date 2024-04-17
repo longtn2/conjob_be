@@ -17,7 +17,7 @@ namespace ConJob.Entities
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
-   
+
         [Required]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "First Name must contain at least 1 character and maximum to 50 character")]
         public string first_name { get; set; }
@@ -46,11 +46,11 @@ namespace ConJob.Entities
         public Gender gender { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        public DateTime dob {  get; set; }
+        public DateTime dob { get; set; }
         [Required]
-        public string address {  get; set; }
+        public string address { get; set; }
 
-        public string? fcm_token {  get; set; }
+        public string? fcm_token { get; set; }
 
         [Required]
         [RegularExpression("([84|0])([3|5|7|8|9])+([0-9]{8})", ErrorMessage = "Phone number is not valid format!")]
@@ -86,13 +86,17 @@ namespace ConJob.Entities
         [JsonIgnore]
         public virtual ICollection<FollowModel> following { get; set; }
         [JsonIgnore]
-        public virtual ICollection<NotificationModel> from_user_notiofications { get; set; }
+        public virtual ICollection<NotificationModel> from_user_notifications { get; set; }
         [JsonIgnore]
-        public virtual ICollection<NotificationModel> to_user_notiofications { get; set; }
+        public virtual ICollection<NotificationModel> to_user_notifications { get; set; }
         [JsonIgnore]
         public virtual ICollection<MessageModel> send_users { get; set; }
         [JsonIgnore]
         public virtual ICollection<MessageModel> receive_users { get; set; }
-
+        [JsonIgnore]
+        public virtual ICollection<LikeModel> Likes { get; set; }
+        public virtual ICollection<CommentModel> Comments { get; set; }
+        public virtual ICollection<FollowModel> Followers { get; set; }
+        public virtual ICollection<FollowModel> Followings { get; set; }
     }
 }
