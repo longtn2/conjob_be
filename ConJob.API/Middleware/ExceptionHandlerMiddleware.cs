@@ -20,6 +20,7 @@ namespace ConJob.API.Middleware
         {
             try
             {
+                _logger.LogInformation($"Currently in use Of Exception Handler");
                 await _next(context);
             }
             catch (Exception ex)
@@ -29,14 +30,14 @@ namespace ConJob.API.Middleware
                 if(ex is DbUpdateException)
                 {
                     ResponseErrorAsync(context, ex.Message, 400);
-                }
+            }
                 else
-                {
+            {
                     ResponseErrorAsync(context, "Internal Server Error", 500);
                 }
             }
             
-        }
+            }
         private async void ResponseErrorAsync(HttpContext context, string msg, int status_code)
         {
             
