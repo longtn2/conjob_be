@@ -18,15 +18,18 @@ namespace ConJob.Entities
     { 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int id { get; set; }
         [Required]
         [StringLength(50)]
         [RegularExpression("\\w+.(jpg|mp4){1}")]
-        public string Name { get; set; }
+        public string name { get; set; }
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public FileEnum Type { get; set; }
-        public double Size { get; set; }
+        public FileEnum type { get; set; }
+        public double size { get; set; }
+        public string url { get; set; }
+        public virtual ICollection<PostModel> posts { get; set; }
+        
 
     }
 }

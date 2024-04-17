@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ConJob.Entities
@@ -11,18 +12,17 @@ namespace ConJob.Entities
     public class JWTModel:BaseModel
     {
         [Key]
-
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int id { get; set; }
 
         [Required]
         [DataType(DataType.Text)]
-        public string TokenHashValue { get; set; }
+        public string token_hash_value { get; set; }
         [DataType(DataType.DateTime)]
-        public DateTime ExpiredDate { get; set; }
-
-
-        public UserModel User { get; set; }
+        public DateTime expired_date { get; set; }
+        public int user_id { get; set; }
+        [JsonIgnore]
+        [ForeignKey("user_id")]
+        public UserModel user { get; set; }
     }
 }

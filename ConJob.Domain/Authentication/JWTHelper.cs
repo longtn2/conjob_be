@@ -28,7 +28,7 @@ namespace ConJob.Domain.Authentication
             
             foreach ( var role in user.Roles )
             {
-                claims.Add(new Claim(ClaimTypes.Role, role.RoleName));
+                claims.Add(new Claim(ClaimTypes.Role, role.role_name));
             }
             var token = new JwtSecurityToken(
                 claims: claims,

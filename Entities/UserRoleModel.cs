@@ -14,13 +14,14 @@ namespace ConJob.Entities
         [Key]
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int id { get; set; }
+        public int user_id { get; set; }
+        public int role_id { get; set; }
         [JsonIgnore]
-        public virtual UserModel User { get; set; }
+        [ForeignKey("user_id")]
+        public virtual UserModel user { get; set; }
         [JsonIgnore]
-        public virtual RoleModel Role
-        {
-            get; set;
-        }
+        [ForeignKey("role_id")]
+        public virtual RoleModel role { get; set;}
     }
 }
