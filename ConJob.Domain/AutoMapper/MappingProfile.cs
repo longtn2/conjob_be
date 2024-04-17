@@ -5,6 +5,7 @@ using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Encryption;
 using ConJob.Entities;
 using AutoMapper;
+using ConJob.Domain.DTOs.Report;
 namespace ConJob.Domain.AutoMapper
 {
     public class MappingProfile :Profile
@@ -23,6 +24,13 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
 
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
+            CreateMap<ReportModel, ReportDTO>()
+                 .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.post.id))
+                 .ForMember(dest => dest.user_id, opt => opt.MapFrom(src => src.user.id))
+                 .ReverseMap();
+            CreateMap<ReportModel, ReportByUserDTO>()
+              .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.post.id))
+              .ReverseMap();
         }
     }
 }
