@@ -56,12 +56,12 @@ namespace ConJob.Domain.Services
                 var user = await _userRepository.getUserByEmail(userdata.Email);
                 if (user != null)
                 {
-                    var checkCredential = _pwHasher.verify(userdata.Password, user.Password);
+                    var checkCredential = _pwHasher.verify(userdata.Password, user.password);
                     if (checkCredential)
                     {
                         var userDTO = _mapper.Map<UserModel,UserDTO>(user);
-                        string? token = await _jWTHelper.GenerateJWTToken(user.Id, DateTime.UtcNow.AddMinutes(10), userDTO);
-                        string? refreshToken = await _jWTHelper.GenerateJWTRefreshToken(user.Id, DateTime.UtcNow.AddMonths(6));
+                        string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
+                        string? refreshToken = await _jWTHelper.GenerateJWTRefreshToken(user.id, DateTime.UtcNow.AddMonths(6));
 
 
                         await _jwtServices.InsertJWTToken(new JwtDTO()
@@ -99,7 +99,7 @@ namespace ConJob.Domain.Services
         public async Task verifyEmailAsync(string userid)
         {
             var u = _userRepository.GetById(int.Parse(userid)); 
-            if (u == null || u.IsEmailConfirmed == true)
+            if (u == null || u.is_email_confirmed == true)
             {
                 return;
             }
@@ -127,7 +127,7 @@ namespace ConJob.Domain.Services
 
                     var userDTO = _mapper.Map<UserModel, UserDTO>(user);
 
-                    string? token = await _jWTHelper.GenerateJWTToken(user.Id, DateTime.UtcNow.AddMinutes(10), userDTO);
+                    string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
 
                     if (token == null)
                     {
@@ -161,14 +161,14 @@ namespace ConJob.Domain.Services
                 var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
 
                 var user = _userRepository.GetById(int.Parse(userid));
-                if (user == null || action == null || user.IsEmailConfirmed == true) {
+                if (user == null || action == null || user.is_email_confirmed == true) {
                     serviceResponse.ResponseType = EResponseType.Unauthorized;
                     serviceResponse.Message = "Could not found User or activated already.";
                     return serviceResponse;
                 }
                 if(action == "confirm")
                 {
-                    user.IsEmailConfirmed = true;
+                    user.is_email_confirmed = true;
                     _context.Update(user);
                     _context.SaveChanges();
                     serviceResponse.ResponseType = EResponseType.Success;

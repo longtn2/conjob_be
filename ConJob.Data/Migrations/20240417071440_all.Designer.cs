@@ -4,6 +4,7 @@ using ConJob.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240417071440_all")]
+    partial class all
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1525,23 +1528,6 @@ namespace ConJob.Data.Migrations
                     b.Navigation("reports");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.CategoryModel", b =>
-            {
-                b.Navigation("Jobs");
-            });
-
-            modelBuilder.Entity("ConJob.Entities.JobModel", b =>
-            {
-                b.Navigation("Applicants");
-            });
-
-            modelBuilder.Entity("ConJob.Entities.PostModel", b =>
-            {
-                b.Navigation("Comments");
-
-                b.Navigation("Reports");
-            });
-
             modelBuilder.Entity("ConJob.Entities.RoleModel", b =>
                 {
                     b.Navigation("user_roles");
@@ -1551,11 +1537,6 @@ namespace ConJob.Data.Migrations
                 {
                     b.Navigation("personal_Skills");
                 });
-
-            modelBuilder.Entity("ConJob.Entities.SkillModel", b =>
-            {
-                b.Navigation("personal_SkillModels");
-            });
 
             modelBuilder.Entity("ConJob.Entities.UserModel", b =>
                 {

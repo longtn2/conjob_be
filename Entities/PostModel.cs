@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-
 namespace ConJob.Entities
 {
     public class PostModel : BaseModel
@@ -14,14 +13,28 @@ namespace ConJob.Entities
         
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Caption { get; set; }
-
+        public int id { get; set; }
+        public string caption { get; set; }
+        public bool is_deleted { get; set; }
+        public bool is_actived {  get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public UserModel User { get; set; }
-        public FileModel File { get; set; }
-        public ICollection<ReportModel> Reports { get; set; }
-        public ICollection<CommentModel> Comments { get; set; }
+        public int user_id { get; set; }    
+        [JsonIgnore]
+        [ForeignKey("user_id")]
+        public UserModel user { get; set; }
+        public string title { get; set; }
+        public int job_id { get; set; }
+        [JsonIgnore]
+        [ForeignKey("job_id")]
+        public JobModel job { get; set; }
+        public virtual ICollection<LikeModel> likes { get; set; }
+        public int file_id { get; set; }
+        [JsonIgnore]
+        [ForeignKey("file_id")]
+        public FileModel file { get; set; }
+
+        public virtual ICollection<ReportModel> reports { get; set; }
+        public virtual ICollection<CommentModel> comments { get; set; }
 
     }
 }

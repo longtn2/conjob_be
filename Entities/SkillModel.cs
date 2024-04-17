@@ -8,15 +8,13 @@ using System.Threading.Tasks;
 
 namespace ConJob.Entities
 {
-    public class SkillModel
+    public class SkillModel:BaseModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime Created_at { get; set; }
-        public DateTime Updated_at { get; set; }
-        public ICollection<Personal_skillModel> personal_SkillModels { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public ICollection<Personal_skillModel> personal_Skills { get; set; }
     }
 }
