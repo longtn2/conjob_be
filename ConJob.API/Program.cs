@@ -65,6 +65,7 @@ builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
 builder.Services.AddScoped<IS3Services,  S3Services>();
+builder.Services.AddScoped<IReportServices, ReportServices>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
@@ -76,6 +77,7 @@ builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IJwtRepository, JwtRepository>();
 builder.Services.AddTransient<IPostRepository, PostRepository>();
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
 #endregion
 
 builder.Services.AddControllers();
