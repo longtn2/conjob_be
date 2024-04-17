@@ -256,7 +256,7 @@ namespace ConJob.Domain.Services
             if (toCheck == null)
             {
                 await _likeRepository.AddAsync(new LikeModel { 
-                                        users = _userRepository.GetById(userId), 
+                                        user = _userRepository.GetById(userId), 
                                         post = _postRepository.GetById(postId) });
                 serviceResponse.Message = "Like post successfully";
             }

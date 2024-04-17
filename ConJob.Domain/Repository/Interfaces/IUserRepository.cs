@@ -14,5 +14,6 @@ namespace ConJob.Domain.Repository.Interfaces
         Task<UserModel> getUserByEmail(string email);
         Task<bool> updateAvatar(string? userid, string avatar);
         Task<bool> changPasswordAsync(string newPassword, UserModel user);
+        Task<UserModel> findUserPostAsync(int user_id);
     }
 }

@@ -13,6 +13,6 @@ namespace ConJob.Domain.Repository.Interfaces
         Task<RoleModel> getRoleByLevel_NameAsync(int level, string roleName);
         Task<RoleModel> getRoleByNameAsync(string roleName);
         Task<RoleModel> getRoleExceptAdmin( string roleName);
-        RoleModel getRoleByName(string roleName);
+        Task<RoleModel> getRoleByName(string roleName);
     }
 }

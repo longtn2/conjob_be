@@ -23,7 +23,6 @@ namespace ConJob.Entities
         [JsonIgnore]
         [ForeignKey("user_id")]
         public UserModel user { get; set; }
-        public string title { get; set; }
         public int job_id { get; set; }
         [JsonIgnore]
         [ForeignKey("job_id")]

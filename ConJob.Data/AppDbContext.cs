@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Diagnostics;
-using System.Data.Entity.Validation;
+
 
 namespace ConJob.Data
 {
@@ -14,32 +14,18 @@ namespace ConJob.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserModel>().HasIndex(p => p.email).IsUnique();
-            modelBuilder.Entity<UserModel>().HasIndex(p => p.email).IsUnique();
 
-
+            modelBuilder.Entity<UserModel>()
                         .HasMany(e => e.user_roles)
                         .WithOne(e => e.user)
                         .HasForeignKey("user_id")
-                        .HasMany(e => e.user_roles)
-                        .WithOne(e => e.users)
-                        .HasForeignKey("user_id")
-                        .HasForeignKey("user_id")
                         .IsRequired();
 
+            modelBuilder.Entity<RoleModel>()
                     .HasMany(e => e.user_roles)
                     .WithOne(e => e.role)
                     .HasForeignKey("role_id")
-                    .HasMany(e => e.user_roles)
-                    .WithOne(e => e.roles)
-                    .HasForeignKey("role_id")
-                    .HasForeignKey("role_id")
-
-            modelBuilder.Entity<JobModel>()
-                    .HasMany(e => e.posts)
-                    .WithOne(e => e.job)
-                    .HasForeignKey("job_id")
                     .IsRequired();
-
 
             //modelBuilder.Entity<JobModel>()
             //        .HasMany(e => e.posts)
@@ -47,100 +33,84 @@ namespace ConJob.Data
             //        .HasForeignKey("job_id")
             //        .IsRequired();
 
-
+            modelBuilder.Entity<UserModel>()
                     .HasMany(e => e.jwts)
                     .WithOne(e => e.user)
                     .HasForeignKey("user_id")
-                    .HasMany(e => e.jwts)
-                    .WithOne(e => e.users)
-                    .HasForeignKey("user_id")
-                    .HasForeignKey("user_id")
                     .IsRequired();
 
+            modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.posts)
                 .WithOne(e => e.user)
                 .HasForeignKey("user_id");
+
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.likes)
                 .WithOne(e => e.user)
                 .HasForeignKey("user_id");
+
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.applicants)
                 .WithOne(e => e.user)
-                .HasForeignKey("user_id")
-                .OnDelete(DeleteBehavior.Restrict);
-                .HasMany(e => e.posts)
-                .WithOne(e => e.users)
-                .HasForeignKey("user_id");
-                .OnDelete(DeleteBehavior.Restrict);
-
-                .HasMany(e => e.likes)
-                .WithOne(e => e.users)
-                .HasForeignKey("user_id");
-
-                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
-                .HasMany(e => e.applicants)
-                .WithOne(e => e.users)
                 .HasForeignKey("user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.jobs)
-                .WithOne(e => e.users)
+                .WithOne(e => e.user)
                 .HasForeignKey("user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<FollowModel>()
-            .HasOne<UserModel>(f => f.from_user_follows)
+            .HasOne<UserModel>(f => f.from_user_follow)
             .WithMany(u => u.following)
             .HasForeignKey(f => f.from_user_id)
             .OnDelete(DeleteBehavior.NoAction);
 
-                modelBuilder.Entity<FollowModel>()
-                    .HasOne<UserModel>(f => f.to_user_follows)
-                    .WithMany(u => u.followers)
-                    .HasForeignKey(f => f.to_user_id)
-                    .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<FollowModel>()
+                .HasOne<UserModel>(f => f.to_user_follow)
+                .WithMany(u => u.followers)
+                .HasForeignKey(f => f.to_user_id)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<UserModel>()
                 .HasMany(e => e.from_user_notifications)
-                .WithOne(e => e.from_user_notifications)
+                .WithOne(e => e.from_user_notification)
                 .HasForeignKey("from_user_notifi_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
-                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
-               .HasMany(e => e.to_user_notifications)
-               .WithOne(e => e.to_user_notifications)
-               .HasForeignKey("to_user_notifi_id")
-               .OnDelete(DeleteBehavior.Restrict);
-
-                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.posts)
-                .WithOne(u => u.users)
+                .WithOne(u => u.user)
                 .HasForeignKey("user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
-                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.reports)
-                .WithOne(u => u.users)
+                .WithOne(u => u.user)
                 .HasForeignKey("user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
-                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.send_users)
-                .WithOne(u => u.send_users)
+                .WithOne(u => u.send_user)
                 .HasForeignKey("send_user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
-                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.receive_users)
-                .WithOne(u => u.receive_users)
+                .WithOne(u => u.receive_user)
                 .HasForeignKey("receive_user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<PostModel>()
+            .HasMany(p => p.comments)
+            .WithOne(c => c.post)
+            .HasForeignKey(c => c.post)
+            .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<UserModel>().Ignore(u => u.followers);
 
-                .HasForeignKey("UserId").OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
             new DbInitializer(modelBuilder).Seed();
         }
@@ -213,3 +183,4 @@ namespace ConJob.Data
         #endregion
     }
 }
+

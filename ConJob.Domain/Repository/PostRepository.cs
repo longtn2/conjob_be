@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConJob.Entities;
+using ConJob.Domain.DTOs.Post;
 namespace ConJob.Domain.Repository
 {
     public class PostRepository : GenericRepository<PostModel>, IPostRepository
@@ -64,7 +65,7 @@ namespace ConJob.Domain.Repository
         public IQueryable<PostModel> GetUserPosts(int userId)
         {
             return _context.Posts
-                .Where(c => c.users.id == userId);
+                .Where(c => c.user.id == userId);
         }
 
         public IQueryable<PostModel> GetPosts()
