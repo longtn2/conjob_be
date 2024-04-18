@@ -4,6 +4,7 @@ using ConJob.Domain.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -37,7 +38,7 @@ namespace ConJob.Domain.Repository
         {
             try
             {
-                _context.Entry(entity).State = EntityState.Modified;
+                _context.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch
@@ -71,6 +72,16 @@ namespace ConJob.Domain.Repository
         {
             _context.Set<T>().RemoveRange(entities);
             return _context.SaveChangesAsync();
+        }
+        public async Task SoftDelete(T entity)
+        {
+            var propertyInfo = entity.GetType().GetProperty("is_deleted");
+
+            if (propertyInfo != null)
+            {
+                propertyInfo.SetValue(entity, true);
+                await _context.SaveChangesAsync(); // Lưu thay đổi vào cơ sở dữ liệu
+            }
         }
 
     }
