@@ -6,6 +6,7 @@ using ConJob.Domain.Encryption;
 using ConJob.Entities;
 using AutoMapper;
 using ConJob.Domain.DTOs.Post;
+using ConJob.Domain.Filtering;
 namespace ConJob.Domain.AutoMapper
 {
     public class MappingProfile :Profile
@@ -17,7 +18,7 @@ namespace ConJob.Domain.AutoMapper
 
             CreateMap<UserRegisterDTO, UserModel>().ForMember(dest=>dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.password)));
             CreateMap<UserModel, UserDTO>()
-                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()));
+                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())); 
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.Hash(src.Token)));
             ////Reverse can map from 1->2 || 2->1
             CreateMap<UserModel, UserInfoDTO>().ReverseMap(); 
@@ -33,7 +34,6 @@ namespace ConJob.Domain.AutoMapper
                                             .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
                                             .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
                                             .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
-
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
         }
     }

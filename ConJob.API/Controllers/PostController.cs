@@ -27,7 +27,11 @@ namespace ConJob.API.Controllers
             switch (serviceResponse.ResponseType)
             {
                 case EResponseType.Success:
-                    return Ok(serviceResponse.Data);
+                    Response.Headers.Add("X-Paging-PageNo", serviceResponse.Data?.CurrentPage.ToString());
+                    Response.Headers.Add("X-Paging-PageSize", serviceResponse.Data?.PageSize.ToString());
+                    Response.Headers.Add("X-Paging-PageCount", serviceResponse.Data?.TotalPages.ToString());
+                    Response.Headers.Add("X-Paging-TotalRecordCount", serviceResponse.Data?.TotalCount.ToString());
+                    return Ok(serviceResponse.Data?.Items);
                 case EResponseType.NotFound:
                     return NotFound();
                 default:
@@ -106,7 +110,7 @@ namespace ConJob.API.Controllers
 
         [Route("like")]
         [HttpPost]
-        public async Task<ActionResult> likePost(int post_id)
+        public async Task<ActionResult> LikePost(int post_id)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.UserLikePost(int.Parse(userid), post_id);

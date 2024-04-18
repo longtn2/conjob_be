@@ -363,13 +363,9 @@ namespace ConJob.Data
                 new FileModel()
                 {
                     id = 1,
-
                     name = "anh datvila",
-
                     type = FileEnum.Img,
-
                     size = 100,
-
                     url = "https://media.2dep.vn/upload/thucquyen/2022/05/19/dat-villa-la-ai-hot-tiktoker-9x-trieu-view-co-chuyen-tinh-xuyen-bien-gioi-voi-ban-gai-indonesia-social-1652941149.jpg",
 
                 },
@@ -379,13 +375,9 @@ namespace ConJob.Data
                 {
 
                     id = 2,
-
                     name = "anh thong soai ca",
-
-                    type = FileEnum.Img,
-
+                    type =  FileEnum.Img,
                     size = 100,
-
                     url = "https://newsmd2fr.keeng.vn/tiin/archive/imageslead/2023/06/14/90_c373d5ac0433257417f21a0a5e07fa11.jpg",
 
                 });
@@ -621,7 +613,7 @@ namespace ConJob.Data
 
                     user_id = 2,
 
-                    job_id = 1,
+                    //job_id = 1,
 
                     file_id = 1,
 
@@ -635,7 +627,7 @@ namespace ConJob.Data
 
                     user_id = 5,
 
-                    job_id = 2,
+                    //job_id = 2,
 
                     file_id = 2,
 

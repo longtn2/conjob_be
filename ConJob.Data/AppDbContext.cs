@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Diagnostics;
+using System.Security.Claims;
 
 
 namespace ConJob.Data
@@ -29,7 +30,7 @@ namespace ConJob.Data
 
             //modelBuilder.Entity<JobModel>()
             //        .HasMany(e => e.posts)
-            //        .WithOne(e => e.jobs)
+            //        .WithOne(e => e.job)
             //        .HasForeignKey("job_id")
             //        .IsRequired();
 
@@ -104,10 +105,10 @@ namespace ConJob.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PostModel>()
-            .HasMany(p => p.comments)
-            .WithOne(c => c.post)
-            .HasForeignKey(c => c.post)
-            .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(p => p.comments)
+                .WithOne(c => c.post)
+                .HasForeignKey(c => c.post_id)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserModel>().Ignore(u => u.followers);
 
@@ -120,8 +121,10 @@ namespace ConJob.Data
         public virtual DbSet<UserRoleModel> UserRoles { get; set; }
         public virtual DbSet<RoleModel> Roles { get; set; }
         public virtual DbSet<ApplicantModel> Applicants { get; set; }
-        public virtual DbSet<CategoryModel> Categorys { get; set; }
-
+        public virtual DbSet<CategoryModel> Categories { get; set; }
+        public virtual DbSet<MessageModel> Messages { get; set; }
+        public virtual DbSet<Personal_skillModel> Persional_Skills { get; set; }
+        public virtual DbSet<CommentModel> Comments { get; set; }
         public virtual DbSet<FileModel> Files { get; set; }
         public virtual DbSet<FollowModel> Follows { get; set; }
         public virtual DbSet<JobModel> Jobs { get; set; }
@@ -180,6 +183,7 @@ namespace ConJob.Data
                 ((BaseModel)entity.Entity).updated_at = now;
             }
         }
+
         #endregion
     }
 }

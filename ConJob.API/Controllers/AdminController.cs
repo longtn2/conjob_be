@@ -49,7 +49,7 @@ namespace ConJob.API.Controllers
 
         [Route("post")]
         [HttpGet]
-        public async Task<ActionResult> FindUserProjects([FromQuery] FilterOptions filter, string statusFilter)
+        public async Task<ActionResult> FindUserProjects([FromQuery] FilterOptions? filter, string? statusFilter)
         {
             var serviceResponse = await _postService.FilterAllAsync(filter, statusFilter);
             switch (serviceResponse.ResponseType)

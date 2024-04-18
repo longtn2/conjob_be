@@ -30,16 +30,18 @@ namespace ConJob.Domain.Services
         private readonly ILikeRepository _likeRepository;
         private readonly IMapper _mapper;
         private readonly IFilterHelper<PostDetailsDTO> _filterHelper;
+        private readonly IFilterHelper<PostDTO> _filterHelper2;
 
         public static int PAGE_SIZE { get; set; } = 1;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper) 
+        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper, IFilterHelper<PostDTO> filterHelper2) 
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
             _likeRepository = likeRepository;
             _mapper = mapper;
             _filterHelper = filterHelper;
+            _filterHelper2 = filterHelper2;
         }
 
         public async Task<ServiceResponse<PostDTO>> SaveAsync(int userId, PostDTO newPost)
@@ -60,21 +62,21 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<IList<PostDTO>>> GetAllAsync(int pageNo)
+        public async Task<ServiceResponse<PagingReturnModel<PostDTO>>> GetAllAsync(int pageNo)
         {
-            var serviceResponse = new ServiceResponse<IList<PostDTO>>();
+            var serviceResponse = new ServiceResponse<PagingReturnModel<PostDTO>>();
             try
             {
-                var posts = _postRepository.GetPosts();
+                var posts = _mapper.ProjectTo<PostDTO>(_postRepository.GetPosts())
+                        .AsNoTracking();
 
                 #region paging
-                var result = await PaginatedList<PostModel>.CreateAsync(posts, pageNo, PAGE_SIZE);
+                var result = await _filterHelper2.ApplyPaging(posts, pageNo, PAGE_SIZE);
                 #endregion
-
-                IList<PostDTO> listPost = _mapper.Map<IList<PostDTO>>(result);
-                if (listPost != null)
+                
+                if (result != null)
                 {
-                    serviceResponse.Data = listPost;
+                    serviceResponse.Data = result;
                 }
                 else
                 {
@@ -230,14 +232,14 @@ namespace ConJob.Domain.Services
 
                 if (statusFilter == "is_deleted")
                     sortedPosts = sortedPosts.Where(p => p.is_deleted == true); 
-                else 
+                else if (statusFilter == "is_actived")
                     sortedPosts = sortedPosts.Where(p => p.is_actived == true);
 
-                var pagedProjects = await _filterHelper.ApplyPaging(sortedPosts, filterParameters.Page, filterParameters.Limit);
+                var pagedPosts = await _filterHelper.ApplyPaging(sortedPosts, filterParameters.Page, filterParameters.Limit);
 
-                if (pagedProjects?.Items?.Any() == true)
+                if (pagedPosts?.Items?.Any() == true)
                 {
-                    serviceResponse.Data = pagedProjects;
+                    serviceResponse.Data = pagedPosts;
                 }
                 else
                 {

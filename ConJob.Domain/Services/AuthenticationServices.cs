@@ -66,7 +66,7 @@ namespace ConJob.Domain.Services
 
                         await _jwtServices.InsertJWTToken(new JwtDTO()
                         {
-                            users = user,
+                            user = user,
                             ExpiredDate = DateTime.UtcNow.AddMonths(6),
                             Token = refreshToken,
                         });

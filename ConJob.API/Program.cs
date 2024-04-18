@@ -80,6 +80,7 @@ builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
+builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddScoped<IS3Services,  S3Services>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
@@ -87,6 +88,7 @@ builder.Services.AddControllers()
 
 #region  Paging & Sorting on Web-Request
 builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
+builder.Services.AddScoped<IFilterHelper<PostDTO>, FilterHelper<PostDTO>>();
 #endregion
 
 #region Repositories

@@ -11,6 +11,6 @@ namespace ConJob.Domain.DTOs.User
     {
         public string Token { get; set; }
         public DateTime ExpiredDate { get; set; }
-        public UserModel users { get; set; }
+        public UserModel user { get; set; }
     }
 }
