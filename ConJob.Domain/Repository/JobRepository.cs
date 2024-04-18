@@ -23,7 +23,7 @@ namespace ConJob.Domain.Repository
             return _context.Jobs.Where(e => e.title.Contains(searchJob.search) && e.location.Contains(searchJob.location))
                                 .Include(e => e.posts)
                                 .Skip((searchJob.page - 1) * searchJob.pageSize)
-                                .Take(searchJob.pageSize);
+                                .Take(searchJob.pageSize).OrderByDescending(e=>e.expired_day);
         }
     }
 }

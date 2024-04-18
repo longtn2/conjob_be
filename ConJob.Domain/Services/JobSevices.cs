@@ -41,15 +41,21 @@ namespace ConJob.Domain.Services
             var serviceReponse = new ServiceResponse<JobDetailsDTO>();
             try
             {
-                var user =  _userRepository.GetById(userid);
-                var toAddjob = _mapper.Map<JobModel>(job);
-                toAddjob.category = _context.Categories.Where(c => c.id == job.category_id).First();
-
-                toAddjob.user_id = userid;
-                toAddjob.user = user;
-                await _jobRepository.AddAsync(toAddjob);
-                serviceReponse.ResponseType = EResponseType.Success;
-                serviceReponse.Data = _mapper.Map<JobDetailsDTO>(toAddjob);
+                var user = _userRepository.GetById(userid);
+                if (user != null)
+                {
+                    var toAddjob = _mapper.Map<JobModel>(job);
+                    toAddjob.category = _context.Categories.Where(c => c.id == job.category_id).First();
+                    toAddjob.user = user;
+                    await _jobRepository.AddAsync(toAddjob);
+                    serviceReponse.ResponseType = EResponseType.Success;
+                    serviceReponse.Data = _mapper.Map<JobDetailsDTO>(toAddjob);
+                }
+                else
+                {
+                    serviceReponse.ResponseType = EResponseType.NotFound;
+                    serviceReponse.Message = "not found user";
+                }
             }
             catch (DbException ex)
             {
@@ -59,7 +65,7 @@ namespace ConJob.Domain.Services
             return serviceReponse;
         }
 
-        public async Task<ServiceResponse<JobDTO>> DeleteJobAsync(int userid, int id)
+        public async Task<ServiceResponse<JobDTO>> DeleteJobAsync(int id)
         {
 
             var serviceReponse = new ServiceResponse<JobDTO>();
@@ -150,7 +156,7 @@ namespace ConJob.Domain.Services
             return serviceReponse;
         }
 
-        public async Task<ServiceResponse<JobDTO>> UpdateJobAsync(int userid, int id, JobDTO jobDTO)
+        public async Task<ServiceResponse<JobDTO>> UpdateJobAsync(int id, JobDTO jobDTO)
         {
             var serviceReponse = new ServiceResponse<JobDTO>();
             try
