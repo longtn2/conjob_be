@@ -98,7 +98,7 @@ namespace ConJob.Data
         public virtual DbSet<UserRoleModel> UserRoles { get; set; }
         public virtual DbSet<RoleModel> Roles { get; set; }
         public virtual DbSet<ApplicantModel> Applicants { get; set; }
-        public virtual DbSet<CategoryModel> Categorys { get; set; }
+        public virtual DbSet<CategoryModel> Categories { get; set; }
 
         public virtual DbSet<FileModel> Files { get; set; }
         public virtual DbSet<FollowModel> Follows { get; set; }
