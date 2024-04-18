@@ -16,8 +16,8 @@ namespace ConJob.Domain.Services.Interfaces
         Task<ServiceResponse<IEnumerable<JobDTO>>> GetJobsAsync();
         Task<ServiceResponse<JobDTO>> GetJobAsync(int id);
         Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid,JobDetailsDTO job);
-        Task<ServiceResponse<JobDTO>> UpdateJobAsync(int userid,int id, JobDTO jobDTO);
-        Task<ServiceResponse<JobDTO>> DeleteJobAsync(int userid, int id);
+        Task<ServiceResponse<JobDTO>> UpdateJobAsync(int id, JobDTO jobDTO);
+        Task<ServiceResponse<JobDTO>> DeleteJobAsync(int id);
 
     }
 }
