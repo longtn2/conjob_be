@@ -11,43 +11,41 @@ using Amazon;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.DTOs.Authentication;
 using ConJob.Domain.Response;
+using Asp.Versioning;
+using ConJob.API.Error.ValidationError;
+using ConJob.Domain.Files;
 
 namespace ConJob.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/users")]
+    [ApiVersion("1.0")]
     [Authorize(Policy = "emailverified")]
     [ApiController]
+    [ValidateModel]
     public class UserController : ControllerBase
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private readonly IUserServices _userServices;
-        private readonly IS3Services _w3Services;
-        public UserController(ILogger<UserController> logger, IUserServices userService, IS3Services w3Services)
+        private readonly IS3Services _s3Services;
+        public UserController(ILogger<UserController> logger, IUserServices userService, IS3Services s3Services)
         {
             _logger = logger;
             _userServices = userService;
-            _w3Services = w3Services;
+            _s3Services = s3Services;
         }
 
-        [Route("/update")]
+        [Route("update")]
         [Produces("application/json")]
         [HttpPost]
-
         public async Task<ActionResult> Update(UserInfoDTO userdata)
         {
             var claims = User.Claims.Where(x => x.Type == "UserId").FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
             var serviceResponse = await _userServices.updateUserInfo(userdata, userid);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
-                EResponseType.Forbid => Forbid(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.Data);
         }
 
-        [Route("/changePassword")]
+        [Route("change-password")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> changePassword(UPasswordDTO passwordDTO)
@@ -55,44 +53,25 @@ namespace ConJob.API.Controllers
             var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
             var serviceResponse = await _userServices.changePassword(passwordDTO, userid);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
-                EResponseType.Forbid => Forbid(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.Data);
         }
-
-        [Route("/me")]
+        [Route("me")]
         [Produces("application/json")]
         [HttpGet]
         public async Task<ActionResult> get()
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _userServices.GetUserInfoAsync(userid);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.NotFound => BadRequest(serviceResponse.Message),
-                EResponseType.Forbid => Forbid(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.Data);
         }
-
-        [Route("/avatar/upload")]
+        [Route("upload-avatar")]
         [Produces("application/json")]
         [HttpPost]
-
-        public async Task uploadAvatar(IFormFile file)
+        public async Task uploadAvatar(FileDTO file)
         {
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            await _w3Services.UploadImage(file);
-
-
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var serviceResponse = _s3Services.PresignedUpload(file.file_name, file.file_type, userid);
+            _userServices.updateAvatar(file, userid);
         }
-
-
     }
 }

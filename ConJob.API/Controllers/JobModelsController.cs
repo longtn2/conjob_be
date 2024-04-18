@@ -29,14 +29,14 @@ namespace ConJob.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JobModel>>> GetJob()
         {
-            return await _context.Jobs.ToListAsync();
+            return await _context.jobs.ToListAsync();
         }
 
         // GET: api/JobModels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<JobModel>> GetJobModel(int id)
         {
-            var jobModel = await _context.Jobs.FindAsync(id);
+            var jobModel = await _context.jobs.FindAsync(id);
 
             if (jobModel == null)
             {
@@ -83,7 +83,7 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult<JobModel>> PostJobModel(JobDTO jobDTO)
         {
             var jobModel = _mapper.Map<JobModel>(jobDTO);
-            _context.Jobs.Add(jobModel);
+            _context.jobs.Add(jobModel);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetJobModel", new { id = jobModel.id }, jobModel);
@@ -93,13 +93,13 @@ namespace ConJob.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteJobModel(int id)
         {
-            var jobModel = await _context.Jobs.FindAsync(id);
+            var jobModel = await _context.jobs.FindAsync(id);
             if (jobModel == null)
             {
                 return NotFound();
             }
 
-            _context.Jobs.Remove(jobModel);
+            _context.jobs.Remove(jobModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -107,7 +107,7 @@ namespace ConJob.API.Controllers
 
         private bool JobModelExists(int id)
         {
-            return _context.Jobs.Any(e => e.id == id);
+            return _context.jobs.Any(e => e.id == id);
         }
     }
 }

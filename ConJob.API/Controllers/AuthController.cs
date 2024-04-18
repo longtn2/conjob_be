@@ -1,5 +1,8 @@
 ﻿
+using Asp.Versioning;
+using ConJob.API.Error.ValidationError;
 using ConJob.Domain.DTOs.Authentication;
+using ConJob.Domain.DTOs.Common;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +16,9 @@ namespace ConJob.API.Controllers
 {
     [AllowAnonymous]
     [ApiController]
+    [ApiVersion("1.0")]
+    [ValidateModel]
+    [Route("api/v{version:apiVersion}/auth/")]
     public class AuthController : Controller
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
@@ -24,37 +30,48 @@ namespace ConJob.API.Controllers
             _userServices = userService;
             _authService = authService;
         }
-        
-        [Route("/register")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userdata"></param>
+
+        /// <response code="201">User registration successful!</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Route("register")]
         [Produces("application/json")]
         [HttpPost]
+        [ProducesResponseType(typeof(CommonResponseDTO), 201)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), 400)]
+        [ProducesResponseType(typeof(CommonResponseDTO), 500)]
         public async Task<ActionResult> Register(UserRegisterDTO userdata)
         {
             var serviceResponse = await _userServices.RegisterAsync(userdata);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.Data),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.getMessage());
+                
         }
 
-        [Route("/login")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userdata"></param>
+        /// <returns></returns>
+        /// <response code="200">Login Success!</response>
+        /// <response code="401">Login Attemp Fail! Wrong email or password.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [ProducesResponseType(typeof(CredentialDTO), 200)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), 400)]
+        [ProducesResponseType(typeof(CommonResponseDTO), 401)]
+        [ProducesResponseType(typeof(CommonResponseDTO), 500)]
+        [Route("login")]
         [Produces("application/json")]
         [HttpPost]
-        
+
         public async Task<ActionResult> Login(UserLoginDTO userdata)
         {
             var serviceResponse = await _authService.LoginAsync(userdata);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),    
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.Data);
         }
-        [Route("/verify")]
+        [Route("verify")]
         [Produces("application/json")]
         [HttpPost]
         [Authorize]
@@ -64,46 +81,67 @@ namespace ConJob.API.Controllers
             await _authService.verifyEmailAsync(userid);
         }
 
-        [Route("/verify/{token}")]
+        [Route("verify/{token}")]
         [Produces("application/json")]
         [HttpGet]
         public async Task<ActionResult> VerifyLink(string token)
         {
             var decode = WebUtility.UrlDecode(token);
             var serviceResponse = await _authService.activeEmailAsync(decode);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Message),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
+                
         }
-        [Route("/refresh")]
+        /// <summary>
+        /// To refresh new access token
+        /// </summary>
+        /// <param name="token">Refresh Token</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        [ProducesResponseType(typeof(TokenDTO), 201)]
+        [ProducesResponseType(typeof(CommonResponseDTO), 403)]
+        [ProducesResponseType(typeof(CommonResponseDTO), 500)]
+        [Route("refresh")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> refreshToken(TokenDTO token)
         {
-            var serviceResponse = await _authService.refreshTokenAsync(token.Token);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => CreatedAtAction(nameof(refreshToken), new { version = "1" }, serviceResponse.Data),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            var serviceResponse = await _authService.refreshTokenAsync(token.token);
+            return CreatedAtAction(nameof(refreshToken), new { version = "1" }, serviceResponse.Data);
         }
-        [Route("/forgot")]
+        /// <summary>
+        /// Send an email to verification Email. To obtain new password.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        [Route("forgot")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> forgotPassword(string email)
         {
 
             var serviceResponse = await _authService.sendForgotEmailVerify(email);
+            return Ok(serviceResponse.getMessage());
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="recover"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+
+        [Route("forgot/{token}")]
+        [Produces("application/json")]
+        [HttpGet]
+        public async Task<ActionResult> RecoverPassword(RecoverPasswordDTO recover)
+        {
+            var decode = WebUtility.UrlDecode(recover.token);
+            var serviceResponse = await _authService.RecoverPassword(decode, recover.Password);
             return serviceResponse.ResponseType switch
             {
-                EResponseType.Success => Ok(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
+                EResponseType.Success => Ok(serviceResponse.getMessage()),
+                EResponseType.Unauthorized => BadRequest(serviceResponse.getMessage()),
+                EResponseType.BadRequest => BadRequest(serviceResponse.getMessage()),
                 _ => throw new NotImplementedException()
             };
         }

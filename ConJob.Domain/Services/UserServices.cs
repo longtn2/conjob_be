@@ -16,10 +16,12 @@ using ConJob.Entities;
 using ConJob.Data;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.Encryption;
+using ConJob.Domain.Files;
+using Microsoft.AspNetCore.Http;
 
 namespace ConJob.Domain.Services
 {
-    public class UserServices :  IUserServices
+    public class UserServices : IUserServices
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
@@ -27,9 +29,10 @@ namespace ConJob.Domain.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IEmailServices _emailServices;
         private readonly AppDbContext _context;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context, IEmailServices emailServices)
         {
             _logger = logger;
             _mapper = mapper;
@@ -38,31 +41,29 @@ namespace ConJob.Domain.Services
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+            _emailServices = emailServices;
         }
 
         public async Task<UserDTO?> GetUserByIdAsync(int id)
         {
-            //var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             var user = _userRepository.GetById(id);
-            return _mapper.Map<UserDTO>(user); 
+            return _mapper.Map<UserDTO>(user);
         }
-
         public async Task<ServiceResponse<UserInfoDTO>> GetUserInfoAsync(string? id)
         {
-            var serviceResponse = new ServiceResponse<UserInfoDTO>();
-            var user = _userRepository.GetById(int.Parse(id));
-            if (user == null)
+            try
             {
-
-                serviceResponse.ResponseType = EResponseType.NotFound;
-            }
-            else
-            {
-                UserInfoDTO u = _mapper.Map<UserInfoDTO>(user);
+                var serviceResponse = new ServiceResponse<UserInfoDTO>();
+                var user = _userRepository.GetById(int.Parse(id));
+                UserInfoDTO u = _mapper.Map<UserInfoDTO>(user ?? throw new UnauthorizedAccessException("Unable to obtain data"));
                 serviceResponse.Data = u;
+                return serviceResponse;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
-            return serviceResponse;
         }
 
         public async Task<ServiceResponse<UserDTO>> RegisterAsync(UserRegisterDTO user)
@@ -71,26 +72,23 @@ namespace ConJob.Domain.Services
             try
             {
                 var toAdd = _mapper.Map<UserModel>(user);
-                //var role = await _context.Role.FirstOrDefaultAsync(x => x.RoleName == "TimViec");
                 var role = _roleRepository.getRoleByName("TimViec");
 
 
                 if (role == null) ;
-                await _context.UserRoles.AddAsync(new UserRoleModel()
+                await _context.user_roles.AddAsync(new UserRoleModel()
                 {
                     role = role,
                     user = toAdd
                 });
-
-                //await _context.User!.AddAsync(toAdd);
                 await _userRepository.AddAsync(toAdd);
-                //await _context.SaveChangesAsync();
+                await _emailServices.sendActivationEmail(toAdd);
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
+                serviceResponse.Message = "Registered Successful! Please confirm email in your mailbox.";
             }
             catch (DbUpdateException ex)
             {
-                serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Email already taken by another User. Please reset or choose different.";
+                throw new DbUpdateException("Email already taken by another User. Please reset or choose different.");
             }
             catch { throw; }
             return serviceResponse;
@@ -107,8 +105,7 @@ namespace ConJob.Domain.Services
                 var userRole = _userRoleRepository.GetUserRoleAsync(userModel, selectedRole);
                 if (userRole != null)
                 {
-                    serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                    serviceResponse.Message = "You have this role already.";
+                    throw new BadHttpRequestException("You already have this role.");
                 }
                 else
                 {
@@ -122,8 +119,7 @@ namespace ConJob.Domain.Services
             }
             catch (Exception ex)
             {
-                serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                serviceResponse.Message = "Something wrong.";
+                throw;
             }
             return serviceResponse;
         }
@@ -134,7 +130,8 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<UserDTO>();
 
 
-            try {
+            try
+            {
 
                 var user = _userRepository.GetById(int.Parse(id));
                 if (user == null)
@@ -152,8 +149,7 @@ namespace ConJob.Domain.Services
             }
             catch (DbUpdateException ex)
             {
-                serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                serviceResponse.Message = "Error Occur While updating data.";
+                throw new DbUpdateException("Error Occur While updating data.");
             }
             return serviceResponse;
         }
@@ -171,16 +167,29 @@ namespace ConJob.Domain.Services
                 }
                 else
                 {
-                    serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                    serviceResponse.Message = "Wrong old password.";
+                    throw new BadHttpRequestException("Error on change Password! Old password is incorrect!");
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                serviceResponse.Message = "Something wrong.";
+                throw;
             }
             return serviceResponse;
         }
+        public async void updateAvatar(FileDTO fileDTO, string? id)
+        {
+            try
+            {
+                var userModel = _userRepository.GetById(int.Parse(id));
 
+                userModel.avatar = $"{userModel.id}/{fileDTO.file_type}/{fileDTO.file_name}";
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

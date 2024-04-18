@@ -20,6 +20,13 @@ using ConJob.API.Policy;
 using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using System.Text.Json.Serialization;
+using Hangfire;
+using Asp.Versioning;
+using ConJob.API.Middleware;
+using ConJob.API.Filter.AuthResponsesOperationFilter;
+using ConJob.API.Policy.ResultHandler;
+using ConJob.API.Error.ValidationError;
+using System.Net.Mime;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +35,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.Configure<S3Settings>(builder.Configuration.GetSection("S3Settings"));
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
+#endregion
+#region Add Versioning
+var apiVersioningBuilder = builder.Services.AddApiVersioning(o =>
+{
+    o.AssumeDefaultVersionWhenUnspecified = true;
+    o.DefaultApiVersion = new ApiVersion(1, 0);
+    o.ReportApiVersions = true;
+});
+
+apiVersioningBuilder.AddApiExplorer(
+    options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
 #endregion
 
 
@@ -64,11 +88,16 @@ builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
-builder.Services.AddScoped<IS3Services,  S3Services>();
+builder.Services.AddScoped<IS3Services, S3Services>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
+#region add Hangfire 
+builder.Services.AddHangfire(configuration => configuration
+                    .UseSqlServerStorage(builder.Configuration.GetConnectionString("AppDbContext")));
 
+builder.Services.AddHangfireServer();
+#endregion
 #region Repositories
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -83,8 +112,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, EmailAuthorizationMiddlewareResultHandler>();
+#region Controller Config
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var result = new ValidationFailedResult(context.ModelState);
 
+        // TODO: add `using System.Net.Mime;` to resolve MediaTypeNames
+        result.ContentTypes.Add(MediaTypeNames.Application.Json);
+        result.ContentTypes.Add(MediaTypeNames.Application.Xml);
 
+        return result;
+    };
+});
+#endregion
 #region config Swagger 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -99,26 +142,8 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-      {
-        {
-          new OpenApiSecurityScheme
-          {
-            Reference = new OpenApiReference
-              {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-              },
-              Scheme = "oauth2",
-              Name = "Bearer",
-              In = ParameterLocation.Header,
-
-            },
-            new List<string>()
-          }
-        });
-
+    c.OperationFilter<AuthResponsesOperationFilter>();
+    c.IncludeXmlComments($@"{System.AppDomain.CurrentDomain.BaseDirectory}\ConJob.API.xml");
 });
 #endregion
 builder.Services.AddAuthorization(options =>
@@ -133,7 +158,7 @@ builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 .CreateMapper());
 
 #endregion
- 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -142,11 +167,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+#region some sort of Middleware
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+app.UseMiddleware<ValidationExceptionHandlerMiddleware>();
+#endregion
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.Run();

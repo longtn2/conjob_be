@@ -12,9 +12,7 @@ namespace ConJob.Entities.Config
         public int port { get; set; }
         public string username { get; set; }
         public string password { get; set; }
-
-        public string sendername {  get; set; }
-
-        public string senderemail {  get; set; }
+        public string sender_name {  get; set; }
+        public string sender_email {  get; set; }
     }
 }

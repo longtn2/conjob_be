@@ -42,6 +42,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("job_id")
                         .HasColumnType("int");
 
@@ -61,7 +64,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Applicants");
+                    b.ToTable("applicants");
 
                     b.HasData(
                         new
@@ -70,6 +73,7 @@ namespace ConJob.Data.Migrations
                             apply_date = new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             job_id = 1,
                             status = "Mới nộp",
                             user_id = 2
@@ -80,6 +84,7 @@ namespace ConJob.Data.Migrations
                             apply_date = new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             job_id = 2,
                             status = "Mới nộp",
                             user_id = 4
@@ -107,6 +112,9 @@ namespace ConJob.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -116,7 +124,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Categorys");
+                    b.ToTable("categorys");
 
                     b.HasData(
                         new
@@ -125,6 +133,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "các ngành liên quan đến truyền thông",
+                            is_delete = false,
                             name = "media"
                         },
                         new
@@ -133,6 +142,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Đây là cách gọi chung nhất cho người viết mã, sử dụng các ngôn ngữ lập trình để tạo ra các chương trình máy tính.",
+                            is_delete = false,
                             name = "Programmer"
                         },
                         new
@@ -141,6 +151,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = " Đây là cách gọi chung cho những người tạo ra nội dung, bao gồm bài viết, hình ảnh, video, âm nhạc, v.v. Nội dung này có thể được sử dụng cho mục đích giải trí, giáo dục, quảng cáo hoặc kinh doanh",
+                            is_delete = false,
                             name = "Content creator"
                         });
                 });
@@ -165,6 +176,9 @@ namespace ConJob.Data.Migrations
 
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
 
                     b.Property<int>("post_id")
                         .HasColumnType("int");
@@ -201,6 +215,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -221,7 +238,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Files");
+                    b.ToTable("files");
 
                     b.HasData(
                         new
@@ -229,6 +246,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             name = "anh datvila",
                             size = 100.0,
                             type = 1,
@@ -239,6 +257,7 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             name = "anh thong soai ca",
                             size = 100.0,
                             type = 1,
@@ -266,6 +285,9 @@ namespace ConJob.Data.Migrations
                     b.Property<int>("from_user_id")
                         .HasColumnType("int");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("to_user_id")
                         .HasColumnType("int");
 
@@ -278,7 +300,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("to_user_id");
 
-                    b.ToTable("Follows");
+                    b.ToTable("follows");
 
                     b.HasData(
                         new
@@ -287,6 +309,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_id = 2,
+                            is_delete = false,
                             to_user_id = 3
                         },
                         new
@@ -295,6 +318,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_id = 2,
+                            is_delete = false,
                             to_user_id = 4
                         },
                         new
@@ -303,6 +327,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_id = 3,
+                            is_delete = false,
                             to_user_id = 4
                         },
                         new
@@ -311,6 +336,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_id = 3,
+                            is_delete = false,
                             to_user_id = 5
                         });
                 });
@@ -335,6 +361,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime>("expired_date")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("token_hash_value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -349,7 +378,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("JWTs");
+                    b.ToTable("jwts");
                 });
 
             modelBuilder.Entity("ConJob.Entities.JobModel", b =>
@@ -382,6 +411,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime>("expired_day")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("job_type")
                         .HasColumnType("int");
 
@@ -412,7 +444,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("jobs");
 
                     b.HasData(
                         new
@@ -424,6 +456,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "photograper làm để chụp ảnh cá xấu đang ăn",
                             expired_day = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             job_type = 1,
                             location = "Bắc băng dương",
                             quanlity = 20,
@@ -440,6 +473,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Code dự án Web trong 2 tháng",
                             expired_day = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             job_type = 1,
                             location = "Ấn độ dương",
                             quanlity = 1,
@@ -466,6 +500,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("post_id")
                         .HasColumnType("int");
 
@@ -481,7 +518,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Likes");
+                    b.ToTable("likes");
 
                     b.HasData(
                         new
@@ -489,6 +526,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             post_id = 1,
                             user_id = 4
                         },
@@ -497,6 +535,7 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             post_id = 1,
                             user_id = 3
                         },
@@ -505,6 +544,7 @@ namespace ConJob.Data.Migrations
                             id = 3,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             post_id = 1,
                             user_id = 5
                         });
@@ -526,6 +566,9 @@ namespace ConJob.Data.Migrations
 
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
 
                     b.Property<string>("message_content")
                         .IsRequired()
@@ -554,6 +597,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             message_content = "ê tao có công việc này ngon nè ",
                             receive_user_id = 3,
                             send_user_id = 2
@@ -563,6 +607,7 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             message_content = "Việc gì vậy?",
                             receive_user_id = 2,
                             send_user_id = 3
@@ -572,6 +617,7 @@ namespace ConJob.Data.Migrations
                             id = 3,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             message_content = "Đi múa lân 2 ngày cho lân sư đoàn, giá cả thương lượng",
                             receive_user_id = 3,
                             send_user_id = 2
@@ -581,6 +627,7 @@ namespace ConJob.Data.Migrations
                             id = 4,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             message_content = "Nghe cũng okela á.Tao muốn due giá là 200k cho 1 ngày . Mày chốt không",
                             receive_user_id = 2,
                             send_user_id = 3
@@ -590,6 +637,7 @@ namespace ConJob.Data.Migrations
                             id = 5,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             message_content = "Oke thôi.2h ngày 12th 5 nhé ",
                             receive_user_id = 3,
                             send_user_id = 2
@@ -599,6 +647,7 @@ namespace ConJob.Data.Migrations
                             id = 6,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             message_content = "oke chốt",
                             receive_user_id = 2,
                             send_user_id = 3
@@ -631,6 +680,9 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_accept")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("notifi_content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -647,7 +699,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("from_user_notifi_id");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("notifications");
 
                     b.HasData(
                         new
@@ -657,6 +709,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_notifi_id = 2,
                             is_accept = false,
+                            is_delete = false,
                             notifi_content = "node ",
                             status = false
                         },
@@ -667,6 +720,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_notifi_id = 3,
                             is_accept = false,
+                            is_delete = false,
                             notifi_content = "node",
                             status = false
                         },
@@ -677,6 +731,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_notifi_id = 4,
                             is_accept = false,
+                            is_delete = false,
                             notifi_content = "node",
                             status = false
                         });
@@ -707,6 +762,9 @@ namespace ConJob.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("skill_id")
                         .HasColumnType("int");
 
@@ -732,6 +790,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             desciption = "Trong suốt 2 năm làm nghề thì tôi khá tự tin với tài năng của mình",
                             exp = "2 năm ",
+                            is_delete = false,
                             skill_id = 1,
                             user_id = 3
                         },
@@ -742,6 +801,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             desciption = "I'am The Best",
                             exp = "3 năm ",
+                            is_delete = false,
                             skill_id = 2,
                             user_id = 2
                         },
@@ -752,6 +812,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             desciption = "Tôi là một người đa tài",
                             exp = "10 năm",
+                            is_delete = false,
                             skill_id = 3,
                             user_id = 3
                         },
@@ -762,6 +823,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             desciption = "Người có năng khiếu từ nhỏ , siêu vippro",
                             exp = "từ lúc sinh ra ",
+                            is_delete = false,
                             skill_id = 4,
                             user_id = 4
                         });
@@ -794,6 +856,9 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_actived")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("is_deleted")
                         .HasColumnType("bit");
 
@@ -818,7 +883,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Posts");
+                    b.ToTable("posts");
 
                     b.HasData(
                         new
@@ -829,6 +894,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             file_id = 1,
                             is_actived = false,
+                            is_delete = false,
                             is_deleted = false,
                             job_id = 1,
                             title = "Luôn là người có trách nghiệm , I'am vippro",
@@ -842,6 +908,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             file_id = 2,
                             is_actived = false,
+                            is_delete = false,
                             is_deleted = false,
                             job_id = 2,
                             title = "Ai tuyển tôi không",
@@ -866,6 +933,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("post_id")
                         .HasColumnType("int");
 
@@ -885,7 +955,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Reports");
+                    b.ToTable("reports");
 
                     b.HasData(
                         new
@@ -893,6 +963,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             post_id = 1,
                             reason = "lừa đảo ",
                             user_id = 5
@@ -916,6 +987,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("role_description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -929,7 +1003,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("roles");
 
                     b.HasData(
                         new
@@ -937,6 +1011,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             role_description = "Là admin cuyền lực.",
                             role_name = "Admin"
                         },
@@ -945,6 +1020,7 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             role_description = "Là nole tư bản đi tìm kiếm miếng cơm manh áo.",
                             role_name = "TimViec"
                         },
@@ -953,6 +1029,7 @@ namespace ConJob.Data.Migrations
                             id = 3,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             role_description = "Là tư bản đi kiếm những con chiêng ngoan đạo.",
                             role_name = "PhatViec"
                         });
@@ -979,6 +1056,9 @@ namespace ConJob.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -988,7 +1068,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Skills");
+                    b.ToTable("skills");
 
                     b.HasData(
                         new
@@ -997,6 +1077,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Content Creator là người sáng tạo nội dung cho các nền tảng như mạng xã hội, blog, website, YouTube, v.v. Họ có thể viết bài viết, quay video, chụp ảnh, livestream để thu hút người theo dõi và truyền tải thông điệp đến đông đảo người dùng",
+                            is_delete = false,
                             name = "Content Creator"
                         },
                         new
@@ -1005,6 +1086,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Viết mã HTML, CSS và JavaScript: Đây là những ngôn ngữ lập trình cơ bản để xây dựng giao diện web. HTML tạo cấu trúc cho trang web, CSS định dạng giao diện và JavaScript tạo tính năng tương tác cho người dùng.",
+                            is_delete = false,
                             name = "Front-end developer"
                         },
                         new
@@ -1013,6 +1095,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Người mẫu ảnh là những người có ngoại hình ưa nhìn, vóc dáng cân đối, làn da khỏe đẹp và thần thái cuốn hút. Họ được đào tạo bài bản về cách tạo dáng, biểu cảm trước ống kính máy ảnh để có thể truyền tải thông điệp của nhiếp ảnh gia hoặc thương hiệu một cách hiệu quả nhất.",
+                            is_delete = false,
                             name = "Fashion Model"
                         },
                         new
@@ -1021,6 +1104,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "người sử dụng máy ảnh để ghi lại hình ảnh, khoảnh khắc, sự kiện, v.v. Họ sử dụng kỹ năng và óc sáng tạo để tạo ra những bức ảnh đẹp mắt, truyền tải thông điệp hoặc lưu giữ kỷ niệm.",
+                            is_delete = false,
                             name = "Photograper"
                         },
                         new
@@ -1029,6 +1113,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "những người biểu diễn nghệ thuật múa, sử dụng chuyển động cơ thể, biểu cảm gương mặt và ngôn ngữ cơ thể để truyền tải thông điệp, cảm xúc và kể chuyện",
+                            is_delete = false,
                             name = "Dance"
                         },
                         new
@@ -1037,6 +1122,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "nhà sản xuất âm nhạc, hay còn được ví như người họa nên sản phẩm âm nhạc chất lượng.",
+                            is_delete = false,
                             name = "Music Producer"
                         });
                 });
@@ -1084,7 +1170,7 @@ namespace ConJob.Data.Migrations
                     b.Property<int>("gender")
                         .HasColumnType("int");
 
-                    b.Property<bool>("is_deleted")
+                    b.Property<bool>("is_delete")
                         .HasColumnType("bit");
 
                     b.Property<bool>("is_email_confirmed")
@@ -1113,7 +1199,7 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
 
                     b.HasData(
                         new
@@ -1126,10 +1212,10 @@ namespace ConJob.Data.Migrations
                             email = "admin@com.com",
                             first_name = "Admin",
                             gender = 0,
-                            is_deleted = false,
+                            is_delete = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$ERlFL0E9VPW.24fHfytRv.eo51TgL4j//w0d1fu.boxNomLOVx71m",
+                            password = "$2a$11$4ARU/iTNOdwfKMTjLFN9ee184v8tquZjq30uqMuN2AoidEO3cdcTy",
                             phone_number = "0335487991"
                         },
                         new
@@ -1142,10 +1228,10 @@ namespace ConJob.Data.Migrations
                             email = "apeacocke1@google.ca",
                             first_name = "Fawnia",
                             gender = 0,
-                            is_deleted = false,
+                            is_delete = false,
                             is_email_confirmed = false,
                             last_name = "Alexandros",
-                            password = "$2a$11$5T3O2uJBd4cthDWGLjhy1OyzWLa/RwfCpUbs4m70ALMIzEdlkitku",
+                            password = "$2a$11$XsUhc0v8KExkTzg30z/snOsLnNyirJJi3dx8220VLLIAM8vzo1yWa",
                             phone_number = "0354579415"
                         },
                         new
@@ -1158,10 +1244,10 @@ namespace ConJob.Data.Migrations
                             email = "cpancoast2@wsj.com",
                             first_name = "Cazzie",
                             gender = 0,
-                            is_deleted = false,
+                            is_delete = false,
                             is_email_confirmed = false,
                             last_name = "Pancoast",
-                            password = "$2a$11$KSS1SkxNCDrR2dBZRs4TzuXSeMvX77zD0hPAPvN0EHXV.T.QKGpwm",
+                            password = "$2a$11$Yy8qE/ZfGmM5cj4ORIHWUOmS5b3TWuIo52mv0kpyctfB/2MVY14aC",
                             phone_number = "0354596415"
                         },
                         new
@@ -1174,10 +1260,10 @@ namespace ConJob.Data.Migrations
                             email = "datmarri@google.ca",
                             first_name = "Marri",
                             gender = 0,
-                            is_deleted = false,
+                            is_delete = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$XAilPha6UXTNJefGNpNG7ubKjWwGOCrwtxS9/PC1YRAPfiBPX8DoO",
+                            password = "$2a$11$jvCiNyAe.oc2ELjtEfBfm.JAruGhGmFJE6AkCQDnnRNmgSCoOi4ma",
                             phone_number = "0354579415"
                         },
                         new
@@ -1190,10 +1276,10 @@ namespace ConJob.Data.Migrations
                             email = "datkhongchin@google.ca",
                             first_name = "Dat",
                             gender = 0,
-                            is_deleted = false,
+                            is_delete = false,
                             is_email_confirmed = false,
                             last_name = "khong chin",
-                            password = "$2a$11$zCYBsNWgdDje.5rnne2UfOGs8kfA0/jqNVTnf9WrKCOTRxDmC9n5e",
+                            password = "$2a$11$NL1GJs/.nsWcUOZc8c03QuQEHVKChDLXSOdcqsY9wAN5i1u7A38D.",
                             phone_number = "0354579415"
                         });
                 });
@@ -1215,6 +1301,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_delete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("role_id")
                         .HasColumnType("int");
 
@@ -1230,7 +1319,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("user_roles");
 
                     b.HasData(
                         new
@@ -1238,6 +1327,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             role_id = 1,
                             user_id = 1
                         },
@@ -1246,6 +1336,7 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             role_id = 2,
                             user_id = 2
                         },
@@ -1254,6 +1345,7 @@ namespace ConJob.Data.Migrations
                             id = 3,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             role_id = 3,
                             user_id = 3
                         },
@@ -1262,6 +1354,7 @@ namespace ConJob.Data.Migrations
                             id = 4,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             role_id = 2,
                             user_id = 4
                         },
@@ -1270,6 +1363,7 @@ namespace ConJob.Data.Migrations
                             id = 5,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_delete = false,
                             role_id = 3,
                             user_id = 5
                         });
@@ -1277,89 +1371,89 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.ApplicantModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.JobModel", "jobs")
+                    b.HasOne("ConJob.Entities.JobModel", "job")
                         .WithMany("applicants")
                         .HasForeignKey("job_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("applicants")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("jobs");
+                    b.Navigation("job");
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.PostModel", "posts")
+                    b.HasOne("ConJob.Entities.PostModel", "post")
                         .WithMany("comments")
                         .HasForeignKey("post_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("comments")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("posts");
+                    b.Navigation("post");
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.FollowModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.UserModel", "from_user_follows")
+                    b.HasOne("ConJob.Entities.UserModel", "from_user_follow")
                         .WithMany("followers")
                         .HasForeignKey("from_user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "to_user_follows")
+                    b.HasOne("ConJob.Entities.UserModel", "to_user_follow")
                         .WithMany("following")
                         .HasForeignKey("to_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("from_user_follows");
+                    b.Navigation("from_user_follow");
 
-                    b.Navigation("to_user_follows");
+                    b.Navigation("to_user_follow");
                 });
 
             modelBuilder.Entity("ConJob.Entities.JWTModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("jwts")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.JobModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.CategoryModel", "categorys")
+                    b.HasOne("ConJob.Entities.CategoryModel", "category")
                         .WithMany("jobs")
                         .HasForeignKey("category_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("jobs")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("categorys");
+                    b.Navigation("category");
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.LikeModel", b =>
@@ -1370,7 +1464,7 @@ namespace ConJob.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("likes")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1378,26 +1472,26 @@ namespace ConJob.Data.Migrations
 
                     b.Navigation("post");
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.MessageModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.UserModel", "receive_users")
+                    b.HasOne("ConJob.Entities.UserModel", "receive_user")
                         .WithMany("receive_users")
                         .HasForeignKey("receive_user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "send_users")
+                    b.HasOne("ConJob.Entities.UserModel", "send_user")
                         .WithMany("send_users")
                         .HasForeignKey("send_user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("receive_users");
+                    b.Navigation("receive_user");
 
-                    b.Navigation("send_users");
+                    b.Navigation("send_user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.NotificationModel", b =>
@@ -1406,97 +1500,97 @@ namespace ConJob.Data.Migrations
                         .WithMany("to_user_notiofications")
                         .HasForeignKey("UserModelid");
 
-                    b.HasOne("ConJob.Entities.UserModel", "from_user_notifications")
+                    b.HasOne("ConJob.Entities.UserModel", "from_user_notification")
                         .WithMany("from_user_notiofications")
                         .HasForeignKey("from_user_notifi_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("from_user_notifications");
+                    b.Navigation("from_user_notification");
                 });
 
             modelBuilder.Entity("ConJob.Entities.Personal_skillModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.SkillModel", "skills")
+                    b.HasOne("ConJob.Entities.SkillModel", "skill")
                         .WithMany("personal_Skills")
                         .HasForeignKey("skill_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("personal_skills")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("skills");
+                    b.Navigation("skill");
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.FileModel", "files")
-                        .WithMany("oosts")
+                    b.HasOne("ConJob.Entities.FileModel", "file")
+                        .WithMany("posts")
                         .HasForeignKey("file_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.JobModel", "jobs")
+                    b.HasOne("ConJob.Entities.JobModel", "job")
                         .WithMany("posts")
                         .HasForeignKey("job_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("posts")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("files");
+                    b.Navigation("file");
 
-                    b.Navigation("jobs");
+                    b.Navigation("job");
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.ReportModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.PostModel", "posts")
+                    b.HasOne("ConJob.Entities.PostModel", "post")
                         .WithMany("reports")
                         .HasForeignKey("post_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("reports")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("posts");
+                    b.Navigation("post");
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.UserRoleModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.RoleModel", "roles")
+                    b.HasOne("ConJob.Entities.RoleModel", "role")
                         .WithMany("user_roles")
                         .HasForeignKey("role_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConJob.Entities.UserModel", "users")
+                    b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("user_roles")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("roles");
+                    b.Navigation("role");
 
-                    b.Navigation("users");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ConJob.Entities.CategoryModel", b =>
@@ -1506,7 +1600,7 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.FileModel", b =>
                 {
-                    b.Navigation("oosts");
+                    b.Navigation("posts");
                 });
 
             modelBuilder.Entity("ConJob.Entities.JobModel", b =>

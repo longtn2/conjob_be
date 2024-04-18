@@ -9,7 +9,7 @@ namespace ConJob.Domain.Services
 {
     public interface IEmailServices
     {
-        Task sendActivationEmail(UserModel user, string baseurl);
-        Task sendForgotPassword(UserModel user, string baseurl);
+        Task sendActivationEmail(UserModel user);
+        Task sendForgotPassword(UserModel user);
     }
 }

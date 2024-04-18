@@ -28,7 +28,6 @@ namespace ConJob.Domain.Services
 {
     public class AuthenticationServices : IAuthenticationServices
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _pwHasher;
         private readonly IJWTHelper _jWTHelper;
@@ -36,14 +35,13 @@ namespace ConJob.Domain.Services
         private readonly IEmailServices _emailServies;
         private readonly IJwtServices _jwtServices;
         private readonly AppDbContext _context;
-        public AuthenticationServices(IUserRepository userRepository, IPasswordHasher pwhasher, IJWTHelper jWTHelper, IMapper mapper, IJwtServices jwtServices, IHttpContextAccessor httpContextAccessor, IEmailServices emailServies, AppDbContext context)
+        public AuthenticationServices(IUserRepository userRepository, IPasswordHasher pwhasher, IJWTHelper jWTHelper, IMapper mapper, IJwtServices jwtServices, IEmailServices emailServies, AppDbContext context)
         {
             _userRepository = userRepository;
             _pwHasher = pwhasher;
             _jWTHelper = jWTHelper;
             _mapper = mapper;
             _jwtServices = jwtServices;
-            _httpContextAccessor = httpContextAccessor;
             _emailServies = emailServies;
             _context = context;
         }
@@ -59,7 +57,7 @@ namespace ConJob.Domain.Services
                     var checkCredential = _pwHasher.verify(userdata.Password, user.password);
                     if (checkCredential)
                     {
-                        var userDTO = _mapper.Map<UserModel,UserDTO>(user);
+                        var userDTO = _mapper.Map<UserModel, UserDTO>(user);
                         string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
                         string? refreshToken = await _jWTHelper.GenerateJWTRefreshToken(user.id, DateTime.UtcNow.AddMonths(6));
 
@@ -77,20 +75,18 @@ namespace ConJob.Domain.Services
                     }
                     else
                     {
-                        serviceResponse.ResponseType = EResponseType.Unauthorized;
-                        serviceResponse.Message = "Login Fail! Wrong password.";
+                        throw new UnauthorizedAccessException("The user or password you entered is incorrect");
 
                     }
                 }
                 else
                 {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Login Fail! Could not found Account by Username!.";
+                    throw new UnauthorizedAccessException("The user or password you entered is incorrect");
                 }
 
                 return serviceResponse;
             }
-            catch
+            catch (Exception ex)
             {
 
                 throw;
@@ -98,57 +94,47 @@ namespace ConJob.Domain.Services
         }
         public async Task verifyEmailAsync(string userid)
         {
-            var u = _userRepository.GetById(int.Parse(userid)); 
+            var u = _userRepository.GetById(int.Parse(userid));
             if (u == null || u.is_email_confirmed == true)
             {
                 return;
             }
-            var request = _httpContextAccessor.HttpContext!.Request;
-            await _emailServies.sendActivationEmail(u, $"{request.Scheme}://{request.Host}{request.PathBase}");
+            await _emailServies.sendActivationEmail(u);
         }
         public async Task<ServiceResponse<TokenDTO>> refreshTokenAsync(string reftoken)
         {
-            var serviceResponse = new ServiceResponse<TokenDTO>();
-
-            var claim = _jWTHelper.ValidateToken(reftoken);
-
-            if (claim.HasClaim(claim => claim.Type == ClaimTypes.NameIdentifier))
+            try
             {
-                var userid = claim.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+                var serviceResponse = new ServiceResponse<TokenDTO>();
 
-                var user =  _userRepository.GetById(int.Parse(userid));
-                if (user == null)
+                var claim = _jWTHelper.ValidateToken(reftoken);
+
+
+                var userid = claim.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var user = _userRepository.GetById(int.Parse(userid));
+                var userDTO = _mapper.Map<UserModel, UserDTO>(user);
+
+                string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
+
+                if (token == null)
                 {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Could not found User from token.";
+                    throw new BadHttpRequestException("Invalid Refresh Token.");
                 }
                 else
                 {
-
-                    var userDTO = _mapper.Map<UserModel, UserDTO>(user);
-
-                    string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
-
-                    if (token == null)
-                    {
-                        serviceResponse.ResponseType = EResponseType.Unauthorized;
-                        serviceResponse.Message = "Could not found User from token.";
-                    }
-                    else
-                    {
-                        TokenDTO _tokendto = new TokenDTO();
-                        _tokendto.Token = token;
-                        serviceResponse.Data = _tokendto;
-                    }
-                    
+                    TokenDTO _tokendto = new TokenDTO();
+                    _tokendto.token = token;
+                    serviceResponse.Data = _tokendto;
                 }
+
+
+                return serviceResponse;
             }
-            else
+            catch
             {
-                serviceResponse.ResponseType = EResponseType.Unauthorized;
-                serviceResponse.Message = "Could not found User from token.";
+                throw new BadHttpRequestException("Invalid Refresh Token.");
             }
-            return serviceResponse;
 
         }
         public async Task<ServiceResponse<Object>> activeEmailAsync(string Token)
@@ -157,28 +143,23 @@ namespace ConJob.Domain.Services
             try
             {
                 var claim = _jWTHelper.ValidateToken(Token);
-                var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+                var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
 
                 var user = _userRepository.GetById(int.Parse(userid));
-                if (user == null || action == null || user.is_email_confirmed == true) {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Could not found User or activated already.";
-                    return serviceResponse;
-                }
-                if(action == "confirm")
+                if (action == "confirm")
                 {
                     user.is_email_confirmed = true;
                     _context.Update(user);
                     _context.SaveChanges();
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Activate Success.";
-                    
+
                 }
             }
-            catch (Exception ex)
+            catch (NullReferenceException ex)
             {
-
+                throw new BadHttpRequestException("Invalid token for activation email!");
             }
             return serviceResponse;
         }
@@ -190,18 +171,61 @@ namespace ConJob.Domain.Services
                 var user = await _userRepository.getUserByEmail(useremail);
                 if (user == null)
                 {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Could not found user";
+                    throw new DbUpdateException("Could not found user to send email.");
                 }
                 else
                 {
-                    var request = _httpContextAccessor.HttpContext!.Request;
-                    await _emailServies.sendForgotPassword(user, $"{request.Scheme}://{request.Host}{request.PathBase}");
+
+                    await _emailServies.sendForgotPassword(user);
                 }
             }
             catch (Exception e)
             {
+                throw;
+            }
+            return serviceResponse;
+        }
+        public async Task<ServiceResponse<object>> RecoverPassword(string token, string new_password)
+        {
+            var serviceResponse = new ServiceResponse<Object>();
+            try
+            {
+                var claim = _jWTHelper.ValidateToken(token);
+                var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+                var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
 
+                var user = _userRepository.GetById(int.Parse(userid));
+                if (user == null || action == null)
+                {
+                    serviceResponse.ResponseType = EResponseType.Unauthorized;
+                    serviceResponse.Message = "Could not found User or activated already.";
+                }
+                if (action == "forgot")
+                {
+                    await _userRepository.changPasswordAsync(_pwHasher.Hash(new_password), user);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Message = "Change Password Successful!";
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return serviceResponse;
+        }
+
+        public ServiceResponse<object> Logout(string token)
+        {
+            var serviceResponse = new ServiceResponse<Object>();
+            try
+            {
+                _jwtServices.InvalidateToken(token);
+                serviceResponse.ResponseType = EResponseType.Success;
+            }
+            catch
+            {
+                throw;
             }
             return serviceResponse;
         }

@@ -29,7 +29,7 @@ namespace DataLayer.Email
             {
                 using (MimeMessage emailMessage = new MimeMessage())
                 {
-                    MailboxAddress emailFrom = new MailboxAddress(_mailSettings.sendername, _mailSettings.senderemail);
+                    MailboxAddress emailFrom = new MailboxAddress(_mailSettings.sender_name, _mailSettings.sender_email);
                     emailMessage.From.Add(emailFrom);
 
                     MailboxAddress emailTo = new MailboxAddress(email, email);
@@ -55,7 +55,7 @@ namespace DataLayer.Email
             catch (Exception ex)
             {
                 // Exception Details
-
+                throw new UnauthorizedAccessException(ex.Message);
             }
         }
         

@@ -1,0 +1,28 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "AppDbContext": ""
+  },
+  "AppSettings": {
+    "Secret": ""
+  },
+  "MailSettings": {
+    "Server": "",
+    "Port": ,
+    "SenderName": "",
+    "SenderEmail": "",
+    "UserName": "",
+    "Password": ""
+  },
+  "S3Settings": {
+    "AccessKey": "",
+    "SecretKey": "",
+    "BucketName": ""
+  }
+}

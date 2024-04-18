@@ -42,5 +42,10 @@ namespace ConJob.Domain.Services
         /// </summary>
         /// <param name="usermail">Thông tin đăng nhập của người dùng</param>
         Task<ServiceResponse<Object>> sendForgotEmailVerify(string useremail);
+
+        Task<ServiceResponse<Object>> RecoverPassword(string Token, string new_password);
+
+
+        ServiceResponse<Object> Logout(string token);
     }
 }

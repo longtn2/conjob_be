@@ -94,22 +94,22 @@ namespace ConJob.Data
         }
 
 
-        public virtual DbSet<UserModel> Users { get; set; }
-        public virtual DbSet<UserRoleModel> UserRoles { get; set; }
-        public virtual DbSet<RoleModel> Roles { get; set; }
-        public virtual DbSet<ApplicantModel> Applicants { get; set; }
-        public virtual DbSet<CategoryModel> Categorys { get; set; }
+        public virtual DbSet<UserModel> users { get; set; }
+        public virtual DbSet<UserRoleModel> user_roles { get; set; }
+        public virtual DbSet<RoleModel> roles { get; set; }
+        public virtual DbSet<ApplicantModel> applicants { get; set; }
+        public virtual DbSet<CategoryModel> categorys { get; set; }
 
-        public virtual DbSet<FileModel> Files { get; set; }
-        public virtual DbSet<FollowModel> Follows { get; set; }
-        public virtual DbSet<JobModel> Jobs { get; set; }
+        public virtual DbSet<FileModel> files { get; set; }
+        public virtual DbSet<FollowModel> follows { get; set; }
+        public virtual DbSet<JobModel> jobs { get; set; }
 
-        public virtual DbSet<JWTModel> JWTs { get; set; }
-        public virtual DbSet<LikeModel> Likes { get; set; }
-        public virtual DbSet<NotificationModel> Notifications { get; set; }
-        public virtual DbSet<PostModel> Posts { get; set; }
-        public virtual DbSet<ReportModel> Reports { get; set; }
-        public virtual DbSet<SkillModel> Skills { get; set; }
+        public virtual DbSet<JWTModel> jwts { get; set; }
+        public virtual DbSet<LikeModel> likes { get; set; }
+        public virtual DbSet<NotificationModel> notifications { get; set; }
+        public virtual DbSet<PostModel> posts { get; set; }
+        public virtual DbSet<ReportModel> reports { get; set; }
+        public virtual DbSet<SkillModel> skills { get; set; }
 
 
         #region Auto add created-time, updated-time

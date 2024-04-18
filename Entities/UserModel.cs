@@ -61,8 +61,6 @@ namespace ConJob.Entities
         public string? avatar { get; set; }
 
 
-        [JsonIgnore, Required]
-        public bool is_deleted { get; set; } = false;
         [JsonIgnore]
         public virtual ICollection<UserRoleModel> user_roles { get; set; }
         [JsonIgnore]
