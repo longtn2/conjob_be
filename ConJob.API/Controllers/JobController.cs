@@ -11,7 +11,10 @@ namespace ConJob.API.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/[controller]/")]
-
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status404NotFound)]
     public class JobController : ControllerBase
     {
         private readonly IJobServices _jobServices;
@@ -22,10 +25,6 @@ namespace ConJob.API.Controllers
 
 
         [HttpGet("search")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<JobDTO>>> search([FromBody] SearchJob searchJob)
         {
             var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>>();
@@ -41,10 +40,6 @@ namespace ConJob.API.Controllers
         }
 
         [HttpPost("create")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] JobDetailsDTO jobDTO)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -61,10 +56,6 @@ namespace ConJob.API.Controllers
         }
 
         [HttpPut("update/{id}")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(string id,[FromBody] JobDTO jobDTO)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();
@@ -80,10 +71,7 @@ namespace ConJob.API.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status404NotFound)]
+
         public async Task<IActionResult> Delete(string id)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();

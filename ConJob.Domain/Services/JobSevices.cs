@@ -77,6 +77,7 @@ namespace ConJob.Domain.Services
                     var toAddjob = _mapper.Map<JobModel>(job);
                     serviceReponse.ResponseType = EResponseType.Success;
                     serviceReponse.Data = _mapper.Map<JobDTO>(toAddjob);
+                    await _jobRepository.RemoveAsync(job);
                 }
                 else
                 {
