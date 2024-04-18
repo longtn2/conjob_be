@@ -18,5 +18,6 @@ namespace ConJob.Domain.Repository.Interface
         Task AddRangeAsync(IEnumerable<T> entities);
         Task RemoveAsync(T entity);
         Task RemoveRangeAsync(IEnumerable<T> entities);
+        Task SoftDelete(T entity);
     }
 }
