@@ -5,15 +5,15 @@ namespace ConJob.Domain.DTOs.User
 {
     public class UserDTO
     {
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string PhoneNumber { get; set; }
+        public string email { get; set; }
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public string phone_number { get; set; }
         [DataType(DataType.Date)]
-        public DateTime DOB { get; set; }
-        public string Address { get; set; }
-        public string? Avatar { get; set; }
+        public DateTime dob { get; set; }
+        public string address { get; set; }
+        public string? avatar { get; set; }
 
-        public List<RoleModel> Roles { get; set; }
+        public List<RoleModel> roles { get; set; }
     }
 }

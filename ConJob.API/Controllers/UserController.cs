@@ -1,5 +1,4 @@
-﻿
-using ConJob.Domain.DTOs.User;
+﻿using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using static ConJob.Domain.Response.EServiceResponseTypes;
@@ -11,12 +10,14 @@ using Amazon;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.DTOs.Authentication;
 using ConJob.Domain.Response;
+using Asp.Versioning;
 
 namespace ConJob.API.Controllers
 {
-    [Route("api/[controller]")]
-    [Authorize(Policy = "emailverified")]
     [ApiController]
+    [Authorize(Policy = "emailverified")]
+    [ApiVersion("1")]
+    [Route("api/v{version:apiVersion}/[controller]/")]
     public class UserController : ControllerBase
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
@@ -29,13 +30,13 @@ namespace ConJob.API.Controllers
             _w3Services = w3Services;
         }
 
-        [Route("/update")]
+        [Route("update-profile")]
         [Produces("application/json")]
         [HttpPost]
 
-        public async Task<ActionResult> Update(UserInfoDTO userdata)
+        public async Task<ActionResult> UpdateUserProfile(UserInfoDTO userdata)
         {
-            var claims = User.Claims.Where(x => x.Type == "UserId").FirstOrDefault();
+            var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
             var serviceResponse = await _userServices.updateUserInfo(userdata, userid);
             return serviceResponse.ResponseType switch
@@ -47,10 +48,10 @@ namespace ConJob.API.Controllers
             };
         }
 
-        [Route("/changePassword")]
+        [Route("change-password")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> changePassword(UPasswordDTO passwordDTO)
+        public async Task<ActionResult> ChangePassword(UPasswordDTO passwordDTO)
         {
             var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
@@ -64,10 +65,10 @@ namespace ConJob.API.Controllers
             };
         }
 
-        [Route("/me")]
+        [Route("profile")]
         [Produces("application/json")]
         [HttpGet]
-        public async Task<ActionResult> get()
+        public async Task<ActionResult> getProfileUser()
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _userServices.GetUserInfoAsync(userid);
@@ -80,17 +81,13 @@ namespace ConJob.API.Controllers
             };
         }
 
-        [Route("/avatar/upload")]
+        [Route("avatar-upload")]
         [Produces("application/json")]
         [HttpPost]
-
         public async Task uploadAvatar(IFormFile file)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
             await _w3Services.UploadImage(file);
-
-
         }
 
 

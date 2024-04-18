@@ -6,6 +6,6 @@ namespace ConJob.Domain.DTOs.User
     public class UserLoginDTO : PasswordDTO
     {
         [Required]
-        public string Email { get; set; }
+        public string email { get; set; }
     }
 }

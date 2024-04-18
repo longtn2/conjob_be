@@ -20,6 +20,7 @@ using ConJob.API.Policy;
 using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using System.Text.Json.Serialization;
+using Asp.Versioning;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,21 @@ builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("AppS
 builder.Services.Configure<S3Settings>(builder.Configuration.GetSection("S3Settings"));
 #endregion
 
+#region add Version
+var apiVersioningBuilder = builder.Services.AddApiVersioning(o =>
+{
+    o.AssumeDefaultVersionWhenUnspecified = true;
+    o.DefaultApiVersion = new ApiVersion(1, 0);
+    o.ReportApiVersions = true;
+});
+
+apiVersioningBuilder.AddApiExplorer(
+    options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
+#endregion
 
 #region Add DB service
 builder.Services.AddDbContext<AppDbContext>(options =>

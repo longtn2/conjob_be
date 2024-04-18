@@ -34,7 +34,7 @@ namespace ConJob.Domain.Repository
                 user.avatar = avatar;
             }
             else
-        {
+            {
                 return false;
             }
             _context.SaveChanges();
@@ -52,6 +52,13 @@ namespace ConJob.Domain.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<UserModel> updateAsync(UserInfoDTO userDTO, UserModel userModel)
+        {
+            var user = _mapper.Map(userDTO, userModel);
+            await _context.SaveChangesAsync();
+            return user;
         }
     }
 }
