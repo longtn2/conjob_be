@@ -14,9 +14,9 @@ using ConJob.Domain.Response;
 
 namespace ConJob.API.Controllers
 {
-    [Route("api/[controller]")]
-    [Authorize(Policy = "emailverified")]
     [ApiController]
+    [ApiVersion("1")]
+    [Route("api/v{version:apiVersion}/[controller]/")]
     public class UserController : ControllerBase
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
@@ -29,7 +29,7 @@ namespace ConJob.API.Controllers
             _w3Services = w3Services;
         }
 
-        [Route("/update")]
+        [Route("update-profile")]
         [Produces("application/json")]
         [HttpPost]
 
@@ -47,7 +47,7 @@ namespace ConJob.API.Controllers
             };
         }
 
-        [Route("/changePassword")]
+        [Route("change-password")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> changePassword(UPasswordDTO passwordDTO)
@@ -64,10 +64,10 @@ namespace ConJob.API.Controllers
             };
         }
 
-        [Route("/me")]
+        [Route("profile")]
         [Produces("application/json")]
         [HttpGet]
-        public async Task<ActionResult> get()
+        public async Task<ActionResult> getProfileUser()
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _userServices.GetUserInfoAsync(userid);
@@ -80,7 +80,7 @@ namespace ConJob.API.Controllers
             };
         }
 
-        [Route("/avatar/upload")]
+        [Route("avatar-upload")]
         [Produces("application/json")]
         [HttpPost]
 
