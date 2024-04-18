@@ -93,7 +93,7 @@ namespace ConJob.API.Controllers
 
 
         }
-        [AllowAnonymous]
+
         [Route("/follow")]
         [Produces("application/json")]
         [HttpPost]
@@ -103,7 +103,7 @@ namespace ConJob.API.Controllers
 
             var serviceResponse = await _userServices.followUser(new FollowDTO()
             {
-                FromUserID = 1 /*int.Parse(userid!)*/,
+                FromUserID = int.Parse(userid!),
                 ToUserID = int.Parse(followUser.toUser)
             });
             return serviceResponse.ResponseType switch
@@ -117,7 +117,6 @@ namespace ConJob.API.Controllers
             };
         }
 
-        [AllowAnonymous]
         [Route("/unfollow")]
         [Produces("application/json")]
         [HttpPost]
@@ -127,7 +126,7 @@ namespace ConJob.API.Controllers
 
             var serviceResponse = await _userServices.unfollowUser(new FollowDTO()
             {
-                FromUserID = 1,
+                FromUserID = int.Parse(userid!),
                 ToUserID = int.Parse(followUser.toUser),
             });
             return serviceResponse.ResponseType switch
