@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Data.Entity.Validation;
+using System.Linq.Expressions;
 
 namespace ConJob.Data
 {
@@ -62,7 +63,7 @@ namespace ConJob.Data
                 .WithOne(e => e.from_user_notification)
                 .HasForeignKey("from_user_notifi_id")
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
 
             modelBuilder.Entity<UserModel>()
                 .HasMany(u => u.followers)
@@ -90,6 +91,24 @@ namespace ConJob.Data
                 .HasForeignKey("receive_user_id")
                 .OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
+            var entityTypes = modelBuilder.Model.GetEntityTypes();
+
+            foreach (var entityType in entityTypes)
+            {
+                var entityClrType = entityType.ClrType;
+
+                var isSoftDeleteEnabled = entityClrType.GetProperty("is_deleted") != null;
+
+                if (isSoftDeleteEnabled)
+                {
+                    var parameter = Expression.Parameter(entityClrType, "e");
+                    var property = Expression.Property(parameter, "is_deleted");
+                    var notDeleted = Expression.Not(property);
+                    var lambda = Expression.Lambda(notDeleted, parameter);
+
+                    entityType.SetQueryFilter(lambda);
+                }
+            }
             new DbInitializer(modelBuilder).Seed();
         }
 
