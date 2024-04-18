@@ -31,7 +31,7 @@ namespace ConJob.API.Controllers
             {
                 reason= reportPost.reason,
                 post_id= reportPost.post_id,
-                user_id=4,
+                user_id=int.Parse(userid!),
             };
             serviceResponse = await _reportServices.reportPost(report);
             return serviceResponse.ResponseType switch
