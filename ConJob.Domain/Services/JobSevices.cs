@@ -92,9 +92,9 @@ namespace ConJob.Domain.Services
             return serviceReponse;
         }
 
-        public async Task<ServiceResponse<JobDTO>> GetJobAsync(int id)
+        public async Task<ServiceResponse<JobDetailsDTO>> GetJobAsync(int id)
         {
-            var serviceReponse = new ServiceResponse<JobDTO>();
+            var serviceReponse = new ServiceResponse<JobDetailsDTO>();
             try
             {
                 var job = _jobRepository.GetById(id);
@@ -105,7 +105,7 @@ namespace ConJob.Domain.Services
                 else
                 {
                     serviceReponse.ResponseType = EResponseType.Success;
-                    serviceReponse.Data = _mapper.Map<JobDTO>(job);
+                    serviceReponse.Data = _mapper.Map<JobDetailsDTO>(job);
                 }
             }
             catch (DbException ex)

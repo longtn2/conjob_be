@@ -22,8 +22,6 @@ namespace ConJob.API.Controllers
         {
             _jobServices = jobServices;
         }
-
-
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<JobDTO>>> search([FromBody] SearchJob searchJob)
         {
@@ -38,13 +36,46 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
-
+        [HttpGet("get/{id}")]
+        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> get(int id)
+        {
+            var serviceResponse = new ServiceResponse<JobDetailsDTO>();
+            serviceResponse = await _jobServices.GetJobAsync(id);
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse),
+                EResponseType.BadRequest => BadRequest(serviceResponse),
+                EResponseType.CannotCreate => BadRequest(serviceResponse),
+                EResponseType.NotFound => NotFound(serviceResponse),
+                _ => throw new NotImplementedException()
+            };
+        }
+        [HttpGet("getAll")]
+        public async Task<IActionResult> getAll()
+        {
+            var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>> ();
+            serviceResponse = await _jobServices.GetJobsAsync();
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse),
+                EResponseType.BadRequest => BadRequest(serviceResponse),
+                EResponseType.CannotCreate => BadRequest(serviceResponse),
+                EResponseType.NotFound => NotFound(serviceResponse),
+                _ => throw new NotImplementedException()
+            };
+        }
         [HttpPost("create")]
+        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] JobDetailsDTO jobDTO)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = new ServiceResponse<JobDetailsDTO>();
-            serviceResponse = await _jobServices.AddJobAsync(1,jobDTO);
+            serviceResponse = await _jobServices.AddJobAsync(1, jobDTO);
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
@@ -56,10 +87,10 @@ namespace ConJob.API.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update(string id,[FromBody] JobDTO jobDTO)
+        public async Task<IActionResult> Update(string id, [FromBody] JobDTO jobDTO)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();
-            serviceResponse = await _jobServices.UpdateJobAsync(int.Parse(id),jobDTO);
+            serviceResponse = await _jobServices.UpdateJobAsync(int.Parse(id), jobDTO);
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
