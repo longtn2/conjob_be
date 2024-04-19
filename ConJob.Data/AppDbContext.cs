@@ -110,7 +110,7 @@ namespace ConJob.Data
         public virtual DbSet<PostModel> Posts { get; set; }
         public virtual DbSet<ReportModel> Reports { get; set; }
         public virtual DbSet<SkillModel> Skills { get; set; }
-
+        public virtual DbSet<Personal_skillModel> Personal_Skills { get; set; }
 
         #region Auto add created-time, updated-time
         public override int SaveChanges()
