@@ -48,14 +48,6 @@ apiVersioningBuilder.AddApiExplorer(
     });
 #endregion
 
-apiVersioningBuilder.AddApiExplorer(
-    options =>
-    {
-        options.GroupNameFormat = "'v'VVV";
-        options.SubstituteApiVersionInUrl = true;
-    });
-#endregion
-
 #region Add DB service
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.")));
