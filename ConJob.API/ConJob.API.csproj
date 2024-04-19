@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
   <ItemGroup>
     <None Include="example.appsettings.json" />
@@ -32,14 +32,14 @@
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ConJob.Data\ConJob.Data.csproj" />
-    <ProjectReference Include="..\ConJob.Domain\ConJob.Domain.csproj" />
-    <ProjectReference Include="..\Entities\ConJob.Entities.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ConJob.Data\ConJob.Data.csproj" />
+		<ProjectReference Include="..\ConJob.Domain\ConJob.Domain.csproj" />
+		<ProjectReference Include="..\Entities\ConJob.Entities.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Middleware\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Middleware\" />
+	</ItemGroup>
 
 </Project>
