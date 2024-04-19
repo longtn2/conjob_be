@@ -3,6 +3,7 @@ using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using ConJob.Domain.DTOs.User;
 
 namespace ConJob.Domain.Repository
 {
