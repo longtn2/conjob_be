@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Job;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,6 +82,8 @@ builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
 builder.Services.AddScoped<IS3Services,  S3Services>();
 builder.Services.AddScoped<IJobServices, JobSevices>();
+builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
+builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion

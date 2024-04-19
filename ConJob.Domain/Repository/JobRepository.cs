@@ -18,12 +18,10 @@ namespace ConJob.Domain.Repository
         {
         }
 
-        public IEnumerable<JobModel> searchJobs(SearchJob searchJob)
+        public IQueryable<JobModel> searchJob(string search, string location)
         {
-            return _context.Jobs.Where(e => e.title.Contains(searchJob.search) && e.location.Contains(searchJob.location))
-                                .Include(e => e.posts)
-                                .Skip((searchJob.page - 1) * searchJob.pageSize)
-                                .Take(searchJob.pageSize).OrderByDescending(e=>e.expired_day);
+            return _context.Jobs.Where(e => e.title.Contains(search) && e.location.Contains(location))
+                     .Include(e => e.posts);
         }
     }
 }
