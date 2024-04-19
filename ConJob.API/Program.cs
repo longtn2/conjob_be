@@ -20,8 +20,6 @@ using ConJob.API.Policy;
 using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using System.Text.Json.Serialization;
-using ConJob.Domain.Filtering;
-using ConJob.Domain.DTOs.Post;
 using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);

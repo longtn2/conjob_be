@@ -362,7 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /ConJob.API/appsettings.json
-FodyWeavers.xsd
 /ConJob.API/appsettings.json
-/ConJob.Data/Migrations/20240417115722_initall.cs
-/ConJob.Data/Migrations/20240417120000_initall2.cs

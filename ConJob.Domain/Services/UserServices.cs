@@ -116,23 +116,23 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<UserDTO>> updateUserInfo(UserInfoDTO updateUser, string? id)
+        public async Task<ServiceResponse<UserInfoDTO>> updateUserInfo(UserInfoDTO updateUser, string? id)
         {
-            var serviceResponse = new ServiceResponse<UserDTO>();
-            try
-            {
 
+            var serviceResponse = new ServiceResponse<UserInfoDTO>();
+            try {
                 var user = _userRepository.GetById(int.Parse(id));
                 if (user == null)
                 {
                     serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "User Not Found";
                 }
                 else
                 {
-                    user = _mapper.Map(updateUser, user);
+                    user = await _userRepository.updateAsync(updateUser, user);
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Message = "Update User Successful";
-                    serviceResponse.Data = _mapper.Map<UserDTO>(user);
+                    serviceResponse.Message = "Update User Successfully";
+                    serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
                 }
             }
             catch (DbUpdateException ex)
