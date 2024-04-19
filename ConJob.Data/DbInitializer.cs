@@ -1,13 +1,5 @@
-﻿using BCrypt.Net;
-using ConJob.Entities;
-
+﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConJob.Data
 {
@@ -141,7 +133,7 @@ namespace ConJob.Data
 
                 id = 2,
 
-                role_name = "TimViec",
+                role_name = "Job Seeker",
 
                 role_description = "Là nole tư bản đi tìm kiếm miếng cơm manh áo."
 
@@ -153,7 +145,7 @@ namespace ConJob.Data
 
                 id = 3,
 
-                role_name = "PhatViec",
+                role_name = "Job Giver",
 
                 role_description = "Là tư bản đi kiếm những con chiêng ngoan đạo."
 

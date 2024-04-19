@@ -43,8 +43,4 @@
 		<ProjectReference Include="..\Entities\ConJob.Entities.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Middleware\" />
-	</ItemGroup>
-
 </Project>

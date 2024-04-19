@@ -6,9 +6,9 @@ using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Response;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 using ConJob.Entities;
-using ConJob.Data;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.Encryption;
+using ConJob.Domain.Constant;
 
 namespace ConJob.Domain.Services
 {
@@ -17,17 +17,17 @@ namespace ConJob.Domain.Services
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IPasswordHasher _pwHasher;
+        private readonly IEmailServices _emailServices;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
-        private readonly AppDbContext _context;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IEmailServices emailServices ,IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository)
         {
             _logger = logger;
             _mapper = mapper;
             _pwHasher = pwhasher;
-            _context = context;
+            _emailServices = emailServices;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
@@ -50,8 +50,9 @@ namespace ConJob.Domain.Services
             }
             else
             {
-                UserInfoDTO u = _mapper.Map<UserInfoDTO>(user);
-                serviceResponse.Data = u;
+                UserInfoDTO userInfo = _mapper.Map<UserInfoDTO>(user);
+                serviceResponse.Data = userInfo;
+                serviceResponse.Message = "Get user profile successfully";
             }
             return serviceResponse;
         }
@@ -62,15 +63,17 @@ namespace ConJob.Domain.Services
             try
             {
                 var toAdd = _mapper.Map<UserModel>(user);
-                var role = await _roleRepository.getRoleByName("TimViec");
+                var role = await _roleRepository.getRoleByName(CJConstant.JOB_SEEKER);
                 if (role == null) ;
-                await _context.UserRoles.AddAsync(new UserRoleModel()
+                await _userRoleRepository.AddAsync(new UserRoleModel()
                 {
                     role = role,
                     user = toAdd
                 });
                 await _userRepository.AddAsync(toAdd);
+                //await _emailServices.sendActivationEmail(toAdd);
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
+                serviceResponse.Message = "Register Successfully! Please check your email to confirm account!";
             }
             catch (DbUpdateException ex)
             {
@@ -107,7 +110,7 @@ namespace ConJob.Domain.Services
             catch (Exception ex)
             {
                 serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                serviceResponse.Message = "Something wrong.";
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
             }
             return serviceResponse;
         }
@@ -121,13 +124,13 @@ namespace ConJob.Domain.Services
                 if (user == null)
                 {
                     serviceResponse.ResponseType = EResponseType.NotFound;
-                    serviceResponse.Message = "User Not Found";
+                    serviceResponse.Message = "User not found!";
                 }
                 else
                 {
                     user = await _userRepository.updateAsync(updateUser, user);
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Message = "Update User Successfully";
+                    serviceResponse.Message = "Update user successfully!";
                     serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
                 }
             }
@@ -158,7 +161,7 @@ namespace ConJob.Domain.Services
             } catch (Exception ex)
             {
                 serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                serviceResponse.Message = "Something wrong.";
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
             }
             return serviceResponse;
         }

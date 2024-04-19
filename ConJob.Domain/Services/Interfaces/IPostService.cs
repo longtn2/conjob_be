@@ -14,8 +14,6 @@ namespace ConJob.Domain.Services.Interfaces
         Task<ServiceResponse<PostDetailsDTO>> UpdateAsync(int userId, int id, PostDTO post);
         Task<ServiceResponse<object>> DeleteAsync(int userId, int id);
         Task<ServiceResponse<object>> ActiveAsync(int userId, int id);
-        Task<ServiceResponse<IList<PostDetailsDTO>>> GetAllDeletedPosts(int pageNo);
-        Task<ServiceResponse<IList<PostDetailsDTO>>> GetAllActivedPosts(int pageNo);
         Task<ServiceResponse<int>> UserLikePost(int userId, int postId);
     }
 }

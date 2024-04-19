@@ -1,25 +1,14 @@
 ﻿using AutoMapper;
-using ConJob.Data;
+using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Post;
-using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Filtering;
-using ConJob.Domain.Repository;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using MimeKit.Cryptography;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static ConJob.Domain.Response.EServiceResponseTypes;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace ConJob.Domain.Services
 {
@@ -77,6 +66,7 @@ namespace ConJob.Domain.Services
                 if (result != null)
                 {
                     serviceResponse.Data = result;
+                    serviceResponse.Message = "Get all posts successfully!";
                 }
                 else
                 {
@@ -96,6 +86,7 @@ namespace ConJob.Domain.Services
                 serviceResponse.Data = await _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetUserPosts(userId))
                     .AsNoTracking()
                     .FirstAsync(c => c.id == id);
+                serviceResponse.Message = "Get post by id successfully!";
             }
             catch (InvalidOperationException)
             {
@@ -114,6 +105,7 @@ namespace ConJob.Domain.Services
                 serviceResponse.Data = await _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetPosts())
                     .AsNoTracking()
                     .FirstAsync(c => c.id == id);
+                serviceResponse.Message = "Get post by id successfully!";
             }
             catch (InvalidOperationException)
             {
@@ -135,6 +127,7 @@ namespace ConJob.Domain.Services
                 {
                     post = await _postRepository.UpdateAsync(id, postDTO);
                     serviceResponse.Data = _mapper.Map<PostDetailsDTO>(post);
+                    serviceResponse.Message = "Update post successfully!";
                 }
                 else
                 {
@@ -158,10 +151,12 @@ namespace ConJob.Domain.Services
             {
                 var post = _postRepository.GetById(id);
                 await _postRepository.DeleteAsync(post.id);
+                serviceResponse.Message = "Delete post successfully!";
             }
             catch (DbUpdateConcurrencyException)
             {
                 serviceResponse.ResponseType = EResponseType.NotFound;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
             }
             catch { throw; }
             return serviceResponse;
@@ -174,44 +169,15 @@ namespace ConJob.Domain.Services
             {
                 var post = _postRepository.GetById(id);
                 await _postRepository.ActiveAsync(post.id);
+                serviceResponse.Message = "Post has been successfully approved.";
             }
             catch (DbUpdateConcurrencyException)
             {
                 serviceResponse.ResponseType = EResponseType.NotFound;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
             }
             catch { throw; }
             return serviceResponse;
-        }
-
-        public async Task<ServiceResponse<IList<PostDetailsDTO>>> GetAllDeletedPosts(int pageNo)
-        {
-            var serviceResponse = new ServiceResponse<IList<PostDetailsDTO>>();
-            try
-            {
-                var posts = _postRepository.GetPostNotDeleted();
-
-                #region paging
-                var result = await PaginatedList<PostModel>.CreateAsync(posts, pageNo, PAGE_SIZE);
-                #endregion
-
-                IList<PostDetailsDTO> listPost = _mapper.Map<IList<PostDetailsDTO>>(result);
-                if (listPost != null)
-                {
-                    serviceResponse.Data = listPost;
-                }
-                else
-                {
-                    serviceResponse.ResponseType = EResponseType.NotFound;
-                    serviceResponse.Message = "Post not found.";
-                }
-            }
-            catch { throw; }
-            return serviceResponse;
-        }
-
-        public Task<ServiceResponse<IList<PostDetailsDTO>>> GetAllActivedPosts(int pageNo)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions filterParameters, string statusFilter)
@@ -240,6 +206,7 @@ namespace ConJob.Domain.Services
                 if (pagedPosts?.Items?.Any() == true)
                 {
                     serviceResponse.Data = pagedPosts;
+                    serviceResponse.Message = "Get and filter posts successfully!";
                 }
                 else
                 {

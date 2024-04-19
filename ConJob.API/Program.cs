@@ -23,9 +23,8 @@ using System.Text.Json.Serialization;
 using Asp.Versioning;
 using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Job;
-using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Post;
-using Asp.Versioning;
+using ConJob.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -173,6 +172,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+#region some sort of Middleware
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ValidationExceptionHandlerMiddleware>();
+#endregion
 
 app.UseHttpsRedirection();
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240417163834_add-relationship-post-job")]
-    partial class addrelationshippostjob
+    [Migration("20240419093338_initDB")]
+    partial class initDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -947,7 +947,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             role_description = "Là nole tư bản đi tìm kiếm miếng cơm manh áo.",
-                            role_name = "TimViec"
+                            role_name = "Job Seeker"
                         },
                         new
                         {
@@ -955,7 +955,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             role_description = "Là tư bản đi kiếm những con chiêng ngoan đạo.",
-                            role_name = "PhatViec"
+                            role_name = "Job Giver"
                         });
                 });
 
@@ -1130,7 +1130,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$.9I/h0t5vRd6gXImROWCFOqXRwvcAy4r8ednR79uZbiURBc6hN6Ie",
+                            password = "$2a$11$WBPVMj4TF6d9W0b0GaDeQO4tfDe265tCA6SjtJTfcu0352IZ4KMve",
                             phone_number = "0335487991"
                         },
                         new
@@ -1146,7 +1146,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Alexandros",
-                            password = "$2a$11$3vhn5LsoLhZHAI1Lt6FYReYwx6pW3V/5jFaei8K2EitH/i0CwLTFm",
+                            password = "$2a$11$ZRpqQBzfOD17gLxL4uLK.ONqAUrEjh41ohGR/Nv/MUP23ebEJvVUG",
                             phone_number = "0354579415"
                         },
                         new
@@ -1162,7 +1162,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Pancoast",
-                            password = "$2a$11$jXTEvryioE.GMnhWMQ2e7upYw.xseMX4oCktepHJOEbRfgXOrjjJC",
+                            password = "$2a$11$OTavW4gVh0GsgZfmZ0v9heT1ULE7FcOXef6QgwXWAnB9KPMykz0Sq",
                             phone_number = "0354596415"
                         },
                         new
@@ -1178,7 +1178,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$G/Ds/GlEIGNolFn1yahpae/eS2mSjA1JQPNqh1mFCgONiTn8EYave",
+                            password = "$2a$11$sS7Ct6pC5SbO7W55XHIoD.jV9O8BV5PSwHbhmIqvJWXfcDqQrnBhO",
                             phone_number = "0354579415"
                         },
                         new
@@ -1194,7 +1194,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "khong chin",
-                            password = "$2a$11$FcGFqaYT/G0P7erupduyMuumWTwUh8X2u.jKZvk76mCUhiIZDvSzy",
+                            password = "$2a$11$wpVM2balNCYumoz7fxECe.aOQjJ6PpQa8EFBw28cYVx4lEtjPPQQq",
                             phone_number = "0354579415"
                         });
                 });

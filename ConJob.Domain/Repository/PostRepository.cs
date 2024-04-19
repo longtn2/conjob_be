@@ -2,12 +2,6 @@
 using ConJob.Data;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConJob.Entities;
 using ConJob.Domain.DTOs.Post;
 namespace ConJob.Domain.Repository
 {
@@ -43,6 +37,10 @@ namespace ConJob.Domain.Repository
             if (post != null)
             {
                 post.is_deleted = !post.is_deleted;
+                if (post.is_actived == true)
+                {
+                    post.is_actived = false;
+                }
                 await _context.SaveChangesAsync();
             }
         }
@@ -53,6 +51,10 @@ namespace ConJob.Domain.Repository
             if (post != null)
             {
                 post.is_actived = !post.is_actived;
+                if (post.is_deleted == true)
+                {
+                    post.is_deleted = false;
+                }
                 await _context.SaveChangesAsync();
             }
         }
@@ -76,7 +78,14 @@ namespace ConJob.Domain.Repository
         public IQueryable<PostModel> GetPostNotDeleted()
         {
             var posts = _context.Posts.AsQueryable();
-            posts = _context.Posts.Where(p => p.is_deleted == true);
+            posts = _context.Posts.Where(p => p.is_deleted == false);
+            return posts;
+        }
+
+        public IQueryable<PostModel> GetPostNotApproved()
+        {
+            var posts = _context.Posts.AsQueryable();
+            posts = _context.Posts.Where(p => p.is_deleted == false).Where(p => p.is_actived == false);
             return posts;
         }
     }

@@ -7,6 +7,7 @@ using ConJob.Entities;
 using AutoMapper;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Job;
 namespace ConJob.Domain.AutoMapper
 {
     public class MappingProfile :Profile
