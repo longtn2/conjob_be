@@ -4,12 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Amazon.S3.Transfer;
-using Amazon.S3;
-using Amazon;
 using ConJob.Domain.Services.Interfaces;
-using ConJob.Domain.DTOs.Authentication;
-using ConJob.Domain.Response;
 using Asp.Versioning;
 
 namespace ConJob.API.Controllers
@@ -20,7 +15,7 @@ namespace ConJob.API.Controllers
     [Route("api/v{version:apiVersion}/[controller]/")]
     public class UserController : ControllerBase
     {
-        private readonly Microsoft.Extensions.Logging.ILogger _logger;
+        private readonly ILogger _logger;
         private readonly IUserServices _userServices;
         private readonly IS3Services _w3Services;
         public UserController(ILogger<UserController> logger, IUserServices userService, IS3Services w3Services)
@@ -34,14 +29,14 @@ namespace ConJob.API.Controllers
         [Produces("application/json")]
         [HttpPost]
 
-        public async Task<ActionResult> UpdateUserProfile(UserInfoDTO userdata)
+        public async Task<ActionResult> updateUserProfile(UserInfoDTO userdata)
         {
             var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
             var serviceResponse = await _userServices.updateUserInfo(userdata, userid);
             return serviceResponse.ResponseType switch
             {
-                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.Success => Ok(serviceResponse),
                 EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
                 EResponseType.Forbid => Forbid(serviceResponse.Message),
                 _ => throw new NotImplementedException()
@@ -51,7 +46,7 @@ namespace ConJob.API.Controllers
         [Route("change-password")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> ChangePassword(UPasswordDTO passwordDTO)
+        public async Task<ActionResult> changePassword(UPasswordDTO passwordDTO)
         {
             var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
