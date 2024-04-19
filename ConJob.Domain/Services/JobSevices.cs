@@ -145,21 +145,28 @@ namespace ConJob.Domain.Services
         public async Task<ServiceResponse<PagingReturnModel<JobDTO>>> searchJobAsync(FilterOptions searchJob)
         {
             var predicate = PredicateBuilder.New<JobDTO>();
-            var searchJob2 = new SearchJob();
-            predicate = predicate.Or(p => p.title.Contains(searchJob2.search));
-            var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
+            predicate = predicate.Or(p => p.title.Contains(searchJob.SearchTerm));
 
+            var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
             try
             {
-                var job = _mapper.ProjectTo<JobDTO>(GetJobs()).Where(predicate).AsNoTracking();
-                var sortedJob=_filterHelper.ApplySorting(job,searchJob.OrderBy);
+                var job = _mapper.ProjectTo<JobDTO>(GetJobs())
+                    .Where(predicate)
+                    .AsNoTracking();
+                var sortedJob = _filterHelper.ApplySorting(job, searchJob.OrderBy);
                 var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.Page, searchJob.Limit);
-                if (job.Any()==true)
+                if (job.Any() == true)
                 {
-                    serviceResponse.Data =pagedJob ;
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Data = pagedJob;
+
                 }
             }
-            catch { throw; }
+            catch(DbException ex) 
+            {
+                serviceResponse.ResponseType = EResponseType.BadRequest;
+                serviceResponse.Message = "Somthing wrong"+ex.Message;
+            }
             return serviceResponse;
         }
 
