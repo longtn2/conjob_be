@@ -41,7 +41,6 @@ namespace ConJob.API.Controllers
                 default:
                     throw new NotImplementedException();
             }
-            };
         }
         [HttpGet("get/{id}")]
         [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status200OK)]
@@ -63,38 +62,7 @@ namespace ConJob.API.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> getAll()
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>> ();
-            serviceResponse = await _jobServices.GetJobsAsync();
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.BadRequest => BadRequest(serviceResponse),
-                EResponseType.CannotCreate => BadRequest(serviceResponse),
-                EResponseType.NotFound => NotFound(serviceResponse),
-                _ => throw new NotImplementedException()
-            };
-        }
-        [HttpGet("get/{id}")]
-        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> get(int id)
-        {
-            var serviceResponse = new ServiceResponse<JobDetailsDTO>();
-            serviceResponse = await _jobServices.GetJobAsync(id);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.BadRequest => BadRequest(serviceResponse),
-                EResponseType.CannotCreate => BadRequest(serviceResponse),
-                EResponseType.NotFound => NotFound(serviceResponse),
-                _ => throw new NotImplementedException()
-            };
-        }
-        [HttpGet("getAll")]
-        public async Task<IActionResult> getAll()
-        {
-            var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>> ();
+            var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>>();
             serviceResponse = await _jobServices.GetJobsAsync();
             return serviceResponse.ResponseType switch
             {
