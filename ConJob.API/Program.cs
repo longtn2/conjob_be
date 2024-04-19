@@ -23,6 +23,9 @@ using System.Text.Json.Serialization;
 using Asp.Versioning;
 using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Post;
+using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +98,7 @@ builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IJwtRepository, JwtRepository>();
 builder.Services.AddTransient<IPostRepository, PostRepository>();
+builder.Services.AddTransient<IFollowRepository, FollowRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 #endregion
 

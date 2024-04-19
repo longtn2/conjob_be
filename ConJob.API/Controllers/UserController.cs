@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.Response;
+using ConJob.Domain.DTOs.Follow;
 
 namespace ConJob.API.Controllers
 {
@@ -92,6 +93,51 @@ namespace ConJob.API.Controllers
             await _w3Services.UploadImage(file);
         }
 
+        [Route("/follow")]
+        [Produces("application/json")]
+        [HttpPost]
+        public async Task<ActionResult> followUser([FromBody] FollowerDTO followUser)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var serviceResponse = await _userServices.followUser(new FollowDTO()
+            {
+                FromUserID = int.Parse(userid!),
+                ToUserID = int.Parse(followUser.toUser)
+            });
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
+                EResponseType.Forbid => Forbid(serviceResponse.Message),
+                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
+                EResponseType.NotFound => NotFound(serviceResponse.Message),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        [Route("/unfollow")]
+        [Produces("application/json")]
+        [HttpPost]
+        public async Task<ActionResult> unfollowUser([FromBody] FollowerDTO followUser)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var serviceResponse = await _userServices.unfollowUser(new FollowDTO()
+            {
+                FromUserID = int.Parse(userid!),
+                ToUserID = int.Parse(followUser.toUser),
+            });
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
+                EResponseType.Forbid => Forbid(serviceResponse.Message),
+                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
+                EResponseType.NotFound => NotFound(serviceResponse.Message),
+                _ => throw new NotImplementedException()
+            };
+        }
 
     }
 }
