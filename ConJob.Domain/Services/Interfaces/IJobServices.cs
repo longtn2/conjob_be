@@ -1,4 +1,6 @@
-﻿using ConJob.Domain.DTOs.Job;
+﻿using ConJob.Data.Migrations;
+using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.Filtering;
 using ConJob.Domain.Response;
 using Hangfire.Common;
 using System;
@@ -11,13 +13,11 @@ namespace ConJob.Domain.Services.Interfaces
 {
     public interface IJobServices
     {
-        public interface IJobRepository
-        {
-            Task<IEnumerable<Job>> GetJobsAsync();
-            Task<Job> GetJobAsync(int id);
-            Task<Job> AddJobAsync(Job job);
-            Task UpdateJobAsync(Job job);
-            Task DeleteJobAsync(int id);
-        }
+        Task<ServiceResponse<IEnumerable<JobDTO>>> GetJobsAsync();
+        Task<ServiceResponse<JobDTO>> GetJobAsync(int id);
+        Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid,JobDetailsDTO job);
+        Task<ServiceResponse<JobDTO>> UpdateJobAsync(int id, JobDTO jobDTO);
+        Task<ServiceResponse<JobDTO>> DeleteJobAsync(int id);
+        Task<ServiceResponse<PagingReturnModel<JobDTO>>> searchJobAsync(FilterOptions searchJob);
     }
 }
