@@ -11,6 +11,6 @@ namespace ConJob.Domain.Repository.Interfaces
 {
     public interface IJobRepository:IGenericRepository<JobModel>
     {
-        IEnumerable<JobModel> searchJobs(SearchJob searchJob);
+        IQueryable<JobModel> searchJob(string search, string location);
     }
 }

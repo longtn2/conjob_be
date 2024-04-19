@@ -1,6 +1,8 @@
 ﻿using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.Filtering;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -22,21 +24,23 @@ namespace ConJob.API.Controllers
         {
             _jobServices = jobServices;
         }
-
-
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<JobDTO>>> search([FromBody] SearchJob searchJob)
+        public async Task<IActionResult> searchjob([FromQuery] FilterOptions filterOptions)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>>();
-            serviceResponse = await _jobServices.searchJobAsync(searchJob);
-            return serviceResponse.ResponseType switch
+            var serviceResponse = await _jobServices.searchJobAsync(filterOptions);
+            switch (serviceResponse.ResponseType)
             {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.BadRequest => BadRequest(serviceResponse),
-                EResponseType.CannotCreate => BadRequest(serviceResponse),
-                EResponseType.NotFound => NotFound(serviceResponse),
-                _ => throw new NotImplementedException()
-            };
+                case EResponseType.Success:
+                    Response.Headers.Add("X-Paging-PageNo", serviceResponse.Data?.CurrentPage.ToString());
+                    Response.Headers.Add("X-Paging-PageSize", serviceResponse.Data?.PageSize.ToString());
+                    Response.Headers.Add("X-Paging-PageCount", serviceResponse.Data?.TotalPages.ToString());
+                    Response.Headers.Add("X-Paging-TotalRecordCount", serviceResponse.Data?.TotalCount.ToString());
+                    return Ok(serviceResponse.Data?.Items);
+                case EResponseType.NotFound:
+                    return NotFound();
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

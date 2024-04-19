@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using ConJob.Data;
 using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.Filtering;
 using ConJob.Domain.Repository;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using Hangfire.Common;
+using LinqKit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -28,14 +30,20 @@ namespace ConJob.Domain.Services
         private readonly IJobRepository _jobRepository;
         private readonly IUserRepository _userRepository;
         private readonly AppDbContext _context;
-        public JobSevices(IMapper mapper, IJobRepository jobRepository, IUserRepository userRepository, AppDbContext context)
+        private readonly IFilterHelper<JobDTO> _filterHelper;
+        public JobSevices(IMapper mapper, IJobRepository jobRepository, IUserRepository userRepository, AppDbContext context, IFilterHelper<JobDTO> filterHelper)
         {
             _mapper = mapper;
             _jobRepository = jobRepository;
             _userRepository = userRepository;
             _context = context;
+            _filterHelper = filterHelper;
         }
 
+        private IQueryable<JobModel> GetJobs()
+        {
+            return _context.Jobs;
+        }
         public async Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid, JobDetailsDTO job)
         {
             var serviceReponse = new ServiceResponse<JobDetailsDTO>();
@@ -134,27 +142,25 @@ namespace ConJob.Domain.Services
             return serviceReponse;
         }
 
-        public async Task<ServiceResponse<IEnumerable<JobDTO>>> searchJobAsync(SearchJob searchJob)
+        public async Task<ServiceResponse<PagingReturnModel<JobDTO>>> searchJobAsync(FilterOptions searchJob)
         {
-            var serviceReponse = new ServiceResponse<IEnumerable<JobDTO>>();
+            var predicate = PredicateBuilder.New<JobDTO>();
+            var searchJob2 = new SearchJob();
+            predicate = predicate.Or(p => p.title.Contains(searchJob2.search));
+            var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
+
             try
             {
-                var job = _jobRepository.searchJobs(searchJob);
-                var jobDTO = _mapper.Map<IEnumerable<JobDTO>>(job);
-                if (jobDTO != null)
+                var job = _mapper.ProjectTo<JobDTO>(GetJobs()).Where(predicate).AsNoTracking();
+                var sortedJob=_filterHelper.ApplySorting(job,searchJob.OrderBy);
+                var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.Page, searchJob.Limit);
+                if (job.Any()==true)
                 {
-                    serviceReponse.Data = jobDTO;
+                    serviceResponse.Data =pagedJob ;
                 }
-
-                serviceReponse.ResponseType = EResponseType.Success;
             }
-            catch (DbException ex)
-            {
-                serviceReponse.ResponseType = EResponseType.NotFound;
-                serviceReponse.Message = ex.Message;
-            }
-
-            return serviceReponse;
+            catch { throw; }
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<JobDTO>> UpdateJobAsync(int id, JobDTO jobDTO)
