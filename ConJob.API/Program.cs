@@ -23,7 +23,9 @@ using System.Text.Json.Serialization;
 using Asp.Versioning;
 using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Job;
-
+using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Post;
+using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +55,6 @@ apiVersioningBuilder.AddApiExplorer(
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.")));
 #endregion
-
 
 
 #region Add JWT Settings 
