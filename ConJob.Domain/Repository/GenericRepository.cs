@@ -28,6 +28,18 @@ namespace ConJob.Domain.Repository
             }
             
         }
+        public async Task UpdateAsync(T entity)
+        {
+            try
+            {
+                _context.Entry(entity).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+        }
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
             await _context.Set<T>().AddRangeAsync(entities);

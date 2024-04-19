@@ -4,6 +4,7 @@ using ConJob.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240418071127_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -722,7 +725,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Personal_Skills");
+                    b.ToTable("Personal_skillModel");
 
                     b.HasData(
                         new
@@ -1129,7 +1132,6 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$1sVR2Gq.ClMN/YHPGJ1pyOoImy22J.rM48VMvhvmcw52ekgfxKAtW",
                             password = "$2a$11$.CERnqT9ko9moKM9Vr9W2usgHwDekCCHqfQ1tY46Y8b3ilNrwoP3S",
                             phone_number = "0335487991"
                         },
