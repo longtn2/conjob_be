@@ -5,6 +5,8 @@ using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Encryption;
 using ConJob.Entities;
 using AutoMapper;
+using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.DTOs.Follow;
 namespace ConJob.Domain.AutoMapper
 {
@@ -31,6 +33,18 @@ namespace ConJob.Domain.AutoMapper
                 .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.to_user_id)).ReverseMap();
 
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
+            CreateMap<JobModel, JobDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x => x.posts)).ReverseMap();
+            CreateMap<JobModel, JobDetailsDTO>().ReverseMap();
+            CreateMap<PostModel, PostDTO>().ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
+                                           .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
+                                           .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
+                                           .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
+            CreateMap<PostModel, PostDetailsDTO>()
+                                            .ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
+                                            .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
+                                            .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
+                                            .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
+                                            .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
         }
     }
 }

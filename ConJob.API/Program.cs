@@ -21,6 +21,11 @@ using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Post;
+using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +84,9 @@ builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
 builder.Services.AddScoped<IS3Services,  S3Services>();
+builder.Services.AddScoped<IJobServices, JobSevices>();
+builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
+builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
@@ -91,6 +99,7 @@ builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IJwtRepository, JwtRepository>();
 builder.Services.AddTransient<IPostRepository, PostRepository>();
 builder.Services.AddTransient<IFollowRepository, FollowRepository>();
+builder.Services.AddScoped<IJobRepository, JobRepository>();
 #endregion
 
 builder.Services.AddControllers();

@@ -9,6 +9,7 @@ namespace ConJob.Domain.Repository.Interface
         IEnumerable<T> GetAll();
         IEnumerable<T> Find(Expression<Func<T, bool>> expression);
         Task AddAsync(T entity);
+        Task UpdateAsync(T entity);
         Task AddRangeAsync(IEnumerable<T> entities);
         Task RemoveAsync(T entity);
         Task RemoveRangeAsync(IEnumerable<T> entities);
