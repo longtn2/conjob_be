@@ -8,6 +8,7 @@ using AutoMapper;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.DTOs.Follow;
 namespace ConJob.Domain.AutoMapper
 {
     public class MappingProfile :Profile
@@ -25,6 +26,14 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<UserModel, UserInfoDTO>().ReverseMap(); 
             CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())).ReverseMap();
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
+
+            CreateMap<FollowModel, FollowDTO>()
+               .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.from_user_follow.id))
+               .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.from_user_follow.id)).ReverseMap();
+            CreateMap<FollowModel, FollowDTO>()
+                .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.from_user_id))
+                .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.to_user_id)).ReverseMap();
+
             CreateMap<PostModel, PostDTO> ().ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
                                             .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
                                             .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
