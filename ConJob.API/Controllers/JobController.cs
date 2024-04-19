@@ -31,10 +31,10 @@ namespace ConJob.API.Controllers
             switch (serviceResponse.ResponseType)
             {
                 case EResponseType.Success:
-                    Response.Headers.Add("X-Paging-PageNo", serviceResponse.Data?.CurrentPage.ToString());
-                    Response.Headers.Add("X-Paging-PageSize", serviceResponse.Data?.PageSize.ToString());
-                    Response.Headers.Add("X-Paging-PageCount", serviceResponse.Data?.TotalPages.ToString());
-                    Response.Headers.Add("X-Paging-TotalRecordCount", serviceResponse.Data?.TotalCount.ToString());
+                    Response.Headers["X-Paging-PageNo"] = serviceResponse.Data?.CurrentPage.ToString();
+                    Response.Headers["X-Paging-PageSize"] = serviceResponse.Data?.PageSize.ToString();
+                    Response.Headers["X-Paging-PageCount"] = serviceResponse.Data?.TotalPages.ToString();
+                    Response.Headers["X-Paging-TotalRecordCount"] = serviceResponse.Data?.TotalCount.ToString();
                     return Ok(serviceResponse.Data?.Items);
                 case EResponseType.NotFound:
                     return NotFound();
@@ -108,7 +108,6 @@ namespace ConJob.API.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-
         public async Task<IActionResult> Delete(string id)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();
