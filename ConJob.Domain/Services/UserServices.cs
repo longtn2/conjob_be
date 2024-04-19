@@ -35,7 +35,6 @@ namespace ConJob.Domain.Services
 
         public async Task<UserDTO?> GetUserByIdAsync(int id)
         {
-            //var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             var user = _userRepository.GetById(id);
             return _mapper.Map<UserDTO>(user); 
         }
@@ -46,15 +45,14 @@ namespace ConJob.Domain.Services
             var user = _userRepository.GetById(int.Parse(id));
             if (user == null)
             {
-
                 serviceResponse.ResponseType = EResponseType.NotFound;
+                serviceResponse.Message = "User not found";
             }
             else
             {
                 UserInfoDTO u = _mapper.Map<UserInfoDTO>(user);
                 serviceResponse.Data = u;
             }
-
             return serviceResponse;
         }
 

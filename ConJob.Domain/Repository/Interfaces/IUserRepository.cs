@@ -1,5 +1,4 @@
-﻿using ConJob.Domain.DTOs.User;
-using ConJob.Domain.Repository.Interface;
+﻿using ConJob.Domain.Repository.Interface;
 using ConJob.Entities;
 
 namespace ConJob.Domain.Repository.Interfaces

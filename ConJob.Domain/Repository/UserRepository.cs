@@ -1,5 +1,4 @@
 ﻿using ConJob.Data;
-using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +22,6 @@ namespace ConJob.Domain.Repository
         public async Task<bool> updateAvatar(string? userid, string avatar)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.id == int.Parse(userid));
-
             if (user != null)
             {
                 user.avatar = avatar;

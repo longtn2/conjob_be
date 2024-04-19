@@ -5,7 +5,6 @@ using static ConJob.Domain.Response.EServiceResponseTypes;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
-using Asp.Versioning;
 
 namespace ConJob.API.Controllers
 {
@@ -66,14 +65,21 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> getProfileUser()
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var serviceResponse = await _userServices.GetUserInfoAsync(userid);
-            return serviceResponse.ResponseType switch
+            if (userid == null)
             {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.NotFound => BadRequest(serviceResponse.Message),
-                EResponseType.Forbid => Forbid(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+                return BadRequest(new ServiceResponse<UserInfoDTO> { Message = "User Not Found!", ResponseType = EResponseType.BadRequest});
+            }
+            else
+            {
+                var serviceResponse = await _userServices.GetUserInfoAsync(userid);
+                return serviceResponse.ResponseType switch
+                {
+                    EResponseType.Success => Ok(serviceResponse.Data),
+                    EResponseType.NotFound => BadRequest(serviceResponse.Message),
+                    EResponseType.Forbid => Forbid(serviceResponse.Message),
+                    _ => throw new NotImplementedException()
+                };
+            }
         }
 
         [Route("avatar-upload")]
