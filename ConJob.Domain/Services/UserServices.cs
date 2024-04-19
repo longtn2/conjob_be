@@ -9,8 +9,8 @@ using ConJob.Entities;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.Encryption;
 using ConJob.Domain.DTOs.Follow;
-using Microsoft.AspNetCore.Http.HttpResults;
 using ConJob.Domain.Constant;
+using ConJob.Data;
 
 namespace ConJob.Domain.Services
 {
@@ -26,7 +26,7 @@ namespace ConJob.Domain.Services
         private readonly IFollowRepository _followRepository;
         private readonly AppDbContext _context;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context, IFollowRepository followRepository)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IEmailServices emailServices, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context, IFollowRepository followRepository)
         {
             _logger = logger;
             _mapper = mapper;
@@ -181,7 +181,7 @@ namespace ConJob.Domain.Services
                 tofollow.from_user_follow = _userRepository.GetById(tofollow.from_user_id)!;
                 tofollow.to_user_follow = _userRepository.GetById(tofollow.to_user_id)!;
 
-                var checkfollow =  _context.Follows.Where(e => e.to_user_follow.id == tofollow.to_user_id && e.from_user_follow.id == tofollow.from_user_id).FirstOrDefault();
+                var checkfollow = _context.Follows.Where(e => e.to_user_follow.id == tofollow.to_user_id && e.from_user_follow.id == tofollow.from_user_id).FirstOrDefault();
                 if (tofollow.to_user_follow == null || tofollow.from_user_follow == null)
                     serviceResponse.ResponseType = EResponseType.BadRequest;
                 else if (checkfollow == null)
