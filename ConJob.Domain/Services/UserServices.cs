@@ -134,17 +134,13 @@ namespace ConJob.Domain.Services
 
         public async Task<ServiceResponse<UserDTO>> updateUserInfo(UserInfoDTO updateUser, string? id)
         {
-
             var serviceResponse = new ServiceResponse<UserDTO>();
-
-
             try
             {
 
                 var user = _userRepository.GetById(int.Parse(id));
                 if (user == null)
                 {
-
                     serviceResponse.ResponseType = EResponseType.NotFound;
                 }
                 else
@@ -211,10 +207,10 @@ namespace ConJob.Domain.Services
                     serviceResponse.Message = "User is followed";
                 }
             }
-            catch (DbUpdateException ex)
+            catch
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Somthing wrong." + ex.Message;
+                serviceResponse.Message = "Somthing wrong.";
             }
             return serviceResponse;
         }
@@ -227,7 +223,6 @@ namespace ConJob.Domain.Services
                 var toRemove = _mapper.Map<FollowModel>(follow);
                 toRemove.from_user_follow = _userRepository.GetById(toRemove.from_user_id)!;
                 toRemove.to_user_follow = _userRepository.GetById(toRemove.to_user_id)!;
-                /*var result = await _followRepository.GetFollowbyUser(toRemove.FromUser, toRemove.ToUser);*/
                 var result = await _context.Follows.Where(e => e.from_user_id == follow.FromUserID && e.to_user_id == follow.ToUserID).FirstOrDefaultAsync();
                 if (result == null)
                 {
@@ -239,7 +234,7 @@ namespace ConJob.Domain.Services
                     serviceResponse.Data = _mapper.Map<FollowDTO>(toRemove);
                 }
             }
-            catch (DbUpdateException ex)
+            catch
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
                 serviceResponse.Message = "Somthing wrong.";

@@ -1,10 +1,6 @@
 ﻿using ConJob.Domain.Repository.Interface;
 using ConJob.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ConJob.Domain.Repository.Interfaces
 {
@@ -12,5 +8,6 @@ namespace ConJob.Domain.Repository.Interfaces
     {
         FollowModel GetFollowbyUser(UserModel fromUser, UserModel toUser);
         Task<int> CountFollower(int userid);
+        Task<int> CountFolling(int userid);
     }
 }
