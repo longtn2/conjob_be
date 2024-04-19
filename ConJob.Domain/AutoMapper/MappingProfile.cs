@@ -16,11 +16,11 @@ namespace ConJob.Domain.AutoMapper
             _pwdHasher = pwdHasher;
             CreateMap<UserRegisterDTO, UserModel>().ForMember(dest => dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.Password)));
             CreateMap<UserModel, UserDTO>()
-                 .ForMember(dto => dto.Roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()));
+                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()));
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.Hash(src.Token)));
             ////Reverse can map from 1->2 || 2->1
             CreateMap<UserModel, UserInfoDTO>().ReverseMap();
-            CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.Roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())).ReverseMap();
+            CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())).ReverseMap();
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
 
             CreateMap<FollowModel, FollowDTO>()
