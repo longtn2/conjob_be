@@ -53,7 +53,7 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<CredentialDTO>();
             try
             {
-                var user = await _userRepository.getUserByEmail(userdata.Email);
+                var user = await _userRepository.getUserByEmail(userdata.email);
                 if (user != null)
                 {
                     var checkCredential = _pwHasher.verify(userdata.Password, user.password);
@@ -66,7 +66,7 @@ namespace ConJob.Domain.Services
 
                         await _jwtServices.InsertJWTToken(new JwtDTO()
                         {
-                            User = user,
+                            user = user,
                             ExpiredDate = DateTime.UtcNow.AddMonths(6),
                             Token = refreshToken,
                         });
@@ -116,7 +116,7 @@ namespace ConJob.Domain.Services
             {
                 var userid = claim.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-                var user =  _userRepository.GetById(int.Parse(userid));
+                var user = _userRepository.GetById(int.Parse(userid));
                 if (user == null)
                 {
                     serviceResponse.ResponseType = EResponseType.Unauthorized;
@@ -160,7 +160,7 @@ namespace ConJob.Domain.Services
                 var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
                 var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
 
-                var user = _userRepository.GetById(int.Parse(userid));
+                var user =  _userRepository.GetById(int.Parse(userid));
                 if (user == null || action == null || user.is_email_confirmed == true) {
                     serviceResponse.ResponseType = EResponseType.Unauthorized;
                     serviceResponse.Message = "Could not found User or activated already.";

@@ -1,13 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Response;
@@ -42,7 +35,6 @@ namespace ConJob.Domain.Services
 
         public async Task<UserDTO?> GetUserByIdAsync(int id)
         {
-            //var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             var user = _userRepository.GetById(id);
             return _mapper.Map<UserDTO>(user); 
         }
@@ -53,15 +45,14 @@ namespace ConJob.Domain.Services
             var user = _userRepository.GetById(int.Parse(id));
             if (user == null)
             {
-
                 serviceResponse.ResponseType = EResponseType.NotFound;
+                serviceResponse.Message = "User not found";
             }
             else
             {
                 UserInfoDTO u = _mapper.Map<UserInfoDTO>(user);
                 serviceResponse.Data = u;
             }
-
             return serviceResponse;
         }
 
@@ -71,20 +62,14 @@ namespace ConJob.Domain.Services
             try
             {
                 var toAdd = _mapper.Map<UserModel>(user);
-                //var role = await _context.Role.FirstOrDefaultAsync(x => x.RoleName == "TimViec");
                 var role = _roleRepository.getRoleByName("TimViec");
-
-
                 if (role == null) ;
                 await _context.UserRoles.AddAsync(new UserRoleModel()
                 {
                     role = role,
                     user = toAdd
                 });
-
-                //await _context.User!.AddAsync(toAdd);
                 await _userRepository.AddAsync(toAdd);
-                //await _context.SaveChangesAsync();
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
             }
             catch (DbUpdateException ex)
@@ -100,7 +85,6 @@ namespace ConJob.Domain.Services
         {
             RoleModel selectedRole = await _roleRepository.getRoleExceptAdmin(Role.RoleName);
             var serviceResponse = new ServiceResponse<UserDTO>();
-
             try
             {
                 var userModel = _userRepository.GetById(int.Parse(userid));
@@ -128,26 +112,23 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<UserDTO>> updateUserInfo(UserInfoDTO updateUser, string? id)
+        public async Task<ServiceResponse<UserInfoDTO>> updateUserInfo(UserInfoDTO updateUser, string? id)
         {
 
-            var serviceResponse = new ServiceResponse<UserDTO>();
-
-
+            var serviceResponse = new ServiceResponse<UserInfoDTO>();
             try {
-
                 var user = _userRepository.GetById(int.Parse(id));
                 if (user == null)
                 {
-
                     serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "User Not Found";
                 }
                 else
                 {
-                    user = _mapper.Map(updateUser, user);
+                    user = await _userRepository.updateAsync(updateUser, user);
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Message = "Update User Successful";
-                    serviceResponse.Data = _mapper.Map<UserDTO>(user);
+                    serviceResponse.Message = "Update User Successfully";
+                    serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
                 }
             }
             catch (DbUpdateException ex)
