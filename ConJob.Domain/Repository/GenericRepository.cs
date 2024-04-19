@@ -3,6 +3,7 @@ using ConJob.Data;
 using ConJob.Domain.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+
 namespace ConJob.Domain.Repository
 {
     public class GenericRepository<T>: IGenericRepository<T> where T : class
