@@ -24,7 +24,6 @@ using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Post;
 using Asp.Versioning;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 #region Add Config 
@@ -40,6 +39,14 @@ var apiVersioningBuilder = builder.Services.AddApiVersioning(o =>
     o.DefaultApiVersion = new ApiVersion(1, 0);
     o.ReportApiVersions = true;
 });
+
+apiVersioningBuilder.AddApiExplorer(
+    options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
+#endregion
 
 apiVersioningBuilder.AddApiExplorer(
     options =>
