@@ -40,10 +40,6 @@ namespace ConJob.Domain.Services
             _filterHelper = filterHelper;
         }
 
-        private IQueryable<JobModel> GetJobs()
-        {
-            return _context.Jobs;
-        }
         public async Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid, JobDetailsDTO job)
         {
             var serviceReponse = new ServiceResponse<JobDetailsDTO>();
@@ -129,10 +125,9 @@ namespace ConJob.Domain.Services
             var serviceReponse = new ServiceResponse<IEnumerable<JobDTO>>();
             try
             {
-                var job = _jobRepository.GetAll();
+                var job = _jobRepository.GetAllAsync();
                 serviceReponse.ResponseType = EResponseType.Success;
-                serviceReponse.Data = _mapper.Map<IEnumerable<JobDTO>>(job);
-
+                serviceReponse.Data = _mapper.ProjectTo<JobDTO>(job);
             }
             catch (DbException ex)
             {
@@ -151,7 +146,9 @@ namespace ConJob.Domain.Services
 
             try
             {
-                var job = _mapper.ProjectTo<JobDTO>(GetJobs()).Where(predicate).AsNoTracking();
+                var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
+                    .Where(predicate)
+                    .AsNoTracking();
                 var sortedJob=_filterHelper.ApplySorting(job,searchJob.OrderBy);
                 var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.Page, searchJob.Limit);
                 if (job.Any()==true)

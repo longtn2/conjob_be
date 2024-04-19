@@ -24,5 +24,6 @@ namespace ConJob.Domain.DTOs.Job
         public int quanlity { get; set; }
         public string status { get; set; }
         public int category_id { get; set; }
+        public ICollection<PostDTO> post { get; set; }
     }
 }
