@@ -3,6 +3,7 @@ using ConJob.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -29,14 +30,15 @@ namespace ConJob.API.Controllers
         [Route("update-profile")]
         [Produces("application/json")]
         [HttpPost]
+
         public async Task<ActionResult> updateUserProfile(UserInfoDTO userdata)
         {
-            var claims = User.Claims.Where(x => x.Type == "UserId").FirstOrDefault();
+            var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
             var serviceResponse = await _userServices.updateUserInfo(userdata, userid);
             return serviceResponse.ResponseType switch
             {
-                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.Success => Ok(serviceResponse),
                 EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
                 EResponseType.Forbid => Forbid(serviceResponse.Message),
                 _ => throw new NotImplementedException()

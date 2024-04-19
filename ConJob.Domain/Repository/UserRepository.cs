@@ -3,6 +3,7 @@ using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using ConJob.Domain.DTOs.User;
 
 namespace ConJob.Domain.Repository
 {
@@ -46,6 +47,13 @@ namespace ConJob.Domain.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<UserModel> updateAsync(UserInfoDTO userDTO, UserModel userModel)
+        {
+            var user = _mapper.Map(userDTO, userModel);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task<UserModel> findUserPostAsync(int user_id)
