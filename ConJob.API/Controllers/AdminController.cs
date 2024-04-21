@@ -27,8 +27,8 @@ namespace ConJob.API.Controllers
             var serviceResponse = await _postService.DeleteAsync(int.Parse(userid), id);
             return serviceResponse.ResponseType switch
             {
-                EResponseType.Success => NoContent(),
-                EResponseType.NotFound => NotFound(),
+                EResponseType.Success => Ok(serviceResponse),
+                EResponseType.NotFound => NotFound(serviceResponse),
                 _ => throw new NotImplementedException()
             };
         }
@@ -41,8 +41,8 @@ namespace ConJob.API.Controllers
             var serviceResponse = await _postService.ActiveAsync(int.Parse(userid), id);
             return serviceResponse.ResponseType switch
             {
-                EResponseType.Success => NoContent(),
-                EResponseType.NotFound => NotFound(),
+                EResponseType.Success => Ok(serviceResponse),
+                EResponseType.NotFound => NotFound(serviceResponse),
                 _ => throw new NotImplementedException()
             };
         }
@@ -61,7 +61,7 @@ namespace ConJob.API.Controllers
                     Response.Headers.Add("X-Paging-TotalRecordCount", serviceResponse.Data?.TotalCount.ToString());
                     return Ok(serviceResponse.Data?.Items);
                 case EResponseType.NotFound:
-                    return NotFound();
+                    return NotFound(serviceResponse);
                 default:
                     throw new NotImplementedException();
             }

@@ -109,12 +109,10 @@ builder.Services.AddScoped<IJobRepository, JobRepository>();
 
 builder.Services.AddControllers();
 
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
-
 
 #region config Swagger 
 builder.Services.AddEndpointsApiExplorer();
@@ -180,9 +178,6 @@ app.UseMiddleware<ValidationExceptionHandlerMiddleware>();
 #endregion
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

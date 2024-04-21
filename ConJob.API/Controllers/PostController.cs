@@ -33,7 +33,7 @@ namespace ConJob.API.Controllers
                     Response.Headers.Add("X-Paging-TotalRecordCount", serviceResponse.Data?.TotalCount.ToString());
                     return Ok(serviceResponse.Data?.Items);
                 case EResponseType.NotFound:
-                    return NotFound();
+                    return NotFound(serviceResponse);
                 default:
                     throw new NotImplementedException();
             }

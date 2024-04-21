@@ -56,7 +56,7 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<PagingReturnModel<PostDTO>>();
             try
             {
-                var posts = _mapper.ProjectTo<PostDTO>(_postRepository.GetPosts())
+                var posts = _mapper.ProjectTo<PostDTO>(_postRepository.GetPostNotDeleted())
                         .AsNoTracking();
 
                 #region paging
@@ -193,16 +193,15 @@ namespace ConJob.Domain.Services
                 var posts = _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetPosts())
                         .Where(predicate)
                         .AsNoTracking();
-
-                var sortedPosts = _filterHelper.ApplySorting(posts, filterParameters.OrderBy);
-
                 if (statusFilter == "is_deleted")
-                    sortedPosts = sortedPosts.Where(p => p.is_deleted == true); 
+                    posts = posts.Where(p => p.is_deleted == true);
                 else if (statusFilter == "is_actived")
-                    sortedPosts = sortedPosts.Where(p => p.is_actived == true);
-
+                    posts = posts.Where(p => p.is_actived == true);
+                else
+                    posts = posts.Where(p => p.is_deleted == false && p.is_actived == false);
+                // apply sorting and paging
+                var sortedPosts = _filterHelper.ApplySorting(posts, filterParameters.OrderBy);
                 var pagedPosts = await _filterHelper.ApplyPaging(sortedPosts, filterParameters.Page, filterParameters.Limit);
-
                 if (pagedPosts?.Items?.Any() == true)
                 {
                     serviceResponse.Data = pagedPosts;
