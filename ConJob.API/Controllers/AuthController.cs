@@ -1,5 +1,4 @@
 ﻿
-using Asp.Versioning;
 using ConJob.API.Error.ValidationError;
 using ConJob.Domain.DTOs.Authentication;
 using ConJob.Domain.DTOs.Common;
@@ -7,7 +6,6 @@ using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Net;
 using System.Security.Claims;
 using static ConJob.Domain.Response.EServiceResponseTypes;

@@ -2,12 +2,7 @@
 using ConJob.Data;
 using ConJob.Domain.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConJob.Domain.Repository
 {
@@ -32,6 +27,18 @@ namespace ConJob.Domain.Repository
                 throw;
             }
             
+        }
+        public async Task UpdateAsync(T entity)
+        {
+            try
+            {
+                _context.Entry(entity).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
         }
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {

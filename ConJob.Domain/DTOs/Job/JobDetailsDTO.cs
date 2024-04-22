@@ -1,18 +1,18 @@
-﻿using ConJob.Entities;
+﻿using ConJob.Domain.DTOs.Apllicant;
+using ConJob.Domain.DTOs.Post;
+using ConJob.Domain.DTOs.User;
+using ConJob.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using ConJob.Domain.DTOs.Post;
 
 namespace ConJob.Domain.DTOs.Job
 {
-
-    public class JobDTO
+    public class JobDetailsDTO
     {
         public string title { get; set; }
         public string description { get; set; }
@@ -22,6 +22,6 @@ namespace ConJob.Domain.DTOs.Job
         public DateTime expired_day { get; set; }
         public int quanlity { get; set; }
         public string status { get; set; }
-        public virtual ICollection<PostDTO>? posts { get; set; }
+        public int category_id { get; set; }
     }
 }

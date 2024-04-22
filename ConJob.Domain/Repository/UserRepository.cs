@@ -1,14 +1,9 @@
 ﻿using ConJob.Data;
-using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using ConJob.Domain.DTOs.User;
 
 namespace ConJob.Domain.Repository
 {
@@ -28,13 +23,12 @@ namespace ConJob.Domain.Repository
         public async Task<bool> updateAvatar(string? userid, string avatar)
         {
             var user = await _context.users.FirstOrDefaultAsync(x => x.id == int.Parse(userid));
-
             if (user != null)
             {
                 user.avatar = avatar;
             }
             else
-        {
+            {
                 return false;
             }
             _context.SaveChanges();
@@ -52,6 +46,13 @@ namespace ConJob.Domain.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<UserModel> updateAsync(UserInfoDTO userDTO, UserModel userModel)
+        {
+            var user = _mapper.Map(userDTO, userModel);
+            await _context.SaveChangesAsync();
+            return user;
         }
     }
 }

@@ -27,7 +27,10 @@ using ConJob.API.Filter.AuthResponsesOperationFilter;
 using ConJob.API.Policy.ResultHandler;
 using ConJob.API.Error.ValidationError;
 using System.Net.Mime;
-
+using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.Filtering;
+using ConJob.Domain.DTOs.Post;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,12 +57,10 @@ apiVersioningBuilder.AddApiExplorer(
     });
 #endregion
 
-
 #region Add DB service
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.")));
 #endregion
-
 
 
 #region Add JWT Settings 
@@ -88,7 +89,10 @@ builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
-builder.Services.AddScoped<IS3Services, S3Services>();
+builder.Services.AddScoped<IS3Services,  S3Services>();
+builder.Services.AddScoped<IJobServices, JobSevices>();
+builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
+builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
@@ -105,6 +109,8 @@ builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IJwtRepository, JwtRepository>();
 builder.Services.AddTransient<IPostRepository, PostRepository>();
+builder.Services.AddTransient<IFollowRepository, FollowRepository>();
+builder.Services.AddScoped<IJobRepository, JobRepository>();
 #endregion
 
 builder.Services.AddControllers();
@@ -158,7 +164,7 @@ builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 .CreateMapper());
 
 #endregion
-
+ 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

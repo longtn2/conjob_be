@@ -14,7 +14,7 @@
   },
   "MailSettings": {
     "Server": "",
-    "Port": ,
+    "Port":,
     "SenderName": "",
     "SenderEmail": "",
     "UserName": "",
