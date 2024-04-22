@@ -12,17 +12,16 @@ namespace ConJob.Domain.Services
     public class JwtServices : IJwtServices
     {
         private readonly IMapper _mapper;
-        private readonly AppDbContext _context;
         private readonly IJwtRepository _jwtRepository;
         private readonly IPasswordHasher _hasher;
 
         public JwtServices(IMapper mapper, AppDbContext context, IJwtRepository jwtRepository, IPasswordHasher hasher)
         {
             _mapper = mapper;
-            _context = context;
             _jwtRepository = jwtRepository;
             _hasher = hasher;
         }
+
         public async Task InsertJWTToken(JwtDTO jwt)
         {
             var needToAdd = _mapper.Map<JWTModel>(jwt);

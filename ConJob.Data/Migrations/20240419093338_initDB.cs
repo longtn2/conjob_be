@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ConJob.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class all : Migration
+    public partial class initDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categorys",
+                name: "Categories",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -28,7 +28,7 @@ namespace ConJob.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categorys", x => x.id);
+                    table.PrimaryKey("PK_Categories", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,8 +135,7 @@ namespace ConJob.Data.Migrations
                         name: "FK_Follows_Users_from_user_id",
                         column: x => x.from_user_id,
                         principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Follows_Users_to_user_id",
                         column: x => x.to_user_id,
@@ -170,9 +169,9 @@ namespace ConJob.Data.Migrations
                 {
                     table.PrimaryKey("PK_Jobs", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Jobs_Categorys_category_id",
+                        name: "FK_Jobs_Categories_category_id",
                         column: x => x.category_id,
-                        principalTable: "Categorys",
+                        principalTable: "Categories",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -209,7 +208,7 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MessageModel",
+                name: "Messages",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -224,15 +223,15 @@ namespace ConJob.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MessageModel", x => x.id);
+                    table.PrimaryKey("PK_Messages", x => x.id);
                     table.ForeignKey(
-                        name: "FK_MessageModel_Users_receive_user_id",
+                        name: "FK_Messages_Users_receive_user_id",
                         column: x => x.receive_user_id,
                         principalTable: "Users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MessageModel_Users_send_user_id",
+                        name: "FK_Messages_Users_send_user_id",
                         column: x => x.send_user_id,
                         principalTable: "Users",
                         principalColumn: "id",
@@ -272,7 +271,7 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Personal_skillModel",
+                name: "Persional_Skills",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -288,15 +287,15 @@ namespace ConJob.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Personal_skillModel", x => x.id);
+                    table.PrimaryKey("PK_Persional_Skills", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Personal_skillModel_Skills_skill_id",
+                        name: "FK_Persional_Skills_Skills_skill_id",
                         column: x => x.skill_id,
                         principalTable: "Skills",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Personal_skillModel_Users_user_id",
+                        name: "FK_Persional_Skills_Users_user_id",
                         column: x => x.user_id,
                         principalTable: "Users",
                         principalColumn: "id",
@@ -371,13 +370,13 @@ namespace ConJob.Data.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     caption = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     is_deleted = table.Column<bool>(type: "bit", nullable: false),
                     is_actived = table.Column<bool>(type: "bit", nullable: false),
                     user_id = table.Column<int>(type: "int", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    job_id = table.Column<int>(type: "int", nullable: false),
                     file_id = table.Column<int>(type: "int", nullable: false),
+                    JobModelid = table.Column<int>(type: "int", nullable: true),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -393,11 +392,10 @@ namespace ConJob.Data.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Posts_Jobs_job_id",
-                        column: x => x.job_id,
+                        name: "FK_Posts_Jobs_JobModelid",
+                        column: x => x.JobModelid,
                         principalTable: "Jobs",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Posts_Users_user_id",
                         column: x => x.user_id,
@@ -407,7 +405,7 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CommentModel",
+                name: "Comments",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -422,15 +420,15 @@ namespace ConJob.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommentModel", x => x.id);
+                    table.PrimaryKey("PK_Comments", x => x.id);
                     table.ForeignKey(
-                        name: "FK_CommentModel_Posts_post_id",
+                        name: "FK_Comments_Posts_post_id",
                         column: x => x.post_id,
                         principalTable: "Posts",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CommentModel_Users_user_id",
+                        name: "FK_Comments_Users_user_id",
                         column: x => x.user_id,
                         principalTable: "Users",
                         principalColumn: "id",
@@ -499,7 +497,7 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Categorys",
+                table: "Categories",
                 columns: new[] { "id", "change_on", "create_on", "created_at", "description", "name", "updated_at" },
                 values: new object[,]
                 {
@@ -523,8 +521,8 @@ namespace ConJob.Data.Migrations
                 values: new object[,]
                 {
                     { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Là admin cuyền lực.", "Admin", null },
-                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Là nole tư bản đi tìm kiếm miếng cơm manh áo.", "TimViec", null },
-                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Là tư bản đi kiếm những con chiêng ngoan đạo.", "PhatViec", null }
+                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Là nole tư bản đi tìm kiếm miếng cơm manh áo.", "Job Seeker", null },
+                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Là tư bản đi kiếm những con chiêng ngoan đạo.", "Job Giver", null }
                 });
 
             migrationBuilder.InsertData(
@@ -545,11 +543,11 @@ namespace ConJob.Data.Migrations
                 columns: new[] { "id", "address", "avatar", "change_on", "create_on", "created_at", "dob", "email", "fcm_token", "first_name", "gender", "is_deleted", "is_email_confirmed", "last_name", "password", "phone_number", "updated_at" },
                 values: new object[,]
                 {
-                    { 1, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@com.com", null, "Admin", 0, false, false, "Dat", "$2a$11$ERlFL0E9VPW.24fHfytRv.eo51TgL4j//w0d1fu.boxNomLOVx71m", "0335487991", null },
-                    { 2, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "apeacocke1@google.ca", null, "Fawnia", 0, false, false, "Alexandros", "$2a$11$5T3O2uJBd4cthDWGLjhy1OyzWLa/RwfCpUbs4m70ALMIzEdlkitku", "0354579415", null },
-                    { 3, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cpancoast2@wsj.com", null, "Cazzie", 0, false, false, "Pancoast", "$2a$11$KSS1SkxNCDrR2dBZRs4TzuXSeMvX77zD0hPAPvN0EHXV.T.QKGpwm", "0354596415", null },
-                    { 4, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datmarri@google.ca", null, "Marri", 0, false, false, "Dat", "$2a$11$XAilPha6UXTNJefGNpNG7ubKjWwGOCrwtxS9/PC1YRAPfiBPX8DoO", "0354579415", null },
-                    { 5, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datkhongchin@google.ca", null, "Dat", 0, false, false, "khong chin", "$2a$11$zCYBsNWgdDje.5rnne2UfOGs8kfA0/jqNVTnf9WrKCOTRxDmC9n5e", "0354579415", null }
+                    { 1, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@com.com", null, "Admin", 0, false, false, "Dat", "$2a$11$WBPVMj4TF6d9W0b0GaDeQO4tfDe265tCA6SjtJTfcu0352IZ4KMve", "0335487991", null },
+                    { 2, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "apeacocke1@google.ca", null, "Fawnia", 0, false, false, "Alexandros", "$2a$11$ZRpqQBzfOD17gLxL4uLK.ONqAUrEjh41ohGR/Nv/MUP23ebEJvVUG", "0354579415", null },
+                    { 3, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cpancoast2@wsj.com", null, "Cazzie", 0, false, false, "Pancoast", "$2a$11$OTavW4gVh0GsgZfmZ0v9heT1ULE7FcOXef6QgwXWAnB9KPMykz0Sq", "0354596415", null },
+                    { 4, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datmarri@google.ca", null, "Marri", 0, false, false, "Dat", "$2a$11$sS7Ct6pC5SbO7W55XHIoD.jV9O8BV5PSwHbhmIqvJWXfcDqQrnBhO", "0354579415", null },
+                    { 5, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datkhongchin@google.ca", null, "Dat", 0, false, false, "khong chin", "$2a$11$wpVM2balNCYumoz7fxECe.aOQjJ6PpQa8EFBw28cYVx4lEtjPPQQq", "0354579415", null }
                 });
 
             migrationBuilder.InsertData(
@@ -573,7 +571,7 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "MessageModel",
+                table: "Messages",
                 columns: new[] { "id", "change_on", "create_on", "created_at", "message_content", "receive_user_id", "send_user_id", "updated_at" },
                 values: new object[,]
                 {
@@ -596,7 +594,7 @@ namespace ConJob.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Personal_skillModel",
+                table: "Persional_Skills",
                 columns: new[] { "id", "change_on", "create_on", "created_at", "desciption", "exp", "skill_id", "updated_at", "user_id" },
                 values: new object[,]
                 {
@@ -604,6 +602,15 @@ namespace ConJob.Data.Migrations
                     { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "I'am The Best", "3 năm ", 2, null, 2 },
                     { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Tôi là một người đa tài", "10 năm", 3, null, 3 },
                     { 4, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Người có năng khiếu từ nhỏ , siêu vippro", "từ lúc sinh ra ", 4, null, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Posts",
+                columns: new[] { "id", "JobModelid", "caption", "change_on", "create_on", "created_at", "file_id", "is_actived", "is_deleted", "title", "updated_at", "user_id" },
+                values: new object[,]
+                {
+                    { 1, null, "Là một người có trách nghiệm tôi luồn hoàn thành mọi việc một cách hoàn hảo", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, false, false, "Luôn là người có trách nghiệm , I'am vippro", null, 2 },
+                    { 2, null, "Là một người đỉnh cao tôi tự tin , khoe cá tính", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, false, false, "Ai tuyển tôi không", null, 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -625,15 +632,6 @@ namespace ConJob.Data.Migrations
                 {
                     { 1, new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, "Mới nộp", null, 2 },
                     { 2, new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, "Mới nộp", null, 4 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Posts",
-                columns: new[] { "id", "caption", "change_on", "create_on", "created_at", "file_id", "is_actived", "is_deleted", "job_id", "title", "updated_at", "user_id" },
-                values: new object[,]
-                {
-                    { 1, "Là một người có trách nghiệm tôi luồn hoàn thành mọi việc một cách hoàn hảo", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, false, false, 1, "Luôn là người có trách nghiệm , I'am vippro", null, 2 },
-                    { 2, "Là một người đỉnh cao tôi tự tin , khoe cá tính", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, false, false, 2, "Ai tuyển tôi không", null, 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -662,13 +660,13 @@ namespace ConJob.Data.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommentModel_post_id",
-                table: "CommentModel",
+                name: "IX_Comments_post_id",
+                table: "Comments",
                 column: "post_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommentModel_user_id",
-                table: "CommentModel",
+                name: "IX_Comments_user_id",
+                table: "Comments",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
@@ -707,13 +705,13 @@ namespace ConJob.Data.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageModel_receive_user_id",
-                table: "MessageModel",
+                name: "IX_Messages_receive_user_id",
+                table: "Messages",
                 column: "receive_user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageModel_send_user_id",
-                table: "MessageModel",
+                name: "IX_Messages_send_user_id",
+                table: "Messages",
                 column: "send_user_id");
 
             migrationBuilder.CreateIndex(
@@ -727,13 +725,13 @@ namespace ConJob.Data.Migrations
                 column: "UserModelid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Personal_skillModel_skill_id",
-                table: "Personal_skillModel",
+                name: "IX_Persional_Skills_skill_id",
+                table: "Persional_Skills",
                 column: "skill_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Personal_skillModel_user_id",
-                table: "Personal_skillModel",
+                name: "IX_Persional_Skills_user_id",
+                table: "Persional_Skills",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
@@ -742,9 +740,9 @@ namespace ConJob.Data.Migrations
                 column: "file_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_job_id",
+                name: "IX_Posts_JobModelid",
                 table: "Posts",
-                column: "job_id");
+                column: "JobModelid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_user_id",
@@ -785,7 +783,7 @@ namespace ConJob.Data.Migrations
                 name: "Applicants");
 
             migrationBuilder.DropTable(
-                name: "CommentModel");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Follows");
@@ -797,13 +795,13 @@ namespace ConJob.Data.Migrations
                 name: "Likes");
 
             migrationBuilder.DropTable(
-                name: "MessageModel");
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Personal_skillModel");
+                name: "Persional_Skills");
 
             migrationBuilder.DropTable(
                 name: "Reports");
@@ -827,7 +825,7 @@ namespace ConJob.Data.Migrations
                 name: "Jobs");
 
             migrationBuilder.DropTable(
-                name: "Categorys");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Users");

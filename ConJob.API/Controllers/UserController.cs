@@ -10,6 +10,7 @@ using Asp.Versioning;
 using ConJob.API.Error.ValidationError;
 using ConJob.Domain.Files;
 using ConJob.Domain.DTOs.Follow;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ConJob.API.Controllers
 {

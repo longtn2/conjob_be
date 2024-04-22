@@ -44,7 +44,9 @@ namespace ConJob.API.Middleware
                 {
                     ResponseErrorAsync(context, "Internal Server Error", 500);
                 }
+
             }
+
         }
         private async void ResponseErrorAsync(HttpContext context, string msg, int status_code)
         {

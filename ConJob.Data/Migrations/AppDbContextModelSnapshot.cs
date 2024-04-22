@@ -17,7 +17,7 @@ namespace ConJob.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -195,7 +195,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("CommentModel");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ConJob.Entities.FileModel", b =>
@@ -589,7 +589,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("send_user_id");
 
-                    b.ToTable("MessageModel");
+                    b.ToTable("Messages");
 
                     b.HasData(
                         new
@@ -837,6 +837,9 @@ namespace ConJob.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("JobModelid")
+                        .HasColumnType("int");
+
                     b.Property<string>("caption")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -862,9 +865,6 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("job_id")
-                        .HasColumnType("int");
-
                     b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -877,9 +877,9 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("file_id");
+                    b.HasIndex("JobModelid");
 
-                    b.HasIndex("job_id");
+                    b.HasIndex("file_id");
 
                     b.HasIndex("user_id");
 
@@ -896,7 +896,6 @@ namespace ConJob.Data.Migrations
                             is_actived = false,
                             is_delete = false,
                             is_deleted = false,
-                            job_id = 1,
                             title = "Luôn là người có trách nghiệm , I'am vippro",
                             user_id = 2
                         },
@@ -910,7 +909,6 @@ namespace ConJob.Data.Migrations
                             is_actived = false,
                             is_delete = false,
                             is_deleted = false,
-                            job_id = 2,
                             title = "Ai tuyển tôi không",
                             user_id = 5
                         });
@@ -1022,7 +1020,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_delete = false,
                             role_description = "Là nole tư bản đi tìm kiếm miếng cơm manh áo.",
-                            role_name = "TimViec"
+                            role_name = "Job Seeker"
                         },
                         new
                         {
@@ -1031,7 +1029,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_delete = false,
                             role_description = "Là tư bản đi kiếm những con chiêng ngoan đạo.",
-                            role_name = "PhatViec"
+                            role_name = "Job Giver"
                         });
                 });
 
@@ -1410,13 +1408,13 @@ namespace ConJob.Data.Migrations
             modelBuilder.Entity("ConJob.Entities.FollowModel", b =>
                 {
                     b.HasOne("ConJob.Entities.UserModel", "from_user_follow")
-                        .WithMany("followers")
+                        .WithMany("following")
                         .HasForeignKey("from_user_id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ConJob.Entities.UserModel", "to_user_follow")
-                        .WithMany("following")
+                        .WithMany()
                         .HasForeignKey("to_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1497,11 +1495,11 @@ namespace ConJob.Data.Migrations
             modelBuilder.Entity("ConJob.Entities.NotificationModel", b =>
                 {
                     b.HasOne("ConJob.Entities.UserModel", null)
-                        .WithMany("to_user_notiofications")
+                        .WithMany("to_user_notifications")
                         .HasForeignKey("UserModelid");
 
                     b.HasOne("ConJob.Entities.UserModel", "from_user_notification")
-                        .WithMany("from_user_notiofications")
+                        .WithMany("from_user_notifications")
                         .HasForeignKey("from_user_notifi_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1530,15 +1528,13 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
+                    b.HasOne("ConJob.Entities.JobModel", null)
+                        .WithMany("posts")
+                        .HasForeignKey("JobModelid");
+
                     b.HasOne("ConJob.Entities.FileModel", "file")
                         .WithMany("posts")
                         .HasForeignKey("file_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConJob.Entities.JobModel", "job")
-                        .WithMany("posts")
-                        .HasForeignKey("job_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1549,8 +1545,6 @@ namespace ConJob.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("file");
-
-                    b.Navigation("job");
 
                     b.Navigation("user");
                 });
@@ -1635,11 +1629,9 @@ namespace ConJob.Data.Migrations
 
                     b.Navigation("comments");
 
-                    b.Navigation("followers");
-
                     b.Navigation("following");
 
-                    b.Navigation("from_user_notiofications");
+                    b.Navigation("from_user_notifications");
 
                     b.Navigation("jobs");
 
@@ -1657,7 +1649,7 @@ namespace ConJob.Data.Migrations
 
                     b.Navigation("send_users");
 
-                    b.Navigation("to_user_notiofications");
+                    b.Navigation("to_user_notifications");
 
                     b.Navigation("user_roles");
                 });

@@ -42,7 +42,8 @@ namespace ConJob.Domain.Repository
                 user.password = newPassword;
                 await _context.SaveChangesAsync();
                 return true;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return false;
             }
@@ -53,6 +54,13 @@ namespace ConJob.Domain.Repository
             var user = _mapper.Map(userDTO, userModel);
             await _context.SaveChangesAsync();
             return user;
+        }
+
+        public async Task<UserModel> findUserPostAsync(int user_id)
+        {
+            return await _context.Users
+                    .Include(c => c.posts)
+                    .FirstAsync(c => c.id == user_id);
         }
     }
 }

@@ -63,7 +63,6 @@ namespace ConJob.API.Controllers
         [Route("login")]
         [Produces("application/json")]
         [HttpPost]
-
         public async Task<ActionResult> Login(UserLoginDTO userdata)
         {
             var serviceResponse = await _authService.LoginAsync(userdata);

@@ -6,13 +6,13 @@ using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Response;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 using ConJob.Entities;
-using ConJob.Data;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.Encryption;
 using ConJob.Domain.Files;
 using Microsoft.AspNetCore.Http;
 using ConJob.Domain.DTOs.Follow;
-using Microsoft.AspNetCore.Http.HttpResults;
+using ConJob.Domain.Constant;
+using ConJob.Data;
 
 namespace ConJob.Domain.Services
 {
@@ -21,6 +21,7 @@ namespace ConJob.Domain.Services
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IPasswordHasher _pwHasher;
+        private readonly IEmailServices _emailServices;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
@@ -33,7 +34,7 @@ namespace ConJob.Domain.Services
             _logger = logger;
             _mapper = mapper;
             _pwHasher = pwhasher;
-            _context = context;
+            _emailServices = emailServices;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
@@ -69,7 +70,7 @@ namespace ConJob.Domain.Services
             try
             {
                 var toAdd = _mapper.Map<UserModel>(user);
-                var role = _roleRepository.getRoleByName("TimViec");
+                var role = await _roleRepository.getRoleByName(CJConstant.JOB_SEEKER);
                 if (role == null) ;
                 await _context.user_roles.AddAsync(new UserRoleModel()
                 {
@@ -131,7 +132,7 @@ namespace ConJob.Domain.Services
                 {
                     user = await _userRepository.updateAsync(updateUser, user);
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Message = "Update User Successfully";
+                    serviceResponse.Message = "Update user successfully!";
                     serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
                 }
             }
@@ -152,6 +153,7 @@ namespace ConJob.Domain.Services
                 if (checkPassword)
                 {
                     await _userRepository.changPasswordAsync(_pwHasher.Hash(passwordDTO.newPassword), userModel);
+                    serviceResponse.Message = "Change password successfully!";
                 }
                 else
                 {

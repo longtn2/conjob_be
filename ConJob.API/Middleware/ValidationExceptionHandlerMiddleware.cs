@@ -19,7 +19,7 @@ namespace ConJob.API.Middleware
             await _next(context);
             if (!context.Response.HasStarted && context.Response.StatusCode == (int)HttpStatusCode.BadRequest)
             {
-                
+
                 var validationErrors = new Dictionary<string, string>();
                 foreach (var key in context.Items.Keys)
                 {
@@ -28,10 +28,8 @@ namespace ConJob.API.Middleware
                         validationErrors[key.ToString()] = error;
                     }
                 }
-
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(new
                 {
                     error = "Validation failed.",
@@ -40,5 +38,4 @@ namespace ConJob.API.Middleware
             }
         }
     }
-
 }

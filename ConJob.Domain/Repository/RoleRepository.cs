@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using ConJob.Data;
+using ConJob.Domain.Constant;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConJob.Domain.Repository
 {
@@ -17,13 +13,22 @@ namespace ConJob.Domain.Repository
         public RoleRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
+        public async Task<RoleModel> getRoleByLevel_NameAsync(int level, string roleName)
+        {
+            return await _context.Roles.FirstOrDefaultAsync(r => r.role_name == roleName);
+        }
+
+        public async Task<RoleModel> getRoleByNameAsync(string roleName)
+        {
+            return await _context.Roles.FirstOrDefaultAsync(r => r.role_name == roleName);
+        }
 
         public async Task<RoleModel> getRoleExceptAdmin(string roleName)
         {
             return await _context.roles.Where(r => !r.role_name.Equals("admin", StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync(r => r.role_name == roleName);
         }
 
-        public RoleModel getRoleByName(string roleName)
+        public async Task<RoleModel> getRoleByName(string roleName)
         {
             return _context.roles.FirstOrDefault(r => r.role_name == roleName);
         }
