@@ -376,7 +376,7 @@ namespace ConJob.Data.Migrations
                     is_actived = table.Column<bool>(type: "bit", nullable: false),
                     user_id = table.Column<int>(type: "int", nullable: false),
                     file_id = table.Column<int>(type: "int", nullable: false),
-                    JobModelid = table.Column<int>(type: "int", nullable: true),
+                    job_id = table.Column<int>(type: "int", nullable: false),
                     change_on = table.Column<int>(type: "int", nullable: false),
                     create_on = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -392,10 +392,11 @@ namespace ConJob.Data.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Posts_Jobs_JobModelid",
-                        column: x => x.JobModelid,
+                        name: "FK_Posts_Jobs_job_id",
+                        column: x => x.job_id,
                         principalTable: "Jobs",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Posts_Users_user_id",
                         column: x => x.user_id,
@@ -543,11 +544,11 @@ namespace ConJob.Data.Migrations
                 columns: new[] { "id", "address", "avatar", "change_on", "create_on", "created_at", "dob", "email", "fcm_token", "first_name", "gender", "is_deleted", "is_email_confirmed", "last_name", "password", "phone_number", "updated_at" },
                 values: new object[,]
                 {
-                    { 1, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@com.com", null, "Admin", 0, false, false, "Dat", "$2a$11$WBPVMj4TF6d9W0b0GaDeQO4tfDe265tCA6SjtJTfcu0352IZ4KMve", "0335487991", null },
-                    { 2, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "apeacocke1@google.ca", null, "Fawnia", 0, false, false, "Alexandros", "$2a$11$ZRpqQBzfOD17gLxL4uLK.ONqAUrEjh41ohGR/Nv/MUP23ebEJvVUG", "0354579415", null },
-                    { 3, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cpancoast2@wsj.com", null, "Cazzie", 0, false, false, "Pancoast", "$2a$11$OTavW4gVh0GsgZfmZ0v9heT1ULE7FcOXef6QgwXWAnB9KPMykz0Sq", "0354596415", null },
-                    { 4, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datmarri@google.ca", null, "Marri", 0, false, false, "Dat", "$2a$11$sS7Ct6pC5SbO7W55XHIoD.jV9O8BV5PSwHbhmIqvJWXfcDqQrnBhO", "0354579415", null },
-                    { 5, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datkhongchin@google.ca", null, "Dat", 0, false, false, "khong chin", "$2a$11$wpVM2balNCYumoz7fxECe.aOQjJ6PpQa8EFBw28cYVx4lEtjPPQQq", "0354579415", null }
+                    { 1, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@com.com", null, "Admin", 0, false, false, "Dat", "$2a$11$l3bvDBF9QwETalhZy1yxFu8AxCfUdI6qx1.VLF/I3tX.Lcwbwczn2", "0335487991", null },
+                    { 2, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "apeacocke1@google.ca", null, "Fawnia", 0, false, false, "Alexandros", "$2a$11$pGUb.VfqUITDC/uX7kSsKebAags/DrpszkdZ/Lvejcu9eZjqZIBmK", "0354579415", null },
+                    { 3, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cpancoast2@wsj.com", null, "Cazzie", 0, false, false, "Pancoast", "$2a$11$D0dGon92BipLHPleXdExT.dSJXGrNuenihZ3Ltcxw8uAtGJxo2udO", "0354596415", null },
+                    { 4, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datmarri@google.ca", null, "Marri", 0, false, false, "Dat", "$2a$11$LkrMhqjbW3mudDX1FJVzluxfSa4XbtxrZL/dn61n6r/HpaP2ZTuw.", "0354579415", null },
+                    { 5, "Hue", null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "datkhongchin@google.ca", null, "Dat", 0, false, false, "khong chin", "$2a$11$hCYwKlSwt1E7e/EQsbv6OuKj807Ugx6cHGgL3v6mdjTyrPDm/sb2m", "0354579415", null }
                 });
 
             migrationBuilder.InsertData(
@@ -606,11 +607,11 @@ namespace ConJob.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Posts",
-                columns: new[] { "id", "JobModelid", "caption", "change_on", "create_on", "created_at", "file_id", "is_actived", "is_deleted", "title", "updated_at", "user_id" },
+                columns: new[] { "id", "caption", "change_on", "create_on", "created_at", "file_id", "is_actived", "is_deleted", "job_id", "title", "updated_at", "user_id" },
                 values: new object[,]
                 {
-                    { 1, null, "Là một người có trách nghiệm tôi luồn hoàn thành mọi việc một cách hoàn hảo", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, false, false, "Luôn là người có trách nghiệm , I'am vippro", null, 2 },
-                    { 2, null, "Là một người đỉnh cao tôi tự tin , khoe cá tính", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, false, false, "Ai tuyển tôi không", null, 5 }
+                    { 1, "Là một người có trách nghiệm tôi luồn hoàn thành mọi việc một cách hoàn hảo", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1, false, false, 2, "Luôn là người có trách nghiệm , I'am vippro", null, 2 },
+                    { 2, "Là một người đỉnh cao tôi tự tin , khoe cá tính", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, false, false, 1, "Ai tuyển tôi không", null, 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -740,9 +741,9 @@ namespace ConJob.Data.Migrations
                 column: "file_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_JobModelid",
+                name: "IX_Posts_job_id",
                 table: "Posts",
-                column: "JobModelid");
+                column: "job_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_user_id",

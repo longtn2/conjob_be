@@ -2,11 +2,13 @@
 using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Filtering;
+using ConJob.Domain.Repository;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using LinqKit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 
@@ -17,17 +19,19 @@ namespace ConJob.Domain.Services
         private readonly IPostRepository _postRepository;
         private readonly IUserRepository _userRepository;
         private readonly ILikeRepository _likeRepository;
+        private readonly IJobRepository _jobRepository;
         private readonly IMapper _mapper;
         private readonly IFilterHelper<PostDetailsDTO> _filterHelper;
         private readonly IFilterHelper<PostDTO> _filterHelper2;
 
         public static int PAGE_SIZE { get; set; } = 1;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper, IFilterHelper<PostDTO> filterHelper2) 
+        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper, IFilterHelper<PostDTO> filterHelper2) 
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
             _likeRepository = likeRepository;
+            _jobRepository = jobRepository;
             _mapper = mapper;
             _filterHelper = filterHelper;
             _filterHelper2 = filterHelper2;
@@ -129,11 +133,6 @@ namespace ConJob.Domain.Services
                     serviceResponse.Data = _mapper.Map<PostDetailsDTO>(post);
                     serviceResponse.Message = "Update post successfully!";
                 }
-                else
-                {
-                    serviceResponse.ResponseType = EResponseType.NotFound;
-                    serviceResponse.Message = "You doesn't permission to edit this field.";
-                }
             }
             catch (InvalidOperationException)
             {
@@ -233,6 +232,41 @@ namespace ConJob.Domain.Services
                 serviceResponse.Message = "User already like the post.";
             }
             serviceResponse.Data = _postRepository.CountLikePost(postId);
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<object>> AddJobToPost(int userId, int jobId, int postId)
+        {
+            var serviceResponse = new ServiceResponse<object>(); 
+            try
+            {
+                var post = await _postRepository.GetUserPosts(userId)
+                            .FirstOrDefaultAsync(c => c.id == postId);
+                var job = await _jobRepository.GetUserJobs(userId)
+                            .FirstOrDefaultAsync(c => c.id == jobId);
+                if (job != null && post != null)
+                {
+                    var toCheck = _postRepository.GetById(postId);
+                    if (toCheck.job_id == null)
+                    {
+                        await _postRepository.addJobToPostAsync(jobId, toCheck);
+                        serviceResponse.Message = "Add job to post successfully.";
+                    }
+                    else
+                    {
+                        throw new DbUpdateException(serviceResponse.Message = "Post already exist job.");
+                    }
+                }
+                else
+                {
+                    throw new DbUpdateException("Post and/or Job and/or Owner (User) not found.");
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                throw new BadHttpRequestException(CJConstant.SOMETHING_WENT_WRONG);
+            }
+            catch { throw; }
             return serviceResponse;
         }
     }

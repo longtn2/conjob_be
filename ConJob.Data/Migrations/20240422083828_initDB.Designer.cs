@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240419093338_initDB")]
+    [Migration("20240422083828_initDB")]
     partial class initDB
     {
         /// <inheritdoc />
@@ -778,9 +778,6 @@ namespace ConJob.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("JobModelid")
-                        .HasColumnType("int");
-
                     b.Property<string>("caption")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -803,6 +800,9 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_deleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("job_id")
+                        .HasColumnType("int");
+
                     b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -815,9 +815,9 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("JobModelid");
-
                     b.HasIndex("file_id");
+
+                    b.HasIndex("job_id");
 
                     b.HasIndex("user_id");
 
@@ -833,6 +833,7 @@ namespace ConJob.Data.Migrations
                             file_id = 1,
                             is_actived = false,
                             is_deleted = false,
+                            job_id = 0,
                             title = "Luôn là người có trách nghiệm , I'am vippro",
                             user_id = 2
                         },
@@ -845,6 +846,7 @@ namespace ConJob.Data.Migrations
                             file_id = 2,
                             is_actived = false,
                             is_deleted = false,
+                            job_id = 0,
                             title = "Ai tuyển tôi không",
                             user_id = 5
                         });
@@ -1130,7 +1132,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$WBPVMj4TF6d9W0b0GaDeQO4tfDe265tCA6SjtJTfcu0352IZ4KMve",
+                            password = "$2a$11$l3bvDBF9QwETalhZy1yxFu8AxCfUdI6qx1.VLF/I3tX.Lcwbwczn2",
                             phone_number = "0335487991"
                         },
                         new
@@ -1146,7 +1148,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Alexandros",
-                            password = "$2a$11$ZRpqQBzfOD17gLxL4uLK.ONqAUrEjh41ohGR/Nv/MUP23ebEJvVUG",
+                            password = "$2a$11$pGUb.VfqUITDC/uX7kSsKebAags/DrpszkdZ/Lvejcu9eZjqZIBmK",
                             phone_number = "0354579415"
                         },
                         new
@@ -1162,7 +1164,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Pancoast",
-                            password = "$2a$11$OTavW4gVh0GsgZfmZ0v9heT1ULE7FcOXef6QgwXWAnB9KPMykz0Sq",
+                            password = "$2a$11$D0dGon92BipLHPleXdExT.dSJXGrNuenihZ3Ltcxw8uAtGJxo2udO",
                             phone_number = "0354596415"
                         },
                         new
@@ -1178,7 +1180,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "Dat",
-                            password = "$2a$11$sS7Ct6pC5SbO7W55XHIoD.jV9O8BV5PSwHbhmIqvJWXfcDqQrnBhO",
+                            password = "$2a$11$LkrMhqjbW3mudDX1FJVzluxfSa4XbtxrZL/dn61n6r/HpaP2ZTuw.",
                             phone_number = "0354579415"
                         },
                         new
@@ -1194,7 +1196,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = false,
                             last_name = "khong chin",
-                            password = "$2a$11$wpVM2balNCYumoz7fxECe.aOQjJ6PpQa8EFBw28cYVx4lEtjPPQQq",
+                            password = "$2a$11$hCYwKlSwt1E7e/EQsbv6OuKj807Ugx6cHGgL3v6mdjTyrPDm/sb2m",
                             phone_number = "0354579415"
                         });
                 });
@@ -1437,13 +1439,15 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.JobModel", null)
-                        .WithMany("posts")
-                        .HasForeignKey("JobModelid");
-
                     b.HasOne("ConJob.Entities.FileModel", "file")
                         .WithMany("posts")
                         .HasForeignKey("file_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConJob.Entities.JobModel", "job")
+                        .WithMany("posts")
+                        .HasForeignKey("job_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1454,6 +1458,8 @@ namespace ConJob.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("file");
+
+                    b.Navigation("job");
 
                     b.Navigation("user");
                 });

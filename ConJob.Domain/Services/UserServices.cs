@@ -68,6 +68,7 @@ namespace ConJob.Domain.Services
             try
             {
                 var toAdd = _mapper.Map<UserModel>(user);
+                await _userRepository.AddAsync(toAdd);
                 var role = await _roleRepository.getRoleByName(CJConstant.JOB_SEEKER);
                 if (role == null) ;
                 await _userRoleRepository.AddAsync(new UserRoleModel()
@@ -75,7 +76,6 @@ namespace ConJob.Domain.Services
                     role = role,
                     user = toAdd
                 });
-                await _userRepository.AddAsync(toAdd);
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
                 serviceResponse.Message = "Register Successfully! Please check your email to confirm account!";
             }

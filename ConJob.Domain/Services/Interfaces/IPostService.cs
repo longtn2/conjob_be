@@ -15,5 +15,6 @@ namespace ConJob.Domain.Services.Interfaces
         Task<ServiceResponse<object>> DeleteAsync(int userId, int id);
         Task<ServiceResponse<object>> ActiveAsync(int userId, int id);
         Task<ServiceResponse<int>> UserLikePost(int userId, int postId);
+        Task<ServiceResponse<object>> AddJobToPost(int userId, int jobId, int postId);
     }
 }

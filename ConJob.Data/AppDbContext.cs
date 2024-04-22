@@ -1,6 +1,7 @@
 ﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Hosting;
 
 namespace ConJob.Data
 {
@@ -101,6 +102,16 @@ namespace ConJob.Data
                 .HasForeignKey(c => c.post_id)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<JobModel>()
+                .HasMany(j => j.posts)
+                .WithOne(p => p.job)
+                .HasForeignKey(p => p.job_id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PostModel>()
+                .Property(p => p.job_id)
+                .IsRequired(false);
+
             modelBuilder.Entity<UserModel>().Ignore(u => u.followers);
 
             base.OnModelCreating(modelBuilder);
@@ -126,7 +137,6 @@ namespace ConJob.Data
         public virtual DbSet<PostModel> Posts { get; set; }
         public virtual DbSet<ReportModel> Reports { get; set; }
         public virtual DbSet<SkillModel> Skills { get; set; }
-        public virtual DbSet<Personal_skillModel> Personal_Skills { get; set; }
 
         #region Auto add created-time, updated-time
         public override int SaveChanges()

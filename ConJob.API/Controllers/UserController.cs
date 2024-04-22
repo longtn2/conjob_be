@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.DTOs.Follow;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ConJob.API.Controllers
 {
@@ -31,7 +30,6 @@ namespace ConJob.API.Controllers
         [Route("update-profile")]
         [Produces("application/json")]
         [HttpPost]
-
         public async Task<ActionResult> updateUserProfile(UserInfoDTO userdata)
         {
             var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();

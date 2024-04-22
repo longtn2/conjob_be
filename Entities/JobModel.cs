@@ -32,7 +32,9 @@ namespace ConJob.Entities
         public DateTime expired_day { get; set; }
         public int quanlity { get; set; }
         public string status { get; set; }
+        [JsonIgnore]
         public virtual ICollection<ApplicantModel> applicants { get; set; }
+        [JsonIgnore]
         public virtual ICollection<PostModel> posts { get; set; }
         public int category_id { get; set; }
         [JsonIgnore]

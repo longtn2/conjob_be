@@ -21,7 +21,7 @@ namespace ConJob.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllPosts(int pageNo)
+        public async Task<ActionResult> getAllPosts(int pageNo)
         {
             var serviceResponse = await _postService.GetAllAsync(pageNo);
             switch (serviceResponse.ResponseType)
@@ -40,13 +40,13 @@ namespace ConJob.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddPost(PostDTO newPost)
+        public async Task<ActionResult> addPost(PostDTO newPost)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.SaveAsync(int.Parse(userid), newPost);
             return serviceResponse.ResponseType switch
             {
-                EResponseType.Success => CreatedAtAction(nameof(AddPost), new { version = "1" }, serviceResponse.Data),
+                EResponseType.Success => CreatedAtAction(nameof(addPost), new { version = "1" }, serviceResponse.Data),
                 EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
@@ -55,7 +55,7 @@ namespace ConJob.API.Controllers
         [Route("get-user-post/{id}")]
         [HttpGet]
         [Produces("application/json")]
-        public async Task<ActionResult> GetPostByIdSecurity(int id)
+        public async Task<ActionResult> getPostByIdSecurity(int id)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.FindByIdAsync(int.Parse(userid), id);
@@ -70,7 +70,7 @@ namespace ConJob.API.Controllers
         [Route("get-post/{id}")]
         [HttpGet]
         [Produces("application/json")]
-        public async Task<ActionResult> GetPostById(int id)
+        public async Task<ActionResult> getPostById(int id)
         {
             var serviceResponse = await _postService.FindByIdAsync(id);
             return serviceResponse.ResponseType switch
@@ -82,7 +82,7 @@ namespace ConJob.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdatePost(int id, PostDTO post)
+        public async Task<ActionResult> updatePost(int id, PostDTO post)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.UpdateAsync(int.Parse(userid), id, post);
@@ -96,7 +96,7 @@ namespace ConJob.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeletePost(int id)
+        public async Task<ActionResult> deletePost(int id)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.DeleteAsync(int.Parse(userid), id);
@@ -110,7 +110,7 @@ namespace ConJob.API.Controllers
 
         [Route("like")]
         [HttpPost]
-        public async Task<ActionResult> LikePost(int post_id)
+        public async Task<ActionResult> likePost(int post_id)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.UserLikePost(int.Parse(userid), post_id);
@@ -120,6 +120,15 @@ namespace ConJob.API.Controllers
                 EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
+        }
+
+        [Route("add-job")]
+        [HttpPost]
+        public async Task<ActionResult> addJobToPost(int job_id, int post_id)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = await _postService.AddJobToPost(int.Parse(userid), job_id, post_id);
+            return Ok(serviceResponse.Message);
         }
 
     }

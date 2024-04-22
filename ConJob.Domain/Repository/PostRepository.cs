@@ -3,6 +3,7 @@ using ConJob.Data;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 using ConJob.Domain.DTOs.Post;
+using System.Data.Entity;
 namespace ConJob.Domain.Repository
 {
     public class PostRepository : GenericRepository<PostModel>, IPostRepository
@@ -88,5 +89,12 @@ namespace ConJob.Domain.Repository
             posts = _context.Posts.Where(p => p.is_deleted == false).Where(p => p.is_actived == false);
             return posts;
         }
+
+        public async Task addJobToPostAsync(int jobId, PostModel post)
+        {
+            post.job_id = jobId;
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

@@ -2,25 +2,14 @@
 using ConJob.Data;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.Filtering;
-using ConJob.Domain.Repository;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
-using Hangfire.Common;
 using LinqKit;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static ConJob.Domain.Response.EServiceResponseTypes;
-using static ConJob.Domain.Services.Interfaces.IJobServices;
-using static ConJob.Domain.Services.JobSevices;
 
 namespace ConJob.Domain.Services
 {

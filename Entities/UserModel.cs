@@ -14,7 +14,6 @@ namespace ConJob.Entities
     public class UserModel: BaseModel
     {
         [Key]
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
 

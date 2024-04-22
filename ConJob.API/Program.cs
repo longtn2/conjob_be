@@ -25,6 +25,7 @@ using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.DTOs.Post;
 using ConJob.API.Middleware;
+using System.Net.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -113,6 +114,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 #region config Swagger 
 builder.Services.AddEndpointsApiExplorer();
@@ -150,10 +152,12 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 #endregion
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("emailverified", policy => policy.Requirements.Add(new EmailVerifiedRequirement()));
 });
+
 #region Auto mapper
 builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 {
@@ -162,7 +166,7 @@ builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 .CreateMapper());
 
 #endregion
- 
+  
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -180,4 +184,5 @@ app.UseMiddleware<ValidationExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.Run();

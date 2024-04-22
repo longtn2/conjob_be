@@ -30,6 +30,10 @@ namespace ConJob.Entities
         public FileModel file { get; set; }
         public virtual ICollection<ReportModel> reports { get; set; }
         public virtual ICollection<CommentModel> comments { get; set; }
+        public int? job_id { get; set; }
+        [JsonIgnore]
+        [ForeignKey("job_id")]
+        public JobModel job { get; set; }
 
     }
 }
