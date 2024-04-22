@@ -114,43 +114,27 @@ namespace ConJob.Data
         );
 
         modelBuilder.Entity<RoleModel>().HasData(
-
             new RoleModel()
-
             {
-
                 id = 1,
-
                 role_name = "Admin",
-
                 role_description = "Là admin cuyền lực."
-
             },
-
             new RoleModel()
 
             {
-
                 id = 2,
-
                 role_name = "Job Seeker",
-
                 role_description = "Là nole tư bản đi tìm kiếm miếng cơm manh áo."
 
             },
-
             new RoleModel()
 
             {
-
                 id = 3,
-
                 role_name = "Job Giver",
-
                 role_description = "Là tư bản đi kiếm những con chiêng ngoan đạo."
-
             }
-
            );
 
          modelBuilder.Entity<UserRoleModel>().HasData(
@@ -605,8 +589,6 @@ namespace ConJob.Data
 
                     user_id = 2,
 
-                    //job_id = 1,
-
                     file_id = 1,
 
                     title = "Luôn là người có trách nghiệm , I'am vippro",
@@ -618,8 +600,6 @@ namespace ConJob.Data
                     caption = "Là một người đỉnh cao tôi tự tin , khoe cá tính",
 
                     user_id = 5,
-
-                    //job_id = 2,
 
                     file_id = 2,
 
@@ -662,13 +642,6 @@ namespace ConJob.Data
                     user_id = 5,
                 }
                 );
-            //modelBuilder.Entity<UserRoleModel>().HasData(
-            //new UserRoleModel()
-            //{
-            //    id = 2,
-            //    user_id = 6,
-            //    role_id = 1,
-            //});
         }
     }
 }

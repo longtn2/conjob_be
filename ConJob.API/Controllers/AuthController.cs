@@ -32,18 +32,12 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> Register(UserRegisterDTO userdata)
         {
             var serviceResponse = await _userServices.RegisterAsync(userdata);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.Data),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.Message);
         }
 
         [Route("login")]
         [Produces("application/json")]
         [HttpPost]
-        
         public async Task<ActionResult> Login(UserLoginDTO userdata)
         {
             var serviceResponse = await _authService.LoginAsync(userdata);

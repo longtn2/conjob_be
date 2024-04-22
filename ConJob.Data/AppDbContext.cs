@@ -1,9 +1,6 @@
 ﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Diagnostics;
-using System.Security.Claims;
-
 
 namespace ConJob.Data
 {
@@ -27,12 +24,6 @@ namespace ConJob.Data
                     .WithOne(e => e.role)
                     .HasForeignKey("role_id")
                     .IsRequired();
-
-            //modelBuilder.Entity<JobModel>()
-            //        .HasMany(e => e.posts)
-            //        .WithOne(e => e.job)
-            //        .HasForeignKey("job_id")
-            //        .IsRequired();
 
             modelBuilder.Entity<UserModel>()
                     .HasMany(e => e.jwts)

@@ -76,14 +76,12 @@ namespace ConJob.Domain.Services
                     user = toAdd
                 });
                 await _userRepository.AddAsync(toAdd);
-                //await _emailServices.sendActivationEmail(toAdd);
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
                 serviceResponse.Message = "Register Successfully! Please check your email to confirm account!";
             }
             catch (DbUpdateException ex)
             {
-                serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Email already taken by another User. Please reset or choose different."+ex.ToString();
+                throw new DbUpdateException("Email already taken by another User. Please reset or choose different.");
             }
             catch { throw; }
             return serviceResponse;
@@ -157,6 +155,7 @@ namespace ConJob.Domain.Services
                 if (checkPassword)
                 {
                     await _userRepository.changPasswordAsync(_pwHasher.Hash(passwordDTO.newPassword), userModel);
+                    serviceResponse.Message = "Change password successfully!";
                 }
                 else
                 {
