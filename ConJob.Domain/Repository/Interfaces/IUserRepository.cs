@@ -10,5 +10,6 @@ namespace ConJob.Domain.Repository.Interfaces
         Task<bool> updateAvatar(string? userid, string avatar);
         Task<bool> changPasswordAsync(string newPassword, UserModel user);
         Task<UserModel> updateAsync(UserInfoDTO userDTO, UserModel userModel);
+        Task<UserModel> findUserPostAsync(int user_id);
     }
 }

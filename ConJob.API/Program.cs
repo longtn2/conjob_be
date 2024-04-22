@@ -23,9 +23,8 @@ using System.Text.Json.Serialization;
 using Asp.Versioning;
 using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Job;
-using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Post;
-using Asp.Versioning;
+using ConJob.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,7 +55,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.")));
 #endregion
 
-
 #region Add JWT Settings 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -83,12 +81,18 @@ builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
+builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddScoped<IS3Services,  S3Services>();
 builder.Services.AddScoped<IJobServices, JobSevices>();
 builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
 builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+#endregion
+
+#region  Paging & Sorting on Web-Request
+builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
+builder.Services.AddScoped<IFilterHelper<PostDTO>, FilterHelper<PostDTO>>();
 #endregion
 
 #region Repositories
@@ -98,16 +102,17 @@ builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IJwtRepository, JwtRepository>();
 builder.Services.AddTransient<IPostRepository, PostRepository>();
+builder.Services.AddTransient<ILikeRepository, LikeRepository>();
 builder.Services.AddTransient<IFollowRepository, FollowRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 #endregion
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
-
 
 #region config Swagger 
 builder.Services.AddEndpointsApiExplorer();
@@ -167,10 +172,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+#region some sort of Middleware
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ValidationExceptionHandlerMiddleware>();
+#endregion
+
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

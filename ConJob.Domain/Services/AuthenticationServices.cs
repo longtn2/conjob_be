@@ -8,21 +8,8 @@ using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Entities;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using ConJob.Domain.DTOs.User;
-using Microsoft.AspNetCore.Http;
-using ConJob.Domain.Encryption;
-using ConJob.Domain.Authentication;
-using MailKit;
-using ConJob.Domain.DTOs.Authentication;
 using static ConJob.Domain.Response.EServiceResponseTypes;
-using ConJob.Data;
 
 namespace ConJob.Domain.Services
 {
@@ -56,7 +43,7 @@ namespace ConJob.Domain.Services
                 var user = await _userRepository.getUserByEmail(userdata.email);
                 if (user != null)
                 {
-                    var checkCredential = _pwHasher.verify(userdata.Password, user.password);
+                    var checkCredential = _pwHasher.verify(userdata.password, user.password);
                     if (checkCredential)
                     {
                         var userDTO = _mapper.Map<UserModel,UserDTO>(user);
