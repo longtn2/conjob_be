@@ -14,6 +14,7 @@ namespace ConJob.Domain.DTOs.Job
 {
     public class JobDetailsDTO
     {
+        public int id {  get; set; }
         public string title { get; set; }
         public string description { get; set; }
         public double budget { get; set; }
@@ -23,5 +24,6 @@ namespace ConJob.Domain.DTOs.Job
         public int quanlity { get; set; }
         public string status { get; set; }
         public int category_id { get; set; }
+        public ICollection<PostDTO> post { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace ConJob.Domain.Repository
         {
             try
             {
-                _context.Entry(entity).State = EntityState.Modified;
+                _context.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch
@@ -53,6 +53,10 @@ namespace ConJob.Domain.Repository
         {
             return _context.Set<T>().ToList();
         }
+        public  IQueryable<T>GetAllAsync()
+        {
+            return _context.Set<T>();
+        }
         public T? GetById(int id)
         {
             return _context.Set<T>().Find(id);
@@ -66,6 +70,16 @@ namespace ConJob.Domain.Repository
         {
             _context.Set<T>().RemoveRange(entities);
             return _context.SaveChangesAsync();
+        }
+        public async Task SoftDelete(T entity)
+        {
+            var propertyInfo = entity.GetType().GetProperty("is_deleted");
+
+            if (propertyInfo != null)
+            {
+                propertyInfo.SetValue(entity, true);
+                await _context.SaveChangesAsync(); // Lưu thay đổi vào cơ sở dữ liệu
+            }
         }
 
     }

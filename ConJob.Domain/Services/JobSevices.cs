@@ -2,25 +2,14 @@
 using ConJob.Data;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.Filtering;
-using ConJob.Domain.Repository;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
-using Hangfire.Common;
 using LinqKit;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static ConJob.Domain.Response.EServiceResponseTypes;
-using static ConJob.Domain.Services.Interfaces.IJobServices;
-using static ConJob.Domain.Services.JobSevices;
 
 namespace ConJob.Domain.Services
 {
@@ -40,10 +29,6 @@ namespace ConJob.Domain.Services
             _filterHelper = filterHelper;
         }
 
-        private IQueryable<JobModel> GetJobs()
-        {
-            return _context.Jobs;
-        }
         public async Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid, JobDetailsDTO job)
         {
             var serviceReponse = new ServiceResponse<JobDetailsDTO>();
@@ -85,7 +70,7 @@ namespace ConJob.Domain.Services
                     var toAddjob = _mapper.Map<JobModel>(job);
                     serviceReponse.ResponseType = EResponseType.Success;
                     serviceReponse.Data = _mapper.Map<JobDTO>(toAddjob);
-                    await _jobRepository.RemoveAsync(job);
+                    await _jobRepository.SoftDelete(job);
                 }
                 else
                 {
@@ -100,9 +85,9 @@ namespace ConJob.Domain.Services
             return serviceReponse;
         }
 
-        public async Task<ServiceResponse<JobDTO>> GetJobAsync(int id)
+        public async Task<ServiceResponse<JobDetailsDTO>> GetJobAsync(int id)
         {
-            var serviceReponse = new ServiceResponse<JobDTO>();
+            var serviceReponse = new ServiceResponse<JobDetailsDTO>();
             try
             {
                 var job = _jobRepository.GetById(id);
@@ -113,7 +98,7 @@ namespace ConJob.Domain.Services
                 else
                 {
                     serviceReponse.ResponseType = EResponseType.Success;
-                    serviceReponse.Data = _mapper.Map<JobDTO>(job);
+                    serviceReponse.Data = _mapper.Map<JobDetailsDTO>(job);
                 }
             }
             catch (DbException ex)
@@ -129,10 +114,9 @@ namespace ConJob.Domain.Services
             var serviceReponse = new ServiceResponse<IEnumerable<JobDTO>>();
             try
             {
-                var job = _jobRepository.GetAll();
+                var job = _jobRepository.GetAllAsync();
                 serviceReponse.ResponseType = EResponseType.Success;
-                serviceReponse.Data = _mapper.Map<IEnumerable<JobDTO>>(job);
-
+                serviceReponse.Data = _mapper.ProjectTo<JobDTO>(job);
             }
             catch (DbException ex)
             {
@@ -150,7 +134,7 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
             try
             {
-                var job = _mapper.ProjectTo<JobDTO>(GetJobs())
+                var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
                     .Where(predicate)
                     .AsNoTracking();
                 var sortedJob = _filterHelper.ApplySorting(job, searchJob.OrderBy);
@@ -159,13 +143,12 @@ namespace ConJob.Domain.Services
                 {
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Data = pagedJob;
-
                 }
             }
-            catch(DbException ex) 
+            catch (DbException ex)
             {
                 serviceResponse.ResponseType = EResponseType.BadRequest;
-                serviceResponse.Message = "Somthing wrong"+ex.Message;
+                serviceResponse.Message = "Somthing wrong" + ex.Message;
             }
             return serviceResponse;
         }
@@ -194,7 +177,6 @@ namespace ConJob.Domain.Services
                 serviceReponse.ResponseType = EResponseType.CannotCreate;
                 serviceReponse.Message = ex.Message;
             }
-
             return serviceReponse;
         }
     }
