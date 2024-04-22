@@ -6,7 +6,7 @@ namespace ConJob.Entities
     public abstract class BaseModel
     {
         [Required]
-        public bool is_delete { get; set; } = false;
+        public bool is_deleted { get; set; } = false;
         public int change_on {  get; set; }
         public DateTime create_on { get; set; }
         public DateTime? created_at { get; set; }

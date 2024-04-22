@@ -1,6 +1,7 @@
 ﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 namespace ConJob.Data
 {
@@ -104,6 +105,24 @@ namespace ConJob.Data
             modelBuilder.Entity<UserModel>().Ignore(u => u.followers);
 
             base.OnModelCreating(modelBuilder);
+            var entityTypes = modelBuilder.Model.GetEntityTypes();
+
+            foreach (var entityType in entityTypes)
+            {
+                var entityClrType = entityType.ClrType;
+
+                var isSoftDeleteEnabled = entityClrType.GetProperty("is_deleted") != null;
+
+                if (isSoftDeleteEnabled)
+                {
+                    var parameter = Expression.Parameter(entityClrType, "e");
+                    var property = Expression.Property(parameter, "is_deleted");
+                    var notDeleted = Expression.Not(property);
+                    var lambda = Expression.Lambda(notDeleted, parameter);
+
+                    entityType.SetQueryFilter(lambda);
+                }
+            }
             new DbInitializer(modelBuilder).Seed();
         }
 
@@ -112,7 +131,7 @@ namespace ConJob.Data
         public virtual DbSet<UserRoleModel> user_roles { get; set; }
         public virtual DbSet<RoleModel> roles { get; set; }
         public virtual DbSet<ApplicantModel> applicants { get; set; }
-        public virtual DbSet<CategoryModel> categorys { get; set; }
+        public virtual DbSet<CategoryModel> categories { get; set; }
 
         public virtual DbSet<FileModel> files { get; set; }
         public virtual DbSet<FollowModel> follows { get; set; }

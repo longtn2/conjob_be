@@ -18,15 +18,15 @@ namespace ConJob.Domain.Repository
         }
         public async Task<JWTModel?> FindByValue(string token)
         {
-            return await _context.jwts.FirstOrDefaultAsync(x => x.token_hash_value== token && !x.is_delete );
+            return await _context.jwts.FirstOrDefaultAsync(x => x.token_hash_value== token && !x.is_deleted );
         }
 
         public async Task<bool> InvalidToken(string token)
         {
             try
             {
-                var jwt = await _context.jwts.FirstOrDefaultAsync(x => x.token_hash_value == token && !x.is_delete);
-                jwt.is_delete = true;
+                var jwt = await _context.jwts.FirstOrDefaultAsync(x => x.token_hash_value == token && !x.is_deleted);
+                jwt.is_deleted = true;
                 await _context.SaveChangesAsync();
             }
             catch

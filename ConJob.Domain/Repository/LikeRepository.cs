@@ -13,7 +13,7 @@ namespace ConJob.Domain.Repository
 
         public LikeModel getLikeByUserPost(int userId, int postId)
         {
-            return _context.Likes.Where(l => l.user_id == userId && l.post_id == postId).SingleOrDefault();
+            return _context.likes.Where(l => l.user_id == userId && l.post_id == postId).SingleOrDefault();
         }
     }
 }

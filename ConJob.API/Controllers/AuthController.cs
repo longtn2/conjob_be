@@ -22,11 +22,13 @@ namespace ConJob.API.Controllers
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private readonly IUserServices _userServices;
         private readonly IAuthenticationServices _authService;
-        public AuthController(ILogger<AuthController> logger, IUserServices userService, IAuthenticationServices authService)
+        private readonly IJwtServices _jwtServices;
+        public AuthController(ILogger<AuthController> logger, IUserServices userService, IAuthenticationServices authService, IJwtServices jwtServices)
         {
             _logger = logger;
             _userServices = userService;
             _authService = authService;
+            _jwtServices = jwtServices;
         }
         /// <summary>
         /// 
@@ -129,11 +131,11 @@ namespace ConJob.API.Controllers
 
         [Route("forgot/{token}")]
         [Produces("application/json")]
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult> RecoverPassword(RecoverPasswordDTO recover)
         {
             var decode = WebUtility.UrlDecode(recover.token);
-            var serviceResponse = await _authService.RecoverPassword(decode, recover.Password);
+            var serviceResponse = await _authService.RecoverPassword(decode, recover.password);
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.getMessage()),
@@ -142,5 +144,17 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
+        [Route("logout")]
+        [Produces("application/json")]
+        [HttpPost]
+        public async Task<ActionResult> logout(TokenDTO token)
+        {
+            _jwtServices.InvalidateToken(token.token);
+
+
+            return Ok();
+        }
+
+
     }
 }

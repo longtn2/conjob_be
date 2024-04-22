@@ -31,13 +31,13 @@ namespace ConJob.Domain.Services
             }
             else
             {
-                throw new Exception("Loi: cap cuu!");
+                throw new Exception();
             }
         }
         public async Task<bool> IsJWTValid(string token)
         {
 
-            return await _jwtRepository.FindByValue(_hasher.Hash(token)) == null;
+            return await _jwtRepository.FindByValue(_hasher.Hash(token)) != null;
 
         }
         public async Task InvalidateToken(string token)
@@ -48,7 +48,7 @@ namespace ConJob.Domain.Services
             }
             catch (Exception ex)
             {
-
+                throw;
             }
         }
     }

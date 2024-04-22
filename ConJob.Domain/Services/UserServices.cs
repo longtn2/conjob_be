@@ -25,7 +25,6 @@ namespace ConJob.Domain.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
-        private readonly IEmailServices _emailServices;
         private readonly IFollowRepository _followRepository;
         private readonly AppDbContext _context;
 
@@ -34,7 +33,6 @@ namespace ConJob.Domain.Services
             _logger = logger;
             _mapper = mapper;
             _pwHasher = pwhasher;
-            _emailServices = emailServices;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
@@ -71,13 +69,13 @@ namespace ConJob.Domain.Services
             {
                 var toAdd = _mapper.Map<UserModel>(user);
                 var role = await _roleRepository.getRoleByName(CJConstant.JOB_SEEKER);
-                if (role == null) ;
-                await _context.user_roles.AddAsync(new UserRoleModel()
+                var addRole = new UserRoleModel()
                 {
                     role = role,
                     user = toAdd
-                });
-                await _userRepository.AddAsync(toAdd);
+                };
+                await _userRoleRepository.AddAsync(addRole);
+ //               await _userRepository.AddAsync(toAdd);
                 await _emailServices.sendActivationEmail(toAdd);
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
                 serviceResponse.Message = "Registered Successful! Please confirm email in your mailbox.";
@@ -86,7 +84,10 @@ namespace ConJob.Domain.Services
             {
                 throw new DbUpdateException("Email already taken by another User. Please reset or choose different.");
             }
-            catch { throw; }
+            catch(Exception e) {
+
+                _logger.LogError(e.ToString());
+                throw; }
             return serviceResponse;
         }
 

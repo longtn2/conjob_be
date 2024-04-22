@@ -17,7 +17,7 @@ namespace ConJob.API.Policy.ResultHandler
                 context.Response.ContentType = "application/json";
                 var response = new
                 {
-                    message = "Activate you email to continued!"
+                    message = "Activate your email to continue!"
                 };
                 var jsonResponse = JsonConvert.SerializeObject(response);
                 await context.Response.WriteAsync(jsonResponse);
