@@ -81,7 +81,7 @@ namespace ConJob.API.Controllers
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = new ServiceResponse<JobDetailsDTO>();
-            serviceResponse = await _jobServices.AddJobAsync(1, jobDTO);
+            serviceResponse = await _jobServices.AddJobAsync(int.Parse(userid!), jobDTO);
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),

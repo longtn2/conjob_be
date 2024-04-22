@@ -4,7 +4,6 @@ using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Net;
 using System.Security.Claims;
 using static ConJob.Domain.Response.EServiceResponseTypes;
@@ -13,6 +12,8 @@ namespace ConJob.API.Controllers
 {
     [AllowAnonymous]
     [ApiController]
+    [ApiVersion("1")]
+    [Route("api/v{version:apiVersion}/[controller]/")]
     public class AuthController : Controller
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
@@ -25,24 +26,18 @@ namespace ConJob.API.Controllers
             _authService = authService;
         }
         
-        [Route("/register")]
+        [Route("register")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> Register(UserRegisterDTO userdata)
         {
             var serviceResponse = await _userServices.RegisterAsync(userdata);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.Data),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.Message);
         }
 
-        [Route("/login")]
+        [Route("login")]
         [Produces("application/json")]
         [HttpPost]
-        
         public async Task<ActionResult> Login(UserLoginDTO userdata)
         {
             var serviceResponse = await _authService.LoginAsync(userdata);
@@ -54,7 +49,7 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
-        [Route("/verify")]
+        [Route("verify")]
         [Produces("application/json")]
         [HttpPost]
         [Authorize]
@@ -64,7 +59,7 @@ namespace ConJob.API.Controllers
             await _authService.verifyEmailAsync(userid);
         }
 
-        [Route("/verify/{token}")]
+        [Route("verify/{token}")]
         [Produces("application/json")]
         [HttpGet]
         public async Task<ActionResult> VerifyLink(string token)
@@ -79,7 +74,7 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
-        [Route("/refresh")]
+        [Route("refresh")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> refreshToken(TokenDTO token)
@@ -93,7 +88,7 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
-        [Route("/forgot")]
+        [Route("forgot-password")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> forgotPassword(string email)

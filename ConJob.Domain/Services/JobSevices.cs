@@ -2,25 +2,14 @@
 using ConJob.Data;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.Filtering;
-using ConJob.Domain.Repository;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
-using Hangfire.Common;
 using LinqKit;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static ConJob.Domain.Response.EServiceResponseTypes;
-using static ConJob.Domain.Services.Interfaces.IJobServices;
-using static ConJob.Domain.Services.JobSevices;
 
 namespace ConJob.Domain.Services
 {
@@ -148,19 +137,18 @@ namespace ConJob.Domain.Services
                 var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
                     .Where(predicate)
                     .AsNoTracking();
-                var sortedJob=_filterHelper.ApplySorting(job,searchJob.OrderBy);
+                var sortedJob = _filterHelper.ApplySorting(job, searchJob.OrderBy);
                 var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.Page, searchJob.Limit);
                 if (job.Any() == true)
                 {
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Data = pagedJob;
-
                 }
             }
-            catch(DbException ex) 
+            catch (DbException ex)
             {
                 serviceResponse.ResponseType = EResponseType.BadRequest;
-                serviceResponse.Message = "Somthing wrong"+ex.Message;
+                serviceResponse.Message = "Somthing wrong" + ex.Message;
             }
             return serviceResponse;
         }
@@ -189,7 +177,6 @@ namespace ConJob.Domain.Services
                 serviceReponse.ResponseType = EResponseType.CannotCreate;
                 serviceReponse.Message = ex.Message;
             }
-
             return serviceReponse;
         }
     }

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.DTOs.Follow;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ConJob.API.Controllers
 {
+
     [ApiController]
     [Authorize(Policy = "emailverified")]
     [ApiVersion("1")]
@@ -84,7 +86,7 @@ namespace ConJob.API.Controllers
             }
         }
 
-        [Route("avatar-upload")]
+        [Route("upload-avatar")]
         [Produces("application/json")]
         [HttpPost]
         public async Task uploadAvatar(IFormFile file)

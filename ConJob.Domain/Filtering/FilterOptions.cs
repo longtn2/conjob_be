@@ -9,6 +9,6 @@ namespace ConJob.Domain.Filtering
         public string SearchTerm { get; set; } = string.Empty;
         public int Page { get; set; } = 1;
         public int Limit { get; set; } = 50;
-        public string OrderBy { get; set; }
+        public string? OrderBy { get; set; }
     }
 }

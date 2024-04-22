@@ -1,13 +1,5 @@
-﻿using BCrypt.Net;
-using ConJob.Entities;
-
+﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConJob.Data
 {
@@ -122,43 +114,27 @@ namespace ConJob.Data
         );
 
         modelBuilder.Entity<RoleModel>().HasData(
-
             new RoleModel()
-
             {
-
                 id = 1,
-
                 role_name = "Admin",
-
                 role_description = "Là admin cuyền lực."
-
             },
-
             new RoleModel()
 
             {
-
                 id = 2,
-
-                role_name = "TimViec",
-
+                role_name = "Job Seeker",
                 role_description = "Là nole tư bản đi tìm kiếm miếng cơm manh áo."
 
             },
-
             new RoleModel()
 
             {
-
                 id = 3,
-
-                role_name = "PhatViec",
-
+                role_name = "Job Giver",
                 role_description = "Là tư bản đi kiếm những con chiêng ngoan đạo."
-
             }
-
            );
 
          modelBuilder.Entity<UserRoleModel>().HasData(
@@ -363,13 +339,9 @@ namespace ConJob.Data
                 new FileModel()
                 {
                     id = 1,
-
                     name = "anh datvila",
-
                     type = FileEnum.Img,
-
                     size = 100,
-
                     url = "https://media.2dep.vn/upload/thucquyen/2022/05/19/dat-villa-la-ai-hot-tiktoker-9x-trieu-view-co-chuyen-tinh-xuyen-bien-gioi-voi-ban-gai-indonesia-social-1652941149.jpg",
 
                 },
@@ -379,13 +351,9 @@ namespace ConJob.Data
                 {
 
                     id = 2,
-
                     name = "anh thong soai ca",
-
-                    type = FileEnum.Img,
-
+                    type =  FileEnum.Img,
                     size = 100,
-
                     url = "https://newsmd2fr.keeng.vn/tiin/archive/imageslead/2023/06/14/90_c373d5ac0433257417f21a0a5e07fa11.jpg",
 
                 });
@@ -621,8 +589,6 @@ namespace ConJob.Data
 
                     user_id = 2,
 
-                    job_id = 1,
-
                     file_id = 1,
 
                     title = "Luôn là người có trách nghiệm , I'am vippro",
@@ -634,8 +600,6 @@ namespace ConJob.Data
                     caption = "Là một người đỉnh cao tôi tự tin , khoe cá tính",
 
                     user_id = 5,
-
-                    job_id = 2,
 
                     file_id = 2,
 
