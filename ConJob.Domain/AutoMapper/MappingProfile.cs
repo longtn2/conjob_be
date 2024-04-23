@@ -34,7 +34,6 @@ namespace ConJob.Domain.AutoMapper
                 .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.to_user_id)).ReverseMap();
 
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
-            CreateMap<CategoryModel, CategoryDTO>().ReverseMap();
             CreateMap<JobModel, JobDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x => x.posts)).ReverseMap();
             CreateMap<JobModel, JobDetailsDTO>().ReverseMap();
             CreateMap<PostModel, PostDTO>().ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))

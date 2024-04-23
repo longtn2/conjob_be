@@ -11,15 +11,15 @@ namespace ConJob.Domain.Repository
         public FollowRepository(AppDbContext context, IMapper mapper) : base(context, mapper) { }
         public FollowModel GetFollowbyUser(UserModel fromUser, UserModel toUser)
         {
-            return _context.Follows.Where(e => e.to_user_follow.id == toUser.id && e.from_user_follow.id == fromUser.id).FirstOrDefault()!;
+            return _context.follows.Where(e => e.to_user_follow.id == toUser.id && e.from_user_follow.id == fromUser.id).FirstOrDefault()!;
         }
         public async Task<int> CountFollower(int userid)
         {
-            return await _context.Follows.Where(e => e.to_user_follow.id == userid).CountAsync();
+            return await _context.follows.Where(e => e.to_user_follow.id == userid).CountAsync();
         }
         public async Task<int> CountFolling(int userid)
         {
-            return await _context.Follows.Where(e => e.from_user_follow.id == userid).CountAsync();
+            return await _context.follows.Where(e => e.from_user_follow.id == userid).CountAsync();
         }
     }
 }
