@@ -38,7 +38,6 @@ namespace ConJob.Domain.Services
                 if (user != null)
                 {
                     var toAddjob = _mapper.Map<JobModel>(job);
-                    toAddjob.category = _context.Categories.Where(c => c.id == job.category_id).First();
                     toAddjob.user = user;
                     await _jobRepository.AddAsync(toAddjob);
                     serviceReponse.ResponseType = EResponseType.Success;

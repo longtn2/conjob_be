@@ -22,7 +22,7 @@ namespace ConJob.API.Policy
             {
                 string userid = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                var user =  _context.Users.FirstOrDefault(x => x.id == int.Parse(userid));
+                var user =  _context.users.FirstOrDefault(x => x.id == int.Parse(userid));
                 if(user.is_email_confirmed)
                     context.Succeed(requirement); // User's email is verified, so the requirement is met
             }
