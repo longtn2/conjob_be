@@ -2,8 +2,6 @@
 using ConJob.Domain.Filtering;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using static ConJob.Domain.Response.EServiceResponseTypes;
@@ -12,7 +10,7 @@ namespace ConJob.API.Controllers
 {
     [ApiController]
     [ApiVersion("1")]
-    [Route("api/v{version:apiVersion}/[controller]/")]
+    [Route("api/v{version:apiVersion}/job/")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status400BadRequest)]
@@ -54,7 +52,6 @@ namespace ConJob.API.Controllers
             {
                 EResponseType.Success => Ok(serviceResponse),
                 EResponseType.BadRequest => BadRequest(serviceResponse),
-                EResponseType.CannotCreate => BadRequest(serviceResponse),
                 EResponseType.NotFound => NotFound(serviceResponse),
                 _ => throw new NotImplementedException()
             };
@@ -68,7 +65,6 @@ namespace ConJob.API.Controllers
             {
                 EResponseType.Success => Ok(serviceResponse),
                 EResponseType.BadRequest => BadRequest(serviceResponse),
-                EResponseType.CannotCreate => BadRequest(serviceResponse),
                 EResponseType.NotFound => NotFound(serviceResponse),
                 _ => throw new NotImplementedException()
             };
@@ -86,7 +82,6 @@ namespace ConJob.API.Controllers
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
                 EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
                 EResponseType.NotFound => NotFound(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
@@ -101,7 +96,6 @@ namespace ConJob.API.Controllers
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
                 EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
                 EResponseType.NotFound => NotFound(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
@@ -116,7 +110,6 @@ namespace ConJob.API.Controllers
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
                 EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
                 EResponseType.NotFound => NotFound(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };

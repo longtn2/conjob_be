@@ -33,6 +33,7 @@ namespace ConJob.Entities
         public int quantity { get; set; }
         public int status { get; set; }
         public virtual ICollection<ApplicantModel> applicants { get; set; }
+        [JsonIgnore]
         public virtual ICollection<PostModel> posts { get; set; }
         public int user_id { get; set; }
         [JsonIgnore]

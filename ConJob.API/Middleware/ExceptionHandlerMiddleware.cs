@@ -36,6 +36,14 @@ namespace ConJob.API.Middleware
                 {
                     ResponseErrorAsync(context, ex.Message, 400);
                 }
+                else if (ex is InvalidOperationException)
+                {
+                    ResponseErrorAsync(context, ex.Message, 400);
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    ResponseErrorAsync(context, ex.Message, 400);
+                }
                 else if (ex is UnauthorizedAccessException)
                 {
                     ResponseErrorAsync(context, ex.Message, 401);
