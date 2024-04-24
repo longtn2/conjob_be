@@ -95,17 +95,17 @@ namespace ConJob.API.Controllers
             await _w3Services.UploadImage(file);
         }
 
-        [Route("/follow")]
+        [Route("follow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> followUser([FromBody] FollowerDTO followUser)
+        public async Task<ActionResult> followUser(int toUserid)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var serviceResponse = await _userServices.followUser(new FollowDTO()
             {
                 FromUserID = int.Parse(userid!),
-                ToUserID = int.Parse(followUser.toUser)
+                ToUserID = toUserid
             });
             return serviceResponse.ResponseType switch
             {
@@ -118,17 +118,17 @@ namespace ConJob.API.Controllers
             };
         }
 
-        [Route("/unfollow")]
+        [Route("unfollow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> unfollowUser([FromBody] FollowerDTO followUser)
+        public async Task<ActionResult> unfollowUser(int toUserid)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var serviceResponse = await _userServices.unfollowUser(new FollowDTO()
             {
                 FromUserID = int.Parse(userid!),
-                ToUserID = int.Parse(followUser.toUser),
+                ToUserID = toUserid,
             });
             return serviceResponse.ResponseType switch
             {

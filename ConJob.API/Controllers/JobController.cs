@@ -11,9 +11,9 @@ using static ConJob.Domain.Response.EServiceResponseTypes;
 namespace ConJob.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/[controller]/")]
-    [Produces("application/json")]
     [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ServiceResponse<JobDTO>), StatusCodes.Status404NotFound)]
@@ -93,10 +93,11 @@ namespace ConJob.API.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] JobDTO jobDTO)
+        public async Task<IActionResult> Update(int id, [FromBody] JobDTO jobDTO)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();
-            serviceResponse = await _jobServices.UpdateJobAsync(int.Parse(id), jobDTO);
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            serviceResponse = await _jobServices.UpdateJobAsync(int.Parse(userid!),id, jobDTO);
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),
@@ -108,10 +109,10 @@ namespace ConJob.API.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();
-            serviceResponse = await _jobServices.DeleteJobAsync(int.Parse(id));
+            serviceResponse = await _jobServices.DeleteJobAsync(id);
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => Ok(serviceResponse.Data),

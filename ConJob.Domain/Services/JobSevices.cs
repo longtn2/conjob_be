@@ -31,7 +31,7 @@ namespace ConJob.Domain.Services
 
         public async Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid, JobDetailsDTO job)
         {
-            var serviceReponse = new ServiceResponse<JobDetailsDTO>();
+            var serviceResponse = new ServiceResponse<JobDetailsDTO>();
             try
             {
                 var user = _userRepository.GetById(userid);
@@ -39,98 +39,99 @@ namespace ConJob.Domain.Services
                 {
                     var toAddjob = _mapper.Map<JobModel>(job);
                     toAddjob.user = user;
+                    toAddjob.posts = null!;
                     await _jobRepository.AddAsync(toAddjob);
-                    serviceReponse.ResponseType = EResponseType.Success;
-                    serviceReponse.Data = _mapper.Map<JobDetailsDTO>(toAddjob);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Data = _mapper.Map<JobDetailsDTO>(toAddjob);
                 }
                 else
                 {
-                    serviceReponse.ResponseType = EResponseType.NotFound;
-                    serviceReponse.Message = "not found user";
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "not found user";
                 }
             }
             catch (DbException ex)
             {
-                serviceReponse.ResponseType = EResponseType.CannotCreate;
-                serviceReponse.Message = ex.Message;
+                serviceResponse.ResponseType = EResponseType.CannotCreate;
+                serviceResponse.Message = ex.Message;
             }
-            return serviceReponse;
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<JobDTO>> DeleteJobAsync(int id)
         {
 
-            var serviceReponse = new ServiceResponse<JobDTO>();
+            var serviceResponse = new ServiceResponse<JobDTO>();
             try
             {
                 var job = _jobRepository.GetById(id);
                 if (job != null)
                 {
                     var toAddjob = _mapper.Map<JobModel>(job);
-                    serviceReponse.ResponseType = EResponseType.Success;
-                    serviceReponse.Data = _mapper.Map<JobDTO>(toAddjob);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Data = _mapper.Map<JobDTO>(toAddjob);
                     await _jobRepository.SoftDelete(job);
                 }
                 else
                 {
-                    serviceReponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.ResponseType = EResponseType.NotFound;
                 }
             }
             catch (DbException ex)
             {
-                serviceReponse.ResponseType = EResponseType.CannotCreate;
-                serviceReponse.Message = ex.Message;
+                serviceResponse.ResponseType = EResponseType.CannotCreate;
+                serviceResponse.Message = ex.Message;
             }
-            return serviceReponse;
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<JobDetailsDTO>> GetJobAsync(int id)
         {
-            var serviceReponse = new ServiceResponse<JobDetailsDTO>();
+            var serviceResponse = new ServiceResponse<JobDetailsDTO>();
             try
             {
                 var job = _jobRepository.GetById(id);
                 if (job == null)
                 {
-                    serviceReponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.ResponseType = EResponseType.NotFound;
                 }
                 else
                 {
-                    serviceReponse.ResponseType = EResponseType.Success;
-                    serviceReponse.Data = _mapper.Map<JobDetailsDTO>(job);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Data = _mapper.Map<JobDetailsDTO>(job);
                 }
             }
             catch (DbException ex)
             {
-                serviceReponse.ResponseType = EResponseType.CannotCreate;
-                serviceReponse.Message = ex.Message;
+                serviceResponse.ResponseType = EResponseType.CannotCreate;
+                serviceResponse.Message = ex.Message;
             }
-            return serviceReponse;
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<IEnumerable<JobDTO>>> GetJobsAsync()
         {
-            var serviceReponse = new ServiceResponse<IEnumerable<JobDTO>>();
+            var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>>();
             try
             {
                 var job = _jobRepository.GetAllAsync();
-                serviceReponse.ResponseType = EResponseType.Success;
-                serviceReponse.Data = _mapper.ProjectTo<JobDTO>(job);
+                serviceResponse.ResponseType = EResponseType.Success;
+                serviceResponse.Data = _mapper.ProjectTo<JobDTO>(job);
             }
             catch (DbException ex)
             {
-                serviceReponse.ResponseType = EResponseType.BadRequest;
-                serviceReponse.Message = ex.Message;
+                serviceResponse.ResponseType = EResponseType.BadRequest;
+                serviceResponse.Message = ex.Message;
             }
-            return serviceReponse;
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<PagingReturnModel<JobDTO>>> searchJobAsync(FilterOptions searchJob)
         {
             var predicate = PredicateBuilder.New<JobDTO>();
             predicate = predicate.Or(p => p.title.Contains(searchJob.SearchTerm));
-
             var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
+
             try
             {
                 var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
@@ -152,31 +153,41 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<JobDTO>> UpdateJobAsync(int id, JobDTO jobDTO)
+        public async Task<ServiceResponse<JobDTO>> UpdateJobAsync(int userid, int id, JobDTO jobDTO)
         {
-            var serviceReponse = new ServiceResponse<JobDTO>();
+            var serviceResponse = new ServiceResponse<JobDTO>();
             try
             {
                 var job = _jobRepository.GetById(id);
                 var toAddjob = _mapper.Map(jobDTO, job);
-                if (toAddjob != null)
+                toAddjob!.posts = null!;
+                if (_jobRepository.checkOwner(userid, id) != null)
                 {
-                    await _jobRepository.UpdateAsync(toAddjob!);
-                    serviceReponse.ResponseType = EResponseType.Success;
-                    serviceReponse.Data = _mapper.Map<JobDTO>(toAddjob);
+                    if (toAddjob != null)
+                    {
+                        await _jobRepository.UpdateAsync(toAddjob!);
+                        serviceResponse.ResponseType = EResponseType.Success;
+                        serviceResponse.Data = _mapper.Map<JobDTO>(toAddjob);
+                    }
+                    else
+                    {
+                        serviceResponse.ResponseType = EResponseType.BadRequest;
+                        serviceResponse.Message = "Something wrong";
+                    }
                 }
                 else
                 {
-                    serviceReponse.ResponseType = EResponseType.BadRequest;
-                    serviceReponse.Message = "Something wrong";
+                    serviceResponse.ResponseType= EResponseType.BadRequest;
+                    serviceResponse.Message = "User is not own";
                 }
+
             }
             catch (DbException ex)
             {
-                serviceReponse.ResponseType = EResponseType.CannotCreate;
-                serviceReponse.Message = ex.Message;
+                serviceResponse.ResponseType = EResponseType.CannotCreate;
+                serviceResponse.Message = ex.Message;
             }
-            return serviceReponse;
+            return serviceResponse;
         }
     }
 }
