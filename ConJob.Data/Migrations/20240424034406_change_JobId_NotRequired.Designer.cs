@@ -4,6 +4,7 @@ using ConJob.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240424034406_change_JobId_NotRequired")]
+    partial class change_JobId_NotRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,41 +214,6 @@ namespace ConJob.Data.Migrations
                             type = 0,
                             url = "https://youtu.be/5QPu-wDmeTA"
                         },
-                    b.Property<int>("change_on")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("create_on")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("created_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("is_deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<double>("size")
-                        .HasColumnType("float");
-
-                    b.Property<int>("type")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("updated_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Files");
-
-                    b.HasData(
                         new
                         {
                             id = 9,
@@ -2073,7 +2041,7 @@ namespace ConJob.Data.Migrations
                 {
                     b.HasOne("ConJob.Entities.FileModel", "file")
                         .WithMany("posts")
-                        .HasForeignKey("job_id")
+                        .HasForeignKey("file_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

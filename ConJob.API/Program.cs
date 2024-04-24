@@ -25,6 +25,8 @@ using ConJob.Domain.Filtering;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.DTOs.Post;
 using ConJob.API.Middleware;
+using Hangfire;
+using System.Net.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.Configure<S3Settings>(builder.Configuration.GetSection("S3Settings"));
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 #endregion
 
 #region add Version
@@ -89,7 +92,11 @@ builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
-
+#region add Hangfire 
+builder.Services.AddHangfire(configuration => configuration
+                    .UseSqlServerStorage(builder.Configuration.GetConnectionString("AppDbContext")));
+builder.Services.AddHangfireServer();
+#endregion
 #region  Paging & Sorting on Web-Request
 builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
 builder.Services.AddScoped<IFilterHelper<PostDTO>, FilterHelper<PostDTO>>();
@@ -112,6 +119,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 #region config Swagger 
@@ -150,10 +158,12 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 #endregion
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("emailverified", policy => policy.Requirements.Add(new EmailVerifiedRequirement()));
 });
+
 #region Auto mapper
 builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 {
@@ -162,7 +172,7 @@ builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 .CreateMapper());
 
 #endregion
- 
+  
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -180,4 +190,5 @@ app.UseMiddleware<ValidationExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.Run();

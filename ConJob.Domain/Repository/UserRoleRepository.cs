@@ -2,12 +2,7 @@
 using ConJob.Data;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConJob.Domain.Repository
 {

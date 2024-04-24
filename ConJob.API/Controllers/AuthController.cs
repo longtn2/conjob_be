@@ -15,7 +15,7 @@ namespace ConJob.API.Controllers
     [AllowAnonymous]
     [ApiController]
     [ApiVersion("1")]
-    [Route("api/v{version:apiVersion}/[controller]/")]
+    [Route("api/v{version:apiVersion}/auth/")]
     public class AuthController : Controller
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
@@ -64,14 +64,9 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> Login(UserLoginDTO userdata)
         {
             var serviceResponse = await _authService.LoginAsync(userdata);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.getData()),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),    
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getData());
         }
+
         [Route("verify")]
         [Produces("application/json")]
         [HttpPost]
@@ -89,27 +84,16 @@ namespace ConJob.API.Controllers
         {
             var decode = WebUtility.UrlDecode(token);
             var serviceResponse = await _authService.activeEmailAsync(decode);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Message),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
+
         [Route("refresh")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> refreshToken(TokenDTO token)
         {
             var serviceResponse = await _authService.refreshTokenAsync(token.Token);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => CreatedAtAction(nameof(refreshToken), new { version = "1" }, serviceResponse.Data),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return CreatedAtAction(nameof(refreshToken), new { version = "1" }, serviceResponse.getData());
         }
         [Route("forgot")]
         [Produces("application/json")]
@@ -118,12 +102,7 @@ namespace ConJob.API.Controllers
         {
 
             var serviceResponse = await _authService.sendForgotEmailVerify(email);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
         [Route("logout")]
