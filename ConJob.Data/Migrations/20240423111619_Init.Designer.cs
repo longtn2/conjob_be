@@ -1105,7 +1105,7 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("job_id")
+                    b.Property<int>("job_id")
                         .HasColumnType("int");
 
                     b.Property<string>("title")
@@ -1755,7 +1755,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Dat",
-                            password = "$2a$11$WdUpx2xd/bP2gWtsBGaVNuZ44WrRup5RZqGAmG919bm/qFlRphDea",
+                            password = "$2a$11$tawV6mVjt2t6dc/AjKBjwu02a62owFZv.MquM8QWpS1AHegQsDGi.",
                             phone_number = "0335487991"
                         },
                         new
