@@ -215,7 +215,7 @@ namespace ConJob.Domain.Services
                         .Where(predicate)
                         .AsNoTracking();
                 if (statusFilter == "is_deleted")
-                    posts = posts.Where(p => p.is_deleted == true);
+                    posts = _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetSoftDelete());
                 else if (statusFilter == "is_actived")
                     posts = posts.Where(p => p.is_actived == true);
                 else
