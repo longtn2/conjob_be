@@ -15,7 +15,6 @@ namespace ConJob.Entities
     public class UserModel: BaseModel
     {
         [Key]
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
 
@@ -61,9 +60,6 @@ namespace ConJob.Entities
         [Column(TypeName = "text")]
         public string? avatar { get; set; }
 
-
-        [JsonIgnore, Required]
-        public bool is_deleted { get; set; } = false;
         [JsonIgnore]
         public virtual ICollection<UserRoleModel> user_roles { get; set; }
         [JsonIgnore]

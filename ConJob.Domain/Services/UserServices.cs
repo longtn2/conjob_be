@@ -47,18 +47,18 @@ namespace ConJob.Domain.Services
         public async Task<ServiceResponse<UserInfoDTO>> GetUserInfoAsync(string? id)
         {
             var serviceResponse = new ServiceResponse<UserInfoDTO>();
-            var user = _userRepository.GetById(int.Parse(id));
-            if (user == null)
+            try
             {
-                serviceResponse.ResponseType = EResponseType.NotFound;
-                serviceResponse.Message = "User not found";
-            }
-            else
-            {
+                var user = _userRepository.GetById(int.Parse(id));
                 UserInfoDTO userInfo = _mapper.Map<UserInfoDTO>(user);
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Data = userInfo;
-                serviceResponse.Message = "Get user profile successfully";
             }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("User not found.");
+            }
+            catch { throw; }
             return serviceResponse;
         }
 
@@ -75,6 +75,7 @@ namespace ConJob.Domain.Services
                     user = toAdd
                 });
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Message = "Register Successfully! Please check your email to confirm account!";
                 await _emailServices.sendActivationEmail(toAdd);
             }
@@ -124,23 +125,14 @@ namespace ConJob.Domain.Services
             try
             {
                 var user = _userRepository.GetById(int.Parse(id));
-                if (user == null)
-                {
-                    serviceResponse.ResponseType = EResponseType.NotFound;
-                    serviceResponse.Message = "User not found!";
-                }
-                else
-                {
-                    user = await _userRepository.updateAsync(updateUser, user);
-                    serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Message = "Update user successfully!";
-                    serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
-                }
+                user = await _userRepository.updateAsync(updateUser, user);
+                serviceResponse.ResponseType = EResponseType.Success;
+                serviceResponse.Message = "Update user successfully!";
+                serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
             }
             catch (DbUpdateException ex)
             {
-                serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                serviceResponse.Message = "Error Occur While updating data.";
+                throw new DbUpdateException("Error Occur While updating data.");
             }
             return serviceResponse;
         }
@@ -187,7 +179,8 @@ namespace ConJob.Domain.Services
                     else if (checkfollow == null)
                     {
                         await _followRepository.AddAsync(tofollow);
-                        serviceResponse.Data = _mapper.Map<FollowDTO>(tofollow);
+                        serviceResponse.ResponseType = EResponseType.Success;
+                        serviceResponse.Message = "Success follow user";
                     }
                     else
                     {
@@ -205,7 +198,7 @@ namespace ConJob.Domain.Services
             catch
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Somthing wrong.";
+                serviceResponse.Message = "Something wrong.";
             }
             return serviceResponse;
         }
@@ -228,19 +221,20 @@ namespace ConJob.Domain.Services
                     else
                     {
                         await _followRepository.RemoveAsync(result!);
-                        serviceResponse.Data = _mapper.Map<FollowDTO>(toRemove);
+                        serviceResponse.ResponseType = EResponseType.Success;
+                        serviceResponse.Message = "Success follow user";
                     }
                 }
                 else
                 {
                     serviceResponse.ResponseType = EResponseType.BadRequest;
-                    serviceResponse.Message = "Sometgin wrong";
+                    serviceResponse.Message = "Something wrong";
                 }
             }
             catch
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Somthing wrong.";
+                serviceResponse.Message = "Something wrong.";
             }
             return serviceResponse;
         }

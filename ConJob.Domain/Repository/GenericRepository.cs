@@ -2,7 +2,9 @@
 using ConJob.Data;
 using ConJob.Domain.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Entity;
 using System.Linq.Expressions;
+using static Amazon.S3.Util.S3EventNotification;
 
 namespace ConJob.Domain.Repository
 {
@@ -81,6 +83,9 @@ namespace ConJob.Domain.Repository
                 await _context.SaveChangesAsync(); // Lưu thay đổi vào cơ sở dữ liệu
             }
         }
-
+        public IQueryable<T> GetSoftDelete()
+        {
+            return _context.Set<T>().IgnoreQueryFilters().Where(e => EF.Property<bool>(e, "is_deleted"));
+        }
     }
 }

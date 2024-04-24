@@ -14,5 +14,6 @@ namespace ConJob.Domain.Repository.Interfaces
         Task DeleteAsync(int post_id);
         Task ActiveAsync(int post_id);
         int CountLikePost(int post_id);
+        Task addJobToPostAsync(int jobId, PostModel post);
     }
 }

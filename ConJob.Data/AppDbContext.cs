@@ -1,6 +1,7 @@
 ﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Hosting;
 using System.Linq.Expressions;
 
 namespace ConJob.Data
@@ -29,7 +30,8 @@ namespace ConJob.Data
                     .HasMany(e => e.posts)
                     .WithOne(e => e.job)
                     .HasForeignKey("job_id")
-                    .IsRequired();
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(false);
             modelBuilder.Entity<UserModel>()
                     .HasMany(e => e.jwts)
                     .WithOne(e => e.user)

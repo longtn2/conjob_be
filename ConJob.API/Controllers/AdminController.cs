@@ -9,7 +9,7 @@ namespace ConJob.API.Controllers
 {
     [Authorize(Roles = "Admin")]
     [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]/")]
+    [Route("api/v{version:apiVersion}/admin/")]
     public class AdminController : ControllerBase
     {
         private readonly IPostService _postService;
@@ -19,32 +19,20 @@ namespace ConJob.API.Controllers
             _postService = postService;
         }
 
-        [Route("post/delete")]
+        [Route("post/delete/{id}")]
         [HttpPost]
         public async Task<ActionResult> DeletePost(int id)
         {
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var serviceResponse = await _postService.DeleteAsync(int.Parse(userid), id);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.NotFound => NotFound(serviceResponse),
-                _ => throw new NotImplementedException()
-            };
+            var serviceResponse = await _postService.DeleteAsync(id);
+            return Ok(serviceResponse.getMessage());
         }
 
-        [Route("post/active")]
+        [Route("post/active/{id}")]
         [HttpPost]
         public async Task<ActionResult> ActivePost(int id)
         {
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var serviceResponse = await _postService.ActiveAsync(int.Parse(userid), id);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.NotFound => NotFound(serviceResponse),
-                _ => throw new NotImplementedException()
-            };
+            var serviceResponse = await _postService.ActiveAsync(id);
+            return Ok(serviceResponse.getMessage());
         }
 
         [Route("post")]
@@ -52,19 +40,7 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> FindUserProjects([FromQuery] FilterOptions? filter, string? statusFilter)
         {
             var serviceResponse = await _postService.FilterAllAsync(filter, statusFilter);
-            switch (serviceResponse.ResponseType)
-            {
-                case EResponseType.Success:
-                    Response.Headers.Add("X-Paging-PageNo", serviceResponse.Data?.CurrentPage.ToString());
-                    Response.Headers.Add("X-Paging-PageSize", serviceResponse.Data?.PageSize.ToString());
-                    Response.Headers.Add("X-Paging-PageCount", serviceResponse.Data?.TotalPages.ToString());
-                    Response.Headers.Add("X-Paging-TotalRecordCount", serviceResponse.Data?.TotalCount.ToString());
-                    return Ok(serviceResponse.Data?.Items);
-                case EResponseType.NotFound:
-                    return NotFound(serviceResponse);
-                default:
-                    throw new NotImplementedException();
-            }
+            return Ok(serviceResponse.getData());
         }
     }
 }

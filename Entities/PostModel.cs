@@ -16,7 +16,6 @@ namespace ConJob.Entities
         public int id { get; set; }
         public string title { get; set; }
         public string caption { get; set; }
-        public bool is_deleted { get; set; }
         public bool is_actived {  get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public int user_id { get; set; }    
@@ -24,10 +23,10 @@ namespace ConJob.Entities
         [ForeignKey("user_id")]
         public UserModel user { get; set; }
         public virtual ICollection<LikeModel> likes { get; set; }
-        public int job_id { get; set; }
+        public int? job_id { get; set; } = null;
         [JsonIgnore]
         [ForeignKey("job_id")]
-        public JobModel job { get; set; }
+        public JobModel? job { get; set; } = null;
         public int file_id { get; set; }
         [JsonIgnore]
         [ForeignKey("file_id")]

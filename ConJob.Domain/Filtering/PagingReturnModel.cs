@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace ConJob.Domain.Filtering
 {
 	public class PagingReturnModel<T>

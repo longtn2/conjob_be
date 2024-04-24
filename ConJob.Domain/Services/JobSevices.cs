@@ -148,7 +148,7 @@ namespace ConJob.Domain.Services
             catch (DbException ex)
             {
                 serviceResponse.ResponseType = EResponseType.BadRequest;
-                serviceResponse.Message = "Somthing wrong" + ex.Message;
+                serviceResponse.Message = "Something wrong" + ex.Message;
             }
             return serviceResponse;
         }
