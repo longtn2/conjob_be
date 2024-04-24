@@ -29,7 +29,11 @@ namespace ConJob.Data
                     .HasMany(e => e.posts)
                     .WithOne(e => e.job)
                     .HasForeignKey("job_id")
-                    .IsRequired();
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PostModel>()
+                .Property(p => p.job_id)
+                .IsRequired(false);
             modelBuilder.Entity<UserModel>()
                     .HasMany(e => e.jwts)
                     .WithOne(e => e.user)

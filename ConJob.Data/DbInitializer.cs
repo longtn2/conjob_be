@@ -10,11 +10,9 @@ namespace ConJob.Data
         {
             this.modelBuilder = modelBuilder;
         }
-
         public void Seed()
         {
-
-        modelBuilder.Entity<JobModel>().HasData(
+            modelBuilder.Entity<JobModel>().HasData(
                new JobModel()
 
                {
@@ -316,7 +314,9 @@ namespace ConJob.Data
                    password = BCrypt.Net.BCrypt.HashPassword("123ABCabc!"),
 
                    address = "Hue",
-                   is_email_confirmed = true
+                   is_email_confirmed = true,
+                   avatar= "https://i.pinimg.com/originals/27/0c/be/270cbeb639f6d0ed64f3106daaeccc1d.jpg"
+
                },
                new UserModel()
                {
@@ -333,7 +333,9 @@ namespace ConJob.Data
                    password = BCrypt.Net.BCrypt.HashPassword("123ABCabc!"),
 
                    address = "Hue",
-                   is_email_confirmed = true
+                   is_email_confirmed = true,
+                   avatar = "https://th.bing.com/th/id/OIP.MbAE6jT-VnWsVr9ANrkYNwHaKw?rs=1&pid=ImgDetMain"
+
 
                },
                new UserModel()
@@ -353,7 +355,8 @@ namespace ConJob.Data
                    password = BCrypt.Net.BCrypt.HashPassword("123ABCabc!"),
 
                    address = "Hue",
-                   is_email_confirmed = true
+                   is_email_confirmed = true,
+                   avatar = "https://th.bing.com/th/id/R.47e446cab641c16b2a6f8c9db520ee19?rik=0vd8lTgoDpgUzQ&pid=ImgRaw&r=0"
 
                },
                new UserModel()
@@ -373,7 +376,8 @@ namespace ConJob.Data
                    password = BCrypt.Net.BCrypt.HashPassword("123ABCabc!"),
 
                    address = "Hue",
-                   is_email_confirmed = true
+                   is_email_confirmed = true,
+                   avatar = "https://th.bing.com/th/id/OIP.-Xu8PRNaVrwqZ1J-f4E16wHaHa?w=1200&h=1200&rs=1&pid=ImgDetMain"
 
                },
                new UserModel()
@@ -393,7 +397,8 @@ namespace ConJob.Data
                    password = BCrypt.Net.BCrypt.HashPassword("123ABCabc!"),
 
                    address = "Hue",
-                   is_email_confirmed = true
+                   is_email_confirmed = true,
+                   avatar = "https://th.bing.com/th/id/OIP.-q9JRr6eAAyyBL3s-3g1PgHaKt?rs=1&pid=ImgDetMain"
 
                }
         );
@@ -406,7 +411,7 @@ namespace ConJob.Data
 
                        role_name = "Admin",
 
-                       role_description = "Là admin cuyền lực."
+                       role_description = "manage it all"
 
                    },
                    new RoleModel()
@@ -415,9 +420,9 @@ namespace ConJob.Data
 
                        id = 2,
 
-                       role_name = "TimViec",
+                       role_name = "Job Seeker",
 
-                       role_description = "Là nole tư bản đi tìm kiếm miếng cơm manh áo."
+                       role_description = "They are people looking for work"
 
                    },
                    new RoleModel()
@@ -426,9 +431,9 @@ namespace ConJob.Data
 
                        id = 3,
 
-                       role_name = "PhatViec",
+                       role_name = "Job Giver",
 
-                       role_description = "Là tư bản đi kiếm những con chiêng ngoan đạo."
+                       role_description = "They are someone who goes to work"
 
                    }
             );
@@ -652,7 +657,7 @@ namespace ConJob.Data
 
                       type = FileEnum.Video,
 
-                      url = "https://youtu.be/x3LGCLNq33c?t=48",
+                      url = "https://videos.pexels.com/video-files/6698049/6698049-uhd_3840_2160_25fps.mp4",
                   },
                   new FileModel()
                   {
@@ -682,7 +687,7 @@ namespace ConJob.Data
 
                       type = FileEnum.Video,
 
-                      url = "https://youtu.be/F8-LHRu5cDU",
+                      url = "https://videos.pexels.com/video-files/2084066/2084066-hd_1920_1080_24fps.mp4",
                   },
                   new FileModel()
                   {
@@ -692,7 +697,7 @@ namespace ConJob.Data
 
                       type = FileEnum.Video,
 
-                      url = "https://youtu.be/nm4XvSf6IWw",
+                      url = "https://videos.pexels.com/video-files/2795169/2795169-uhd_3840_2160_25fps.mp4",
                   },
                   new FileModel()
                   {
@@ -702,7 +707,7 @@ namespace ConJob.Data
 
                       type = FileEnum.Video,
 
-                      url = "https://youtu.be/5QPu-wDmeTA",
+                      url = "https://videos.pexels.com/video-files/3959712/3959712-uhd_4096_2160_25fps.mp4",
                   },
                   new FileModel()
                   {
@@ -723,7 +728,60 @@ namespace ConJob.Data
                       type = FileEnum.Img,
 
                       url = "https://jobsgo.vn/blog/wp-content/uploads/2023/03/stt-tuyen-dung-hay-content-tuyen-dung-hai-huoc.png",
-                  }
+                  },
+                  new FileModel()
+                  {
+                      id = 11,
+
+                      name = "Bia",
+
+                      type = FileEnum.Img,
+
+                      url = "https://th.bing.com/th/id/OIP.HY0HMmxb_o1ri0wKsIq2jgHaHa?rs=1&pid=ImgDetMain",
+
+                  },
+                   new FileModel()
+                   {
+                       id = 12,
+                       name = "Ảnh khỏa thân",
+                       type = FileEnum.Img,
+                       url = "https://th.bing.com/th/id/OIP.aVQAa1WSb_Ct4kzZpeCm7AHaHa?rs=1&pid=ImgDetMain",
+                   },
+                   new FileModel()
+                   {
+                       id = 13,
+                       name = "Ngón giữa",
+                       type = FileEnum.Img,
+                       url = "https://toigingiuvedep.vn/wp-content/uploads/2021/12/anh-ngon-tay-giua-450x600.jpg",
+                   },
+                   new FileModel()
+                   {
+                       id = 14,
+                       name = "Súng",
+                       type = FileEnum.Img,
+                       url = "https://videos.pexels.com/video-files/3223449/3223449-uhd_3840_2160_24fps.mp4",
+                   },
+                    new FileModel()
+                    {
+                        id = 15,
+                        name = "Ảnh nhóm",
+                        type = FileEnum.Img,
+                        url = "https://th.bing.com/th/id/R.5f2c346baa2978dd9df6c4a2e093e00f?rik=VwvG7bfjVAc4bw&pid=ImgRaw&r=0",
+                    },
+                    new FileModel()
+                    {
+                        id = 16,
+                        name = "Ảnh nữ",
+                        type = FileEnum.Img,
+                        url = "https://scontent.fdad3-4.fna.fbcdn.net/v/t39.30808-6/439864769_3640571656182795_4383749922632562270_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=x-BvE_1KWXMAb4mSMIZ&_nc_ht=scontent.fdad3-4.fna&oh=00_AfCr0ciTDobk0kNf6V8TLjSk1OQB5afqkW-526xvn0JPsw&oe=662E6F0F",
+                    },
+                     new FileModel()
+                     {
+                         id = 17,
+                         name = "Ảnh nữ",
+                         type = FileEnum.Video,
+                         url = "https://videos.pexels.com/video-files/9335837/9335837-hd_1920_1080_25fps.mp4 ",
+                     }
             );
             modelBuilder.Entity<MessengerModel>().HasData(
                   new MessengerModel()
@@ -812,7 +870,7 @@ namespace ConJob.Data
                     user_id = 2,
                     job_id = 1,
                     apply_date = new DateTime(2024, 4, 29),
-                    status = "Mới nộp",
+                    status = "Đã nộp",
                 },
                 new ApplicantModel()
                 {
@@ -820,7 +878,7 @@ namespace ConJob.Data
                     user_id = 4,
                     job_id = 2,
                     apply_date = new DateTime(2024, 4, 29),
-                    status = "Mới nộp",
+                    status = "Đã nộp",
                 }
                 );
             modelBuilder.Entity<PostModel>().HasData(
@@ -831,7 +889,8 @@ namespace ConJob.Data
                     user_id = 3,
                     job_id = 3,
                     file_id = 3,
-                    title = "Nhà ảnh độc lập từ xa"
+                    title = "Nhà ảnh độc lập từ xa",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -840,7 +899,8 @@ namespace ConJob.Data
                     user_id = 3,
                     job_id = 2,
                     file_id = 2,
-                    title = "Code dự án Web trong 2 tháng"
+                    title = "Code dự án Web trong 2 tháng",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -849,34 +909,38 @@ namespace ConJob.Data
                     user_id = 3,
                     job_id = 17,
                     file_id = 1,
-                    title = "Nhà ảnh tự do"
+                    title = "Nhà ảnh tự do",
+                    created_at = new DateTime(2024, 4, 29)
                 },
-               new PostModel()
+                new PostModel()
                {
                    id = 4,
                    caption = "Chúng tôi đang tìm kiếm một Lập trình viên Backend tài năng để tham gia vào dự án web và đóng góp vào việc phát triển trong 2 tháng.",
                    user_id = 3,
                    job_id = 4,
                    file_id = 10,
-                   title = "Lập trình viên Backend toàn thời gian"
+                   title = "Lập trình viên Backend toàn thời gian",
+                   created_at = new DateTime(2024, 4, 29)
                },
-               new PostModel()
+                new PostModel()
                {
                    id = 5,
                    caption = "Bạn có khả năng chỉnh sửa video và muốn tham gia vào các dự án sáng tạo khác nhau? Hãy gia nhập đội ngũ của chúng tôi và đóng góp vào việc tạo ra video chất lượng cao!",
                    user_id = 3,
                    job_id = 5,
                    file_id = 9,
-                   title = "Biên tập video bán thời gian"
+                   title = "Biên tập video bán thời gian",
+                   created_at = new DateTime(2024, 4, 29)
                },
-               new PostModel()
+                new PostModel()
                {
                    id = 6,
                    caption = "Bạn có khả năng tạo ra nội dung sáng tạo và muốn thể hiện tài năng của mình trên blog của công ty? Hãy tham gia vào đội ngũ của chúng tôi và tạo ra những bài viết hấp dẫn!",
                    user_id = 3,
                    job_id = 11,
                    file_id = 8,
-                   title = "Người viết nội dung tại chỗ"
+                   title = "Người viết nội dung tại chỗ",
+                   created_at = new DateTime(2024, 4, 29)
                },
                 new PostModel()
                 {
@@ -885,7 +949,8 @@ namespace ConJob.Data
                     user_id = 3,
                     job_id = 7,
                     file_id = 7,
-                    title = "Phát triển viên RESTful API kết hợp"
+                    title = "Phát triển viên RESTful API kết hợp",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -894,43 +959,48 @@ namespace ConJob.Data
                     user_id = 3,
                     job_id = 8,
                     file_id = 6,
-                    title = "Thiết kế đồ họa tự do"
+                    title = "Thiết kế đồ họa tự do",
+                    created_at = new DateTime(2024, 4, 29)
                 },
-              new PostModel()
-              {
-                  id = 9,
-                  caption = "Bạn là một kỹ sư phần mềm tài năng và muốn tham gia vào việc phát triển ứng dụng phần mềm toàn thời gian? Hãy tham gia vào đội ngũ của chúng tôi và đóng góp vào dự án công nghệ của chúng tôi.",
-                  user_id = 3,
-                  job_id = 9,
-                  file_id = 5,
-                  title = "Kỹ sư phần mềm toàn thời gian"
-              },
-               new PostModel()
+                new PostModel()
+                  {
+                      id = 9,
+                      caption = "Bạn là một kỹ sư phần mềm tài năng và muốn tham gia vào việc phát triển ứng dụng phần mềm toàn thời gian? Hãy tham gia vào đội ngũ của chúng tôi và đóng góp vào dự án công nghệ của chúng tôi.",
+                      user_id = 3,
+                      job_id = 9,
+                      file_id = 5,
+                      title = "Kỹ sư phần mềm toàn thời gian",
+                      created_at = new DateTime(2024, 4, 29)
+                  },
+                new PostModel()
                {
                    id = 10,
                    caption = "Bạn có khả năng quản lý truyền thông xã hội và muốn làm việc từ xa? Hãy tham gia vào đội ngũ của chúng tôi và quản lý tài khoản truyền thông xã hội cho các chiến dịch tiếp thị của chúng tôi.",
                    user_id = 5,
                    job_id = 16,
                    file_id = 4,
-                   title = "Quản lý truyền thông xã hội từ xa"
+                   title = "Quản lý truyền thông xã hội từ xa",
+                   created_at = new DateTime(2024, 4, 29)
                },
-               new PostModel()
+                new PostModel()
                {
                    id = 11,
                    caption = "Bạn là một người sáng tạo và muốn tạo nội dung độc đáo cho các nền tảng trực tuyến? Chúng tôi đang tìm kiếm Người tạo nội dung bán thời gian để tham gia vào các dự án sáng tạo.",
                    user_id = 5,
                    job_id = 15,
                    file_id = 3,
-                   title = "Người tạo nội dung bán thời gian"
+                   title = "Người tạo nội dung bán thời gian",
+                   created_at = new DateTime(2024, 4, 29)
                },
-               new PostModel()
+                new PostModel()
                {
                    id = 12,
                    caption = "Bạn là một chuyên gia tiếp thị sáng tạo và muốn tham gia vào việc phát triển các chiến lược tiếp thị? Chúng tôi đang tìm kiếm Chuyên gia tiếp thị kết hợp để đóng góp vào các dự án tiếp thị của chúng tôi.",
                    user_id = 5,
                    job_id = 12,
                    file_id = 2,
-                   title = "Chuyên gia tiếp thị kết hợp"
+                   title = "Chuyên gia tiếp thị kết hợp",
+                   created_at = new DateTime(2024, 4, 29)
                },
                 new PostModel()
                 {
@@ -939,7 +1009,8 @@ namespace ConJob.Data
                     user_id = 5,
                     job_id = 14,
                     file_id = 1,
-                    title = "Thiết kế UI/UX tại chỗ"
+                    title = "Thiết kế UI/UX tại chỗ",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -948,21 +1019,18 @@ namespace ConJob.Data
                     user_id = 5,
                     job_id = 20,
                     file_id = 10,
-                    title = "Người viết bài tự do"
+                    title = "Người viết bài tự do",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
                     id = 15,
-
                     caption = "Viết bài cho các khách hàng khác nhau theo cách tự do.",
-
                     user_id = 5,
-
                     job_id = 14,
-
                     file_id = 9,
-
                     title = "Tìm việc người viết bài tự do",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -971,25 +1039,8 @@ namespace ConJob.Data
                     user_id = 4,
                     job_id = 5,
                     file_id = 8,
-                    title = "Biên tập video"
-                },
-                new PostModel()
-                {
-                    id = 24,
-                    caption = "Tôi là một người yêu thích viết lách và mong muốn có cơ hội làm việc trong lĩnh vực tạo nội dung. Tôi tự tin vào khả năng sáng tạo của mình và mong muốn được góp phần vào việc phát triển nội dung cho các dự án trực tuyến. Rất mong nhận được sự quan tâm và cơ hội từ các nhà tuyển dụng!",
-                    user_id = 4,
-                    job_id = 11,
-                    file_id = 7,
-                    title = "Người tạo nội dung"
-                },
-                new PostModel()
-                {
-                    id = 25,
-                    caption = "Tôi là một lập trình viên có kinh nghiệm trong phát triển ứng dụng di động và đam mê công việc của mình. Tôi mong muốn có cơ hội tham gia vào các dự án phát triển ứng dụng di động và đóng góp vào việc tạo ra các sản phẩm chất lượng. Rất mong nhận được sự quan tâm từ các nhà tuyển dụng!",
-                    user_id = 4,
-                    job_id = 18,
-                    file_id = 6,
-                    title = "Phát triển viên ứng dụng di động"
+                    title = "Biên tập video",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -998,7 +1049,8 @@ namespace ConJob.Data
                     user_id = 4,
                     job_id = 5,
                     file_id = 5,
-                    title = "Biên tập video"
+                    title = "Biên tập video",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -1007,7 +1059,8 @@ namespace ConJob.Data
                     user_id = 4,
                     job_id = 7,
                     file_id = 4,
-                    title = "Phát triển viên RESTful API"
+                    title = "Phát triển viên RESTful API",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -1016,7 +1069,8 @@ namespace ConJob.Data
                     user_id = 4,
                     job_id = 5,
                     file_id = 5,
-                    title = "Biên tập video"
+                    title = "Biên tập video",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -1025,7 +1079,8 @@ namespace ConJob.Data
                     user_id = 2,
                     job_id = 7,
                     file_id = 3,
-                    title = "Phát triển viên RESTful API"
+                    title = "Phát triển viên RESTful API",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -1034,7 +1089,8 @@ namespace ConJob.Data
                     user_id = 2,
                     job_id = 18,
                     file_id = 2,
-                    title = "Phát triển viên ứng dụng di động"
+                    title = "Phát triển viên ứng dụng di động",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -1043,7 +1099,8 @@ namespace ConJob.Data
                     user_id = 2,
                     job_id = 11,
                     file_id = 1,
-                    title = "Người tạo nội dung"
+                    title = "Người tạo nội dung",
+                    created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
                 {
@@ -1052,7 +1109,98 @@ namespace ConJob.Data
                     user_id = 2,
                     job_id = 20,
                     file_id = 10,
-                    title = "Nhà thiết kế đồ họa"
+                    title = "Nhà thiết kế đồ họa",
+                    created_at = new DateTime(2024, 4, 29)
+                }, 
+                new PostModel()
+                {
+                    id = 24,
+                    caption = "Tôi là một người yêu thích viết lách và mong muốn có cơ hội làm việc trong lĩnh vực tạo nội dung. Tôi tự tin vào khả năng sáng tạo của mình và mong muốn được góp phần vào việc phát triển nội dung cho các dự án trực tuyến. Rất mong nhận được sự quan tâm và cơ hội từ các nhà tuyển dụng!",
+                    user_id = 4,
+                    job_id = 11,
+                    file_id = 7,
+                    title = "Người tạo nội dung",
+                    created_at = new DateTime(2024, 4, 29)
+                },
+                new PostModel()
+                {
+                    id = 25,
+                    caption = "Tôi là một lập trình viên có kinh nghiệm trong phát triển ứng dụng di động và đam mê công việc của mình. Tôi mong muốn có cơ hội tham gia vào các dự án phát triển ứng dụng di động và đóng góp vào việc tạo ra các sản phẩm chất lượng. Rất mong nhận được sự quan tâm từ các nhà tuyển dụng!",
+                    user_id = 4,
+                    job_id = 18,
+                    file_id = 6,
+                    title = "Phát triển viên ứng dụng di động",
+                    created_at = new DateTime(2024, 4, 29)
+                },
+                new PostModel()
+                {
+                    id = 26,
+                    caption = "Yêu cái đẹp",
+                    user_id = 2,
+                    job_id = 20,
+                    file_id = 12,
+                    title = "Nhà thẩm định hình thể",
+                    created_at = new DateTime(2024, 4, 29)
+                },
+                new PostModel()
+                {
+                    id = 27,
+                    caption = "Yêu nhậu nhẹt",
+                    user_id = 2,
+                    job_id = 20,
+                    file_id = 11,
+                    title = "Nhà thưởng ẩm thực",
+                    created_at = new DateTime(2024, 4, 29)
+                },
+                new PostModel()
+                {
+                    id = 28,
+                    caption = "Nghệ thuật tay",
+                    user_id = 2,
+                    job_id = 20,
+                    file_id = 13,
+                    title = "Nghệ thuật tay",
+                    created_at = new DateTime(2024, 4, 29)
+                },
+                new PostModel()
+                {
+                    id = 29,
+                    caption = "Hình ảnh mạnh mẽ",
+                    user_id = 2,
+                    job_id = 20,
+                    file_id = 14,
+                    title = "Hình ảnh mạnh mẽ",
+                    created_at = new DateTime(2024, 4, 29)
+                },
+                new PostModel()
+                {
+                    id = 30,
+                    caption = "Chúng ta là những người bạn thân ",
+                    user_id = 2,
+                    job_id = 20,
+                    file_id = 15,
+                    title = "Chúng ta là những người bạn thân , luôn luôn đồng hành cùng nhau",
+                    created_at = new DateTime(2024, 4, 29)
+                },
+                new PostModel()
+                {
+                    id = 31,
+                    caption = "Nghệ thuật lừa dối ánh trăng",
+                    user_id = 2,
+                    job_id = 20,
+                    file_id = 15,
+                    title = "Hình ảnh nghệ thuật",
+                    created_at = new DateTime(2024, 4, 29)
+                },
+                new PostModel()
+                {
+                    id = 32,
+                    caption = "Đem đến cho người dùng trải nghiệm tuyệt vời ",
+                    user_id = 3,
+                    job_id = 3,
+                    file_id = 17,
+                    title = "Mát xa bấm huyệt",
+                    created_at = new DateTime(2024, 4, 29)
                 }
                 );
             modelBuilder.Entity<LikeModel>().HasData(
