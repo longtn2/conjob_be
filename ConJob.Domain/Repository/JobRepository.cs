@@ -14,7 +14,7 @@ namespace ConJob.Domain.Repository
 
         public IQueryable<JobModel> GetUserJobs(int userId)
         {
-            return _context.Jobs
+            return _context.jobs
                 .Where(c => c.user.id == userId);
         }
 

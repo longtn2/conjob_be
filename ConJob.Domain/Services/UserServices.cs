@@ -68,8 +68,7 @@ namespace ConJob.Domain.Services
             try
             {
                 var toAdd = _mapper.Map<UserModel>(user);
-                await _userRepository.AddAsync(toAdd);
-                var role = await _roleRepository.getRoleByName(CJConstant.JOB_SEEKER);
+                var role = await _roleRepository.getRoleByName("TimViec");
                 if (role == null) ;
                 await _userRoleRepository.AddAsync(new UserRoleModel()
                 {

@@ -24,15 +24,7 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> getAllPosts(int pageNo)
         {
             var serviceResponse = await _postService.GetAllAsync(pageNo);
-            switch (serviceResponse.ResponseType)
-            {
-                case EResponseType.Success:
-                    return Ok(serviceResponse.getData());
-                case EResponseType.NotFound:
-                    return NotFound(serviceResponse.getMessage());
-                default:
-                    throw new NotImplementedException();
-            }
+            return Ok(serviceResponse.getData());
         }
 
         [HttpPost]

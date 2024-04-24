@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240422083828_initDB")]
-    partial class initDB
+    [Migration("20240424034406_change_JobId_NotRequired")]
+    partial class change_JobId_NotRequired
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("job_id")
                         .HasColumnType("int");
 
@@ -64,7 +67,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Applicants");
+                    b.ToTable("applicants");
 
                     b.HasData(
                         new
@@ -73,6 +76,7 @@ namespace ConJob.Data.Migrations
                             apply_date = new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             job_id = 1,
                             status = "Mới nộp",
                             user_id = 2
@@ -83,108 +87,11 @@ namespace ConJob.Data.Migrations
                             apply_date = new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             job_id = 2,
                             status = "Mới nộp",
                             user_id = 4
                         });
-                });
-
-            modelBuilder.Entity("ConJob.Entities.CategoryModel", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<int>("change_on")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("create_on")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("created_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("updated_at")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            change_on = 0,
-                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "các ngành liên quan đến truyền thông",
-                            name = "media"
-                        },
-                        new
-                        {
-                            id = 2,
-                            change_on = 0,
-                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "Đây là cách gọi chung nhất cho người viết mã, sử dụng các ngôn ngữ lập trình để tạo ra các chương trình máy tính.",
-                            name = "Programmer"
-                        },
-                        new
-                        {
-                            id = 3,
-                            change_on = 0,
-                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = " Đây là cách gọi chung cho những người tạo ra nội dung, bao gồm bài viết, hình ảnh, video, âm nhạc, v.v. Nội dung này có thể được sử dụng cho mục đích giải trí, giáo dục, quảng cáo hoặc kinh doanh",
-                            name = "Content creator"
-                        });
-                });
-
-            modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<int>("change_on")
-                        .HasColumnType("int");
-
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("create_on")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("created_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("post_id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("updated_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("post_id");
-
-                    b.HasIndex("user_id");
-
-                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ConJob.Entities.FileModel", b =>
@@ -204,13 +111,13 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<double>("size")
-                        .HasColumnType("float");
 
                     b.Property<int>("type")
                         .HasColumnType("int");
@@ -224,7 +131,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Files");
+                    b.ToTable("files");
 
                     b.HasData(
                         new
@@ -232,8 +139,8 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             name = "anh datvila",
-                            size = 100.0,
                             type = 1,
                             url = "https://media.2dep.vn/upload/thucquyen/2022/05/19/dat-villa-la-ai-hot-tiktoker-9x-trieu-view-co-chuyen-tinh-xuyen-bien-gioi-voi-ban-gai-indonesia-social-1652941149.jpg"
                         },
@@ -242,10 +149,90 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             name = "anh thong soai ca",
-                            size = 100.0,
                             type = 1,
                             url = "https://newsmd2fr.keeng.vn/tiin/archive/imageslead/2023/06/14/90_c373d5ac0433257417f21a0a5e07fa11.jpg"
+                        },
+                        new
+                        {
+                            id = 3,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            name = "justin",
+                            type = 0,
+                            url = "https://youtu.be/x3LGCLNq33c?t=48"
+                        },
+                        new
+                        {
+                            id = 4,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            name = "guiboss",
+                            type = 1,
+                            url = "https://cdn.eva.vn/upload/2-2020/images/2020-05-05/don-xin-viec-ba-dao-2-1588672247-395-width1214height806.jpg"
+                        },
+                        new
+                        {
+                            id = 5,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            name = "Xinnn",
+                            type = 1,
+                            url = "https://cdn.eva.vn/upload/2-2020/images/2020-05-05/don-xin-viec-ba-dao-1-1588672247-922-width610height813.jpg"
+                        },
+                        new
+                        {
+                            id = 6,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            name = "Xinviecti",
+                            type = 0,
+                            url = "https://youtu.be/F8-LHRu5cDU"
+                        },
+                        new
+                        {
+                            id = 7,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            name = "Diemyeu",
+                            type = 0,
+                            url = "https://youtu.be/nm4XvSf6IWw"
+                        },
+                        new
+                        {
+                            id = 8,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            name = "DungDai",
+                            type = 0,
+                            url = "https://youtu.be/5QPu-wDmeTA"
+                        },
+                        new
+                        {
+                            id = 9,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            name = "LonR",
+                            type = 1,
+                            url = "https://cdn.eva.vn/upload/2-2020/images/2020-05-05/don-xin-viec-ba-dao-6-1588672247-471-width1212height798.jpg"
+                        },
+                        new
+                        {
+                            id = 10,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            name = "NgonHonNYC",
+                            type = 1,
+                            url = "https://jobsgo.vn/blog/wp-content/uploads/2023/03/stt-tuyen-dung-hay-content-tuyen-dung-hai-huoc.png"
                         });
                 });
 
@@ -269,6 +256,9 @@ namespace ConJob.Data.Migrations
                     b.Property<int>("from_user_id")
                         .HasColumnType("int");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("to_user_id")
                         .HasColumnType("int");
 
@@ -281,7 +271,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("to_user_id");
 
-                    b.ToTable("Follows");
+                    b.ToTable("follows");
 
                     b.HasData(
                         new
@@ -290,6 +280,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_id = 2,
+                            is_deleted = false,
                             to_user_id = 3
                         },
                         new
@@ -298,7 +289,8 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_id = 2,
-                            to_user_id = 4
+                            is_deleted = false,
+                            to_user_id = 3
                         },
                         new
                         {
@@ -306,6 +298,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_id = 3,
+                            is_deleted = false,
                             to_user_id = 4
                         },
                         new
@@ -314,6 +307,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_id = 3,
+                            is_deleted = false,
                             to_user_id = 5
                         });
                 });
@@ -338,6 +332,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime>("expired_date")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("token_hash_value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -352,7 +349,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("JWTs");
+                    b.ToTable("jwts");
                 });
 
             modelBuilder.Entity("ConJob.Entities.JobModel", b =>
@@ -365,9 +362,6 @@ namespace ConJob.Data.Migrations
 
                     b.Property<double>("budget")
                         .HasColumnType("float");
-
-                    b.Property<int>("category_id")
-                        .HasColumnType("int");
 
                     b.Property<int>("change_on")
                         .HasColumnType("int");
@@ -385,6 +379,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime>("expired_day")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("job_type")
                         .HasColumnType("int");
 
@@ -392,12 +389,11 @@ namespace ConJob.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("quanlity")
+                    b.Property<int>("quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("status")
+                        .HasColumnType("int");
 
                     b.Property<string>("title")
                         .IsRequired()
@@ -411,26 +407,24 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("category_id");
-
                     b.HasIndex("user_id");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("jobs");
 
                     b.HasData(
                         new
                         {
                             id = 1,
                             budget = 2000.0,
-                            category_id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "photograper làm để chụp ảnh cá xấu đang ăn",
                             expired_day = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             job_type = 1,
-                            location = "Bắc băng dương",
-                            quanlity = 20,
-                            status = "gần đầy",
+                            location = "12 Đường Nguyễn Văn Linh, Phường Hải Châu, Quận Hải Châu, Thành phố Đà Nẵng",
+                            quantity = 20,
+                            status = 1,
                             title = "Đây là công việc về media",
                             user_id = 3
                         },
@@ -438,17 +432,305 @@ namespace ConJob.Data.Migrations
                         {
                             id = 2,
                             budget = 5000.0,
-                            category_id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Code dự án Web trong 2 tháng",
                             expired_day = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             job_type = 1,
-                            location = "Ấn độ dương",
-                            quanlity = 1,
-                            status = "không một ai ",
+                            location = "45 Lê Lợi, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 1,
+                            status = 0,
                             title = "Đây là công việc liên quan đến Backend",
                             user_id = 5
+                        },
+                        new
+                        {
+                            id = 3,
+                            budget = 2000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Tìm kiếm nhà ảnh độc lập để chụp hình cho đời sống dưới biển.",
+                            expired_day = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 1,
+                            location = "78 Đường Lý Thường Kiệt, Phường Văn Miếu, Quận Đống Đa, Thành phố Hà Nội",
+                            quantity = 20,
+                            status = 0,
+                            title = "Nhà ảnh độc lập từ xa",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 4,
+                            budget = 5000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Phát triển dự án web trong 2 tháng.",
+                            expired_day = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 1,
+                            location = "23 Phố Hàng Gai, Quận Hoàn Kiếm, Thành phố Hà Nội",
+                            quantity = 1,
+                            status = 1,
+                            title = "Lập trình viên Backend toàn thời gian",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 5,
+                            budget = 2500.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Chỉnh sửa video cho các dự án khác nhau.",
+                            expired_day = new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 2,
+                            location = "56 Đường Nguyễn Huệ, Phường Phạm Ngũ Lão, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 8,
+                            status = 1,
+                            title = "Biên tập video bán thời gian",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 6,
+                            budget = 1200.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Tạo ra nội dung hấp dẫn cho blog của công ty.",
+                            expired_day = new DateTime(2024, 5, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 3,
+                            location = "34 Phố Hàng Bông, Quận Hoàn Kiếm, Thành phố Hà Nội",
+                            quantity = 12,
+                            status = 0,
+                            title = "Người viết nội dung tại chỗ",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 7,
+                            budget = 4000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "87 Đường Hai Bà Trưng, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh",
+                            expired_day = new DateTime(2024, 5, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 4,
+                            location = "101 Đường Hùng Vương, Phường Nguyễn Du, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 1,
+                            status = 1,
+                            title = "Phát triển viên RESTful API kết hợp",
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 8,
+                            budget = 3000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Tạo ra các thiết kế đồ họa cho các khách hàng khác nhau theo cách tự do.",
+                            expired_day = new DateTime(2024, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 5,
+                            location = "29 Đường Lê Lai, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 1,
+                            status = 1,
+                            title = "Thiết kế đồ họa tự do",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 9,
+                            budget = 6000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Phát triển ứng dụng phần mềm toàn thời gian cho một công ty công nghệ.",
+                            expired_day = new DateTime(2024, 5, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 1,
+                            location = "17 Đường Lý Tự Trọng, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 1,
+                            status = 0,
+                            title = "Kỹ sư phần mềm toàn thời gian",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 10,
+                            budget = 1800.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Quản lý tài khoản truyền thông xã hội từ xa cho một công ty tiếp thị.",
+                            expired_day = new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 0,
+                            location = "63 Phố Hàng Trống, Quận Hoàn Kiếm, Thành phố Hà Nội",
+                            quantity = 1,
+                            status = 1,
+                            title = "Quản lý truyền thông xã hội từ xa",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 11,
+                            budget = 1500.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Tạo nội dung bán thời gian cho các nền tảng trực tuyến khác nhau.",
+                            expired_day = new DateTime(2024, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 2,
+                            location = "8 Phố Hàng Điếu, Quận Hoàn Kiếm, Thành phố Hà Nội",
+                            quantity = 10,
+                            status = 0,
+                            title = "Người tạo nội dung bán thời gian",
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 12,
+                            budget = 3000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Phát triển và triển khai các chiến lược tiếp thị với khả năng làm việc từ xa.",
+                            expired_day = new DateTime(2024, 5, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 4,
+                            location = "72 Đường Trần Hưng Đạo, Phường Phan Chu Trinh, Quận Hoàn Kiếm, Thành phố Hà Nội",
+                            quantity = 1,
+                            status = 1,
+                            title = "Chuyên gia tiếp thị kết hợp",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 13,
+                            budget = 3500.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Thiết kế giao diện người dùng và trải nghiệm tại chỗ cho một công ty phần mềm.",
+                            expired_day = new DateTime(2024, 5, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 3,
+                            location = "39 Đường Lê Thánh Tôn, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 1,
+                            status = 0,
+                            title = "Thiết kế UI/UX tại chỗ",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 14,
+                            budget = 2000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Viết bài cho các khách hàng khác nhau theo cách tự do.",
+                            expired_day = new DateTime(2024, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 5,
+                            location = "20 Phố Hàng Bài, Quận Hoàn Kiếm, Thành phố Hà Nội",
+                            quantity = 1,
+                            status = 1,
+                            title = "Người viết bài tự do",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 15,
+                            budget = 1000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Hỗ trợ các nhiệm vụ hành chính bán thời gian cho một công ty từ xa.",
+                            expired_day = new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 2,
+                            location = "54 Đường Hồ Tùng Mậu, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 5,
+                            status = 0,
+                            title = "Trợ lý ảo bán thời gian",
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 16,
+                            budget = 4500.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Quản lý các dự án với khả năng làm việc từ xa và tại chỗ.",
+                            expired_day = new DateTime(2024, 5, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 4,
+                            location = "95 Đường Đề Thám, Phường Phạm Ngũ Lão, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 1,
+                            status = 1,
+                            title = "Quản lý dự án kết hợp",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 17,
+                            budget = 3000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Chụp ảnh cưới cho cặp đôi tại Hà Nội.",
+                            expired_day = new DateTime(2024, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 5,
+                            location = "41 Phố Hàng Trống, Quận Hoàn Kiếm, Thành phố Hà Nội",
+                            quantity = 1,
+                            status = 0,
+                            title = "Nhà ảnh tự do",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 18,
+                            budget = 5000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Phát triển ứng dụng di động cho một công ty khởi nghiệp.",
+                            expired_day = new DateTime(2024, 5, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 1,
+                            location = "68 Đường Lê Lợi, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 1,
+                            status = 0,
+                            title = "Phát triển viên ứng dụng di động toàn thời gian",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 19,
+                            budget = 2500.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Biên tập video quảng cáo cho các doanh nghiệp tại Hà Nội.",
+                            expired_day = new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 5,
+                            location = "25 Đường Lý Thường Kiệt, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh",
+                            quantity = 3,
+                            status = 0,
+                            title = "Biên tập viên phim tự do",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 20,
+                            budget = 4000.0,
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "Thiết kế đồ họa cho các dự án web và in ấn.",
+                            expired_day = new DateTime(2024, 5, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
+                            job_type = 1,
+                            location = "10 Đường Trần Phú, Phường Lê Lợi, Thành phố Vinh, Tỉnh Nghệ An",
+                            quantity = 2,
+                            status = 1,
+                            title = "Nhà thiết kế đồ họa toàn thời gian",
+                            user_id = 2
                         });
                 });
 
@@ -469,6 +751,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("post_id")
                         .HasColumnType("int");
 
@@ -484,7 +769,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Likes");
+                    b.ToTable("likes");
 
                     b.HasData(
                         new
@@ -492,6 +777,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             post_id = 1,
                             user_id = 4
                         },
@@ -500,6 +786,7 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             post_id = 1,
                             user_id = 3
                         },
@@ -508,12 +795,13 @@ namespace ConJob.Data.Migrations
                             id = 3,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             post_id = 1,
                             user_id = 5
                         });
                 });
 
-            modelBuilder.Entity("ConJob.Entities.MessageModel", b =>
+            modelBuilder.Entity("ConJob.Entities.MessengerModel", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -529,6 +817,9 @@ namespace ConJob.Data.Migrations
 
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("message_content")
                         .IsRequired()
@@ -549,7 +840,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("send_user_id");
 
-                    b.ToTable("Messages");
+                    b.ToTable("messages");
 
                     b.HasData(
                         new
@@ -557,6 +848,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             message_content = "ê tao có công việc này ngon nè ",
                             receive_user_id = 3,
                             send_user_id = 2
@@ -566,6 +858,7 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             message_content = "Việc gì vậy?",
                             receive_user_id = 2,
                             send_user_id = 3
@@ -575,6 +868,7 @@ namespace ConJob.Data.Migrations
                             id = 3,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             message_content = "Đi múa lân 2 ngày cho lân sư đoàn, giá cả thương lượng",
                             receive_user_id = 3,
                             send_user_id = 2
@@ -584,6 +878,7 @@ namespace ConJob.Data.Migrations
                             id = 4,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             message_content = "Nghe cũng okela á.Tao muốn due giá là 200k cho 1 ngày . Mày chốt không",
                             receive_user_id = 2,
                             send_user_id = 3
@@ -593,6 +888,7 @@ namespace ConJob.Data.Migrations
                             id = 5,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             message_content = "Oke thôi.2h ngày 12th 5 nhé ",
                             receive_user_id = 3,
                             send_user_id = 2
@@ -602,6 +898,7 @@ namespace ConJob.Data.Migrations
                             id = 6,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             message_content = "oke chốt",
                             receive_user_id = 2,
                             send_user_id = 3
@@ -615,9 +912,6 @@ namespace ConJob.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<int?>("UserModelid")
-                        .HasColumnType("int");
 
                     b.Property<int>("change_on")
                         .HasColumnType("int");
@@ -634,6 +928,9 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_accept")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("notifi_content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -646,11 +943,9 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("UserModelid");
-
                     b.HasIndex("from_user_notifi_id");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("notifications");
 
                     b.HasData(
                         new
@@ -660,6 +955,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_notifi_id = 2,
                             is_accept = false,
+                            is_deleted = false,
                             notifi_content = "node ",
                             status = false
                         },
@@ -670,6 +966,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_notifi_id = 3,
                             is_accept = false,
+                            is_deleted = false,
                             notifi_content = "node",
                             status = false
                         },
@@ -680,6 +977,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             from_user_notifi_id = 4,
                             is_accept = false,
+                            is_deleted = false,
                             notifi_content = "node",
                             status = false
                         });
@@ -710,6 +1008,9 @@ namespace ConJob.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("skill_id")
                         .HasColumnType("int");
 
@@ -725,7 +1026,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Persional_Skills");
+                    b.ToTable("persional_skills");
 
                     b.HasData(
                         new
@@ -735,6 +1036,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             desciption = "Trong suốt 2 năm làm nghề thì tôi khá tự tin với tài năng của mình",
                             exp = "2 năm ",
+                            is_deleted = false,
                             skill_id = 1,
                             user_id = 3
                         },
@@ -745,6 +1047,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             desciption = "I'am The Best",
                             exp = "3 năm ",
+                            is_deleted = false,
                             skill_id = 2,
                             user_id = 2
                         },
@@ -755,6 +1058,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             desciption = "Tôi là một người đa tài",
                             exp = "10 năm",
+                            is_deleted = false,
                             skill_id = 3,
                             user_id = 3
                         },
@@ -765,6 +1069,7 @@ namespace ConJob.Data.Migrations
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             desciption = "Người có năng khiếu từ nhỏ , siêu vippro",
                             exp = "từ lúc sinh ra ",
+                            is_deleted = false,
                             skill_id = 4,
                             user_id = 4
                         });
@@ -800,7 +1105,7 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("job_id")
+                    b.Property<int?>("job_id")
                         .HasColumnType("int");
 
                     b.Property<string>("title")
@@ -821,34 +1126,333 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Posts");
+                    b.ToTable("posts");
 
                     b.HasData(
                         new
                         {
                             id = 1,
-                            caption = "Là một người có trách nghiệm tôi luồn hoàn thành mọi việc một cách hoàn hảo",
+                            caption = "Bạn là một nhiếp ảnh gia tài năng và đam mê việc ghi lại những khoảnh khắc độc đáo dưới nước? Chúng tôi đang tìm kiếm những nhà ảnh độc lập để ghi lại cuộc sống đa dạng dưới biển.",
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            file_id = 1,
+                            file_id = 3,
                             is_actived = false,
                             is_deleted = false,
-                            job_id = 0,
-                            title = "Luôn là người có trách nghiệm , I'am vippro",
-                            user_id = 2
+                            job_id = 3,
+                            title = "Nhà ảnh độc lập từ xa",
+                            user_id = 3
                         },
                         new
                         {
                             id = 2,
-                            caption = "Là một người đỉnh cao tôi tự tin , khoe cá tính",
+                            caption = "Bạn có kinh nghiệm trong lập trình và muốn thử thách bản thân với một dự án web trong vòng 2 tháng? Hãy tham gia vào đội ngũ của chúng tôi và đóng góp vào việc phát triển dự án!",
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             file_id = 2,
                             is_actived = false,
                             is_deleted = false,
-                            job_id = 0,
-                            title = "Ai tuyển tôi không",
+                            job_id = 2,
+                            title = "Code dự án Web trong 2 tháng",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 3,
+                            caption = "Bạn là một nhiếp ảnh gia tự do và đam mê việc ghi lại những khoảnh khắc đẹp của cặp đôi trong ngày trọng đại? Hãy tham gia vào đội ngũ của chúng tôi và tạo ra những bức ảnh cưới đẹp nhất cho khách hàng!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 1,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 17,
+                            title = "Nhà ảnh tự do",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 4,
+                            caption = "Chúng tôi đang tìm kiếm một Lập trình viên Backend tài năng để tham gia vào dự án web và đóng góp vào việc phát triển trong 2 tháng.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 10,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 4,
+                            title = "Lập trình viên Backend toàn thời gian",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 5,
+                            caption = "Bạn có khả năng chỉnh sửa video và muốn tham gia vào các dự án sáng tạo khác nhau? Hãy gia nhập đội ngũ của chúng tôi và đóng góp vào việc tạo ra video chất lượng cao!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 9,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 5,
+                            title = "Biên tập video bán thời gian",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 6,
+                            caption = "Bạn có khả năng tạo ra nội dung sáng tạo và muốn thể hiện tài năng của mình trên blog của công ty? Hãy tham gia vào đội ngũ của chúng tôi và tạo ra những bài viết hấp dẫn!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 8,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 11,
+                            title = "Người viết nội dung tại chỗ",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 7,
+                            caption = "Bạn có kỹ năng phát triển RESTful APIs và muốn làm việc từ xa? Chúng tôi đang tìm kiếm những Phát triển viên RESTful API kết hợp để đóng góp vào dự án web của chúng tôi.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 7,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 7,
+                            title = "Phát triển viên RESTful API kết hợp",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 8,
+                            caption = "Bạn là một người sáng tạo và muốn tự do trong việc thiết kế đồ họa? Chúng tôi đang tìm kiếm Thiết kế đồ họa tự do để tạo ra các thiết kế độc đáo cho khách hàng.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 6,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 8,
+                            title = "Thiết kế đồ họa tự do",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 9,
+                            caption = "Bạn là một kỹ sư phần mềm tài năng và muốn tham gia vào việc phát triển ứng dụng phần mềm toàn thời gian? Hãy tham gia vào đội ngũ của chúng tôi và đóng góp vào dự án công nghệ của chúng tôi.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 5,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 9,
+                            title = "Kỹ sư phần mềm toàn thời gian",
+                            user_id = 3
+                        },
+                        new
+                        {
+                            id = 10,
+                            caption = "Bạn có khả năng quản lý truyền thông xã hội và muốn làm việc từ xa? Hãy tham gia vào đội ngũ của chúng tôi và quản lý tài khoản truyền thông xã hội cho các chiến dịch tiếp thị của chúng tôi.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 4,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 16,
+                            title = "Quản lý truyền thông xã hội từ xa",
                             user_id = 5
+                        },
+                        new
+                        {
+                            id = 11,
+                            caption = "Bạn là một người sáng tạo và muốn tạo nội dung độc đáo cho các nền tảng trực tuyến? Chúng tôi đang tìm kiếm Người tạo nội dung bán thời gian để tham gia vào các dự án sáng tạo.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 3,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 15,
+                            title = "Người tạo nội dung bán thời gian",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 12,
+                            caption = "Bạn là một chuyên gia tiếp thị sáng tạo và muốn tham gia vào việc phát triển các chiến lược tiếp thị? Chúng tôi đang tìm kiếm Chuyên gia tiếp thị kết hợp để đóng góp vào các dự án tiếp thị của chúng tôi.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 2,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 12,
+                            title = "Chuyên gia tiếp thị kết hợp",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 13,
+                            caption = "Bạn có khả năng thiết kế giao diện người dùng và muốn làm việc tại chỗ? Chúng tôi đang tìm kiếm Thiết kế UI/UX tại chỗ để tham gia vào các dự án phần mềm.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 1,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 14,
+                            title = "Thiết kế UI/UX tại chỗ",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 14,
+                            caption = "Bạn là một người viết bài có tài năng và muốn làm việc tự do? Chúng tôi đang tìm kiếm Người viết bài tự do để tạo ra nội dung chất lượng cho các khách hàng.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 10,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 20,
+                            title = "Người viết bài tự do",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 15,
+                            caption = "Viết bài cho các khách hàng khác nhau theo cách tự do.",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 9,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 14,
+                            title = "Tìm việc người viết bài tự do",
+                            user_id = 5
+                        },
+                        new
+                        {
+                            id = 16,
+                            caption = "Tôi là một người đam mê sáng tạo và muốn tham gia vào lĩnh vực biên tập video. Tôi có kinh nghiệm trong chỉnh sửa video và mong muốn được góp phần vào các dự án sáng tạo. Rất mong được cơ hội làm việc cùng các bạn!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 8,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 5,
+                            title = "Biên tập video",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 24,
+                            caption = "Tôi là một người yêu thích viết lách và mong muốn có cơ hội làm việc trong lĩnh vực tạo nội dung. Tôi tự tin vào khả năng sáng tạo của mình và mong muốn được góp phần vào việc phát triển nội dung cho các dự án trực tuyến. Rất mong nhận được sự quan tâm và cơ hội từ các nhà tuyển dụng!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 7,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 11,
+                            title = "Người tạo nội dung",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 25,
+                            caption = "Tôi là một lập trình viên có kinh nghiệm trong phát triển ứng dụng di động và đam mê công việc của mình. Tôi mong muốn có cơ hội tham gia vào các dự án phát triển ứng dụng di động và đóng góp vào việc tạo ra các sản phẩm chất lượng. Rất mong nhận được sự quan tâm từ các nhà tuyển dụng!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 6,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 18,
+                            title = "Phát triển viên ứng dụng di động",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 17,
+                            caption = "Tôi là một người đam mê sáng tạo và muốn tham gia vào lĩnh vực biên tập video. Tôi có kinh nghiệm trong chỉnh sửa video và mong muốn được góp phần vào các dự án sáng tạo. Rất mong được cơ hội làm việc cùng các bạn!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 5,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 5,
+                            title = "Biên tập video",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 18,
+                            caption = "Tôi là một người đam mê viết lập trình và muốn tham gia vào lĩnh vực phát triển RESTful APIs. Tôi tự tin vào khả năng lập trình của mình và mong muốn được góp phần vào việc phát triển các dự án web. Rất mong nhận được cơ hội từ các nhà tuyển dụng!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 4,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 7,
+                            title = "Phát triển viên RESTful API",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 19,
+                            caption = "Tôi là một người đam mê sáng tạo và muốn tham gia vào lĩnh vực biên tập video. Tôi có kinh nghiệm trong chỉnh sửa video và mong muốn được góp phần vào các dự án sáng tạo. Rất mong được cơ hội làm việc cùng các bạn!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 5,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 5,
+                            title = "Biên tập video",
+                            user_id = 4
+                        },
+                        new
+                        {
+                            id = 20,
+                            caption = "Tôi là một người đam mê viết lập trình và muốn tham gia vào lĩnh vực phát triển RESTful APIs. Tôi tự tin vào khả năng lập trình của mình và mong muốn được góp phần vào việc phát triển các dự án web. Rất mong nhận được cơ hội từ các nhà tuyển dụng!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 3,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 7,
+                            title = "Phát triển viên RESTful API",
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 21,
+                            caption = "Tôi là một người đam mê viết lập trình và mong muốn có cơ hội tham gia vào các dự án phát triển ứng dụng di động. Tôi tự tin vào khả năng lập trình của mình và mong muốn được góp phần vào việc tạo ra các sản phẩm chất lượng. Rất mong nhận được sự quan tâm từ các nhà tuyển dụng!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 2,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 18,
+                            title = "Phát triển viên ứng dụng di động",
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 22,
+                            caption = "Tôi là một người đam mê viết lách và mong muốn có cơ hội làm việc trong lĩnh vực tạo nội dung. Tôi tự tin vào khả năng sáng tạo của mình và mong muốn được góp phần vào việc phát triển nội dung cho các dự án trực tuyến. Rất mong nhận được sự quan tâm và cơ hội từ các nhà tuyển dụng!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 1,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 11,
+                            title = "Người tạo nội dung",
+                            user_id = 2
+                        },
+                        new
+                        {
+                            id = 23,
+                            caption = "Tôi là một người đam mê thiết kế đồ họa và mong muốn có cơ hội làm việc trong lĩnh vực này. Tôi tự tin vào khả năng sáng tạo của mình và mong muốn được góp phần vào việc tạo ra các thiết kế đẹp mắt cho các dự án web và in ấn. Rất mong nhận được cơ hội từ các nhà tuyển dụng!",
+                            change_on = 0,
+                            create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            file_id = 10,
+                            is_actived = false,
+                            is_deleted = false,
+                            job_id = 20,
+                            title = "Nhà thiết kế đồ họa",
+                            user_id = 2
                         });
                 });
 
@@ -869,6 +1473,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("post_id")
                         .HasColumnType("int");
 
@@ -888,7 +1495,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("Reports");
+                    b.ToTable("reports");
 
                     b.HasData(
                         new
@@ -896,6 +1503,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             post_id = 1,
                             reason = "lừa đảo ",
                             user_id = 5
@@ -919,6 +1527,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("role_description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -932,7 +1543,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("roles");
 
                     b.HasData(
                         new
@@ -940,6 +1551,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             role_description = "Là admin cuyền lực.",
                             role_name = "Admin"
                         },
@@ -948,16 +1560,18 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             role_description = "Là nole tư bản đi tìm kiếm miếng cơm manh áo.",
-                            role_name = "Job Seeker"
+                            role_name = "TimViec"
                         },
                         new
                         {
                             id = 3,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             role_description = "Là tư bản đi kiếm những con chiêng ngoan đạo.",
-                            role_name = "Job Giver"
+                            role_name = "PhatViec"
                         });
                 });
 
@@ -982,6 +1596,9 @@ namespace ConJob.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -991,7 +1608,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Skills");
+                    b.ToTable("skills");
 
                     b.HasData(
                         new
@@ -1000,6 +1617,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Content Creator là người sáng tạo nội dung cho các nền tảng như mạng xã hội, blog, website, YouTube, v.v. Họ có thể viết bài viết, quay video, chụp ảnh, livestream để thu hút người theo dõi và truyền tải thông điệp đến đông đảo người dùng",
+                            is_deleted = false,
                             name = "Content Creator"
                         },
                         new
@@ -1008,6 +1626,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Viết mã HTML, CSS và JavaScript: Đây là những ngôn ngữ lập trình cơ bản để xây dựng giao diện web. HTML tạo cấu trúc cho trang web, CSS định dạng giao diện và JavaScript tạo tính năng tương tác cho người dùng.",
+                            is_deleted = false,
                             name = "Front-end developer"
                         },
                         new
@@ -1016,6 +1635,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Người mẫu ảnh là những người có ngoại hình ưa nhìn, vóc dáng cân đối, làn da khỏe đẹp và thần thái cuốn hút. Họ được đào tạo bài bản về cách tạo dáng, biểu cảm trước ống kính máy ảnh để có thể truyền tải thông điệp của nhiếp ảnh gia hoặc thương hiệu một cách hiệu quả nhất.",
+                            is_deleted = false,
                             name = "Fashion Model"
                         },
                         new
@@ -1024,6 +1644,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "người sử dụng máy ảnh để ghi lại hình ảnh, khoảnh khắc, sự kiện, v.v. Họ sử dụng kỹ năng và óc sáng tạo để tạo ra những bức ảnh đẹp mắt, truyền tải thông điệp hoặc lưu giữ kỷ niệm.",
+                            is_deleted = false,
                             name = "Photograper"
                         },
                         new
@@ -1032,6 +1653,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "những người biểu diễn nghệ thuật múa, sử dụng chuyển động cơ thể, biểu cảm gương mặt và ngôn ngữ cơ thể để truyền tải thông điệp, cảm xúc và kể chuyện",
+                            is_deleted = false,
                             name = "Dance"
                         },
                         new
@@ -1040,6 +1662,7 @@ namespace ConJob.Data.Migrations
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "nhà sản xuất âm nhạc, hay còn được ví như người họa nên sản phẩm âm nhạc chất lượng.",
+                            is_deleted = false,
                             name = "Music Producer"
                         });
                 });
@@ -1116,7 +1739,7 @@ namespace ConJob.Data.Migrations
                     b.HasIndex("email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
 
                     b.HasData(
                         new
@@ -1130,9 +1753,9 @@ namespace ConJob.Data.Migrations
                             first_name = "Admin",
                             gender = 0,
                             is_deleted = false,
-                            is_email_confirmed = false,
+                            is_email_confirmed = true,
                             last_name = "Dat",
-                            password = "$2a$11$l3bvDBF9QwETalhZy1yxFu8AxCfUdI6qx1.VLF/I3tX.Lcwbwczn2",
+                            password = "$2a$11$0MgeUzKpamNxU2Erhj.EKOm2DtAXsLRNiUSFlHpY8Zgftn.xBdhWa",
                             phone_number = "0335487991"
                         },
                         new
@@ -1146,9 +1769,9 @@ namespace ConJob.Data.Migrations
                             first_name = "Fawnia",
                             gender = 0,
                             is_deleted = false,
-                            is_email_confirmed = false,
+                            is_email_confirmed = true,
                             last_name = "Alexandros",
-                            password = "$2a$11$pGUb.VfqUITDC/uX7kSsKebAags/DrpszkdZ/Lvejcu9eZjqZIBmK",
+                            password = "$2a$11$Cu3F/xRQNFRdl4FTAi5P7ebxfcwaNk8Jo6I1GL9bCrYEkrVxFgExe",
                             phone_number = "0354579415"
                         },
                         new
@@ -1162,9 +1785,9 @@ namespace ConJob.Data.Migrations
                             first_name = "Cazzie",
                             gender = 0,
                             is_deleted = false,
-                            is_email_confirmed = false,
+                            is_email_confirmed = true,
                             last_name = "Pancoast",
-                            password = "$2a$11$D0dGon92BipLHPleXdExT.dSJXGrNuenihZ3Ltcxw8uAtGJxo2udO",
+                            password = "$2a$11$idwY9OkDTqrltKt0FwFZ.uNWaz6gcYtdorjobGxagzUIveVNY7YS6",
                             phone_number = "0354596415"
                         },
                         new
@@ -1178,9 +1801,9 @@ namespace ConJob.Data.Migrations
                             first_name = "Marri",
                             gender = 0,
                             is_deleted = false,
-                            is_email_confirmed = false,
+                            is_email_confirmed = true,
                             last_name = "Dat",
-                            password = "$2a$11$LkrMhqjbW3mudDX1FJVzluxfSa4XbtxrZL/dn61n6r/HpaP2ZTuw.",
+                            password = "$2a$11$bWF5gTZS7FmrxNp/zQSOeOmFosb62N.shO28AWFm/k7L95NgN7DJO",
                             phone_number = "0354579415"
                         },
                         new
@@ -1194,9 +1817,9 @@ namespace ConJob.Data.Migrations
                             first_name = "Dat",
                             gender = 0,
                             is_deleted = false,
-                            is_email_confirmed = false,
+                            is_email_confirmed = true,
                             last_name = "khong chin",
-                            password = "$2a$11$hCYwKlSwt1E7e/EQsbv6OuKj807Ugx6cHGgL3v6mdjTyrPDm/sb2m",
+                            password = "$2a$11$2NSwQeFA6qTCVab7U2ua9epiNT2E/lwTFakgxXzDd4utID9AZROX.",
                             phone_number = "0354579415"
                         });
                 });
@@ -1218,6 +1841,9 @@ namespace ConJob.Data.Migrations
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("role_id")
                         .HasColumnType("int");
 
@@ -1233,7 +1859,7 @@ namespace ConJob.Data.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("user_roles");
 
                     b.HasData(
                         new
@@ -1241,6 +1867,7 @@ namespace ConJob.Data.Migrations
                             id = 1,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             role_id = 1,
                             user_id = 1
                         },
@@ -1249,6 +1876,7 @@ namespace ConJob.Data.Migrations
                             id = 2,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             role_id = 2,
                             user_id = 2
                         },
@@ -1257,6 +1885,7 @@ namespace ConJob.Data.Migrations
                             id = 3,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             role_id = 3,
                             user_id = 3
                         },
@@ -1265,6 +1894,7 @@ namespace ConJob.Data.Migrations
                             id = 4,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             role_id = 2,
                             user_id = 4
                         },
@@ -1273,6 +1903,7 @@ namespace ConJob.Data.Migrations
                             id = 5,
                             change_on = 0,
                             create_on = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            is_deleted = false,
                             role_id = 3,
                             user_id = 5
                         });
@@ -1297,25 +1928,6 @@ namespace ConJob.Data.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.CommentModel", b =>
-                {
-                    b.HasOne("ConJob.Entities.PostModel", "post")
-                        .WithMany("comments")
-                        .HasForeignKey("post_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConJob.Entities.UserModel", "user")
-                        .WithMany("comments")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("post");
-
-                    b.Navigation("user");
-                });
-
             modelBuilder.Entity("ConJob.Entities.FollowModel", b =>
                 {
                     b.HasOne("ConJob.Entities.UserModel", "from_user_follow")
@@ -1325,9 +1937,9 @@ namespace ConJob.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("ConJob.Entities.UserModel", "to_user_follow")
-                        .WithMany()
+                        .WithMany("followers")
                         .HasForeignKey("to_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("from_user_follow");
@@ -1348,19 +1960,11 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.JobModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.CategoryModel", "category")
-                        .WithMany("jobs")
-                        .HasForeignKey("category_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("jobs")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("category");
 
                     b.Navigation("user");
                 });
@@ -1384,7 +1988,7 @@ namespace ConJob.Data.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.MessageModel", b =>
+            modelBuilder.Entity("ConJob.Entities.MessengerModel", b =>
                 {
                     b.HasOne("ConJob.Entities.UserModel", "receive_user")
                         .WithMany("receive_users")
@@ -1405,10 +2009,6 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.NotificationModel", b =>
                 {
-                    b.HasOne("ConJob.Entities.UserModel", null)
-                        .WithMany("to_user_notifications")
-                        .HasForeignKey("UserModelid");
-
                     b.HasOne("ConJob.Entities.UserModel", "from_user_notification")
                         .WithMany("from_user_notifications")
                         .HasForeignKey("from_user_notifi_id")
@@ -1448,8 +2048,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.JobModel", "job")
                         .WithMany("posts")
                         .HasForeignKey("job_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("posts")
@@ -1502,11 +2101,6 @@ namespace ConJob.Data.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("ConJob.Entities.CategoryModel", b =>
-                {
-                    b.Navigation("jobs");
-                });
-
             modelBuilder.Entity("ConJob.Entities.FileModel", b =>
                 {
                     b.Navigation("posts");
@@ -1521,8 +2115,6 @@ namespace ConJob.Data.Migrations
 
             modelBuilder.Entity("ConJob.Entities.PostModel", b =>
                 {
-                    b.Navigation("comments");
-
                     b.Navigation("likes");
 
                     b.Navigation("reports");
@@ -1542,7 +2134,7 @@ namespace ConJob.Data.Migrations
                 {
                     b.Navigation("applicants");
 
-                    b.Navigation("comments");
+                    b.Navigation("followers");
 
                     b.Navigation("following");
 
@@ -1563,8 +2155,6 @@ namespace ConJob.Data.Migrations
                     b.Navigation("reports");
 
                     b.Navigation("send_users");
-
-                    b.Navigation("to_user_notifications");
 
                     b.Navigation("user_roles");
                 });

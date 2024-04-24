@@ -45,6 +45,7 @@ namespace ConJob.Domain.Services
                 var post = _mapper.Map<PostModel>(newPost);
                 post = await _postRepository.AddPostAsync(user, post);
                 serviceResponse.Data = _mapper.Map<PostDTO>(post);
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Message = "Add post successfully";
             } catch (InvalidOperationException)
             {
@@ -63,8 +64,8 @@ namespace ConJob.Domain.Services
                 #region paging
                 var result = await _filterHelper2.ApplyPaging(posts, pageNo, PAGE_SIZE);
                 #endregion
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Data = result;
-                serviceResponse.Message = "Get all posts successfully!";
             }
             catch (InvalidOperationException)
             {
@@ -79,10 +80,10 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<PostDetailsDTO>();
             try
             {
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Data = await _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetUserPosts(userId))
                     .AsNoTracking()
                     .FirstAsync(c => c.id == id);
-                serviceResponse.Message = "Get post by id successfully!";
             }
             catch (InvalidOperationException)
             {
@@ -97,10 +98,10 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<PostDetailsDTO>();
             try
             {
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Data = await _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetPosts())
                     .AsNoTracking()
                     .FirstAsync(c => c.id == id);
-                serviceResponse.Message = "Get post by id successfully!";
             }
             catch (InvalidOperationException)
             {
@@ -121,7 +122,7 @@ namespace ConJob.Domain.Services
                 if (post != null)
                 {
                     post = await _postRepository.UpdateAsync(id, postDTO);
-                    serviceResponse.Data = _mapper.Map<PostDetailsDTO>(post);
+                    serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Update post successfully!";
                 }
             }
@@ -144,6 +145,7 @@ namespace ConJob.Domain.Services
                 {
                     post = _postRepository.GetById(id);
                     await _postRepository.DeleteAsync(post.id);
+                    serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Delete post successfully!";
                 }
             }
@@ -164,6 +166,7 @@ namespace ConJob.Domain.Services
                 if (post != null)
                 {
                     await _postRepository.DeleteAsync(post.id);
+                    serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Delete post successfully!";
                 }
                 else
@@ -187,12 +190,12 @@ namespace ConJob.Domain.Services
             {
                 var post = _postRepository.GetById(id);
                 await _postRepository.ActiveAsync(post.id);
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Message = "Post has been successfully approved.";
             }
             catch (DbUpdateConcurrencyException)
             {
-                serviceResponse.ResponseType = EResponseType.NotFound;
-                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
             }
             catch { throw; }
             return serviceResponse;
@@ -220,7 +223,7 @@ namespace ConJob.Domain.Services
                 // apply sorting and paging
                 var sortedPosts = _filterHelper.ApplySorting(posts, filterParameters.OrderBy);
                 var pagedPosts = await _filterHelper.ApplyPaging(sortedPosts, filterParameters.Page, filterParameters.Limit);
-
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Data = pagedPosts;
             }
             catch (DbUpdateConcurrencyException)
@@ -234,19 +237,25 @@ namespace ConJob.Domain.Services
         public async Task<ServiceResponse<int>> UserLikePost(int userId, int postId)
         {
             var serviceResponse = new ServiceResponse<int>();
-            var toCheck = _likeRepository.getLikeByUserPost(userId, postId);
-            if (toCheck == null)
+            try
             {
-                await _likeRepository.AddAsync(new LikeModel { 
-                                        user = _userRepository.GetById(userId), 
-                                        post = _postRepository.GetById(postId) });
-                serviceResponse.Message = "Like post successfully";
+                var toCheck = _likeRepository.getLikeByUserPost(userId, postId);
+                if (toCheck == null)
+                {
+                    await _likeRepository.AddAsync(new LikeModel
+                    {
+                        user = _userRepository.GetById(userId),
+                        post = _postRepository.GetById(postId)
+                    });
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Message = "Like post successfully";
+                }
             }
-            else
+            catch (DbUpdateConcurrencyException)
             {
-                serviceResponse.Message = "User already like the post.";
+                throw new DbUpdateConcurrencyException("User already like the post.");
             }
-            serviceResponse.Data = _postRepository.CountLikePost(postId);
+            catch { throw; }
             return serviceResponse;
         }
 
@@ -265,6 +274,7 @@ namespace ConJob.Domain.Services
                     if (toCheck.job_id == null)
                     {
                         await _postRepository.addJobToPostAsync(jobId, toCheck);
+                        serviceResponse.ResponseType = EResponseType.Success;
                         serviceResponse.Message = "Add job to post successfully.";
                     }
                     else

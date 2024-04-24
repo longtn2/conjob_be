@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-<<<<<<<< HEAD:ConJob.Data/Migrations/20240422090604_changeJob_IdInPost.Designer.cs
-    [Migration("20240422090604_changeJob_IdInPost")]
-    partial class changeJob_IdInPost
-========
     [Migration("20240423111619_Init")]
     partial class Init
->>>>>>>> 635bb4274561b4946c064b84a727507abb485d15:ConJob.Data/Migrations/20240423111619_Init.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1110,11 +1105,7 @@ namespace ConJob.Data.Migrations
                     b.Property<bool>("is_deleted")
                         .HasColumnType("bit");
 
-<<<<<<<< HEAD:ConJob.Data/Migrations/20240422090604_changeJob_IdInPost.Designer.cs
                     b.Property<int?>("job_id")
-========
-                    b.Property<int>("job_id")
->>>>>>>> 635bb4274561b4946c064b84a727507abb485d15:ConJob.Data/Migrations/20240423111619_Init.Designer.cs
                         .HasColumnType("int");
 
                     b.Property<string>("title")
@@ -1764,11 +1755,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Dat",
-<<<<<<<< HEAD:ConJob.Data/Migrations/20240422090604_changeJob_IdInPost.Designer.cs
                             password = "$2a$11$WdUpx2xd/bP2gWtsBGaVNuZ44WrRup5RZqGAmG919bm/qFlRphDea",
-========
-                            password = "$2a$11$tawV6mVjt2t6dc/AjKBjwu02a62owFZv.MquM8QWpS1AHegQsDGi.",
->>>>>>>> 635bb4274561b4946c064b84a727507abb485d15:ConJob.Data/Migrations/20240423111619_Init.Designer.cs
                             phone_number = "0335487991"
                         },
                         new
@@ -1784,11 +1771,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Alexandros",
-<<<<<<<< HEAD:ConJob.Data/Migrations/20240422090604_changeJob_IdInPost.Designer.cs
-                            password = "$2a$11$EUhMYFf9p.P6o8m/dtLgW.hDtRawAduusn6GlG5wfp1azv5Wy6tbK",
-========
                             password = "$2a$11$qS0mBDLyugCvOWXdQy/B3.GnrQRlL/zK730n8sjLKx.oOFdxEAtqu",
->>>>>>>> 635bb4274561b4946c064b84a727507abb485d15:ConJob.Data/Migrations/20240423111619_Init.Designer.cs
                             phone_number = "0354579415"
                         },
                         new
@@ -1804,11 +1787,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Pancoast",
-<<<<<<<< HEAD:ConJob.Data/Migrations/20240422090604_changeJob_IdInPost.Designer.cs
-                            password = "$2a$11$DDyWtSfY3t10nBqgbZKE5.ubfLLN/4IeSL1DHOi8LvB4/roUEj9PG",
-========
                             password = "$2a$11$Z52Ge2.zjgXoUzD0NLWBG.SMXCtA9yWB4LthKfKUD2hus2Qg1L7ZW",
->>>>>>>> 635bb4274561b4946c064b84a727507abb485d15:ConJob.Data/Migrations/20240423111619_Init.Designer.cs
                             phone_number = "0354596415"
                         },
                         new
@@ -1824,11 +1803,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Dat",
-<<<<<<<< HEAD:ConJob.Data/Migrations/20240422090604_changeJob_IdInPost.Designer.cs
-                            password = "$2a$11$ca9hSvmbrjlXnC7JJoQlFegtOMbmTKkjHBFApGPMgK8YuRztB817m",
-========
                             password = "$2a$11$BhhEKh/BljHmvpbleffHSemAWUUKCfYyyXpsPdGIjsuP0ka5zLJiK",
->>>>>>>> 635bb4274561b4946c064b84a727507abb485d15:ConJob.Data/Migrations/20240423111619_Init.Designer.cs
                             phone_number = "0354579415"
                         },
                         new
@@ -1844,11 +1819,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "khong chin",
-<<<<<<<< HEAD:ConJob.Data/Migrations/20240422090604_changeJob_IdInPost.Designer.cs
-                            password = "$2a$11$8GOaas2ard5vzfElZbXZbuEFI7tI/fM2p5fp.ROBo.ShtRfM3xgRO",
-========
                             password = "$2a$11$vSTrG62ZLHqkAYDuXv95e.BMhQt9Qdm1zZKueA6xoKfEFTyBjteI2",
->>>>>>>> 635bb4274561b4946c064b84a727507abb485d15:ConJob.Data/Migrations/20240423111619_Init.Designer.cs
                             phone_number = "0354579415"
                         });
                 });
@@ -2077,12 +2048,8 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.JobModel", "job")
                         .WithMany("posts")
                         .HasForeignKey("job_id")
-<<<<<<<< HEAD:ConJob.Data/Migrations/20240422090604_changeJob_IdInPost.Designer.cs
-                        .OnDelete(DeleteBehavior.Cascade);
-========
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
->>>>>>>> 635bb4274561b4946c064b84a727507abb485d15:ConJob.Data/Migrations/20240423111619_Init.Designer.cs
 
                     b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("posts")

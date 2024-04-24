@@ -25,7 +25,7 @@ namespace ConJob.Domain.Repository
 
         public async Task<RoleModel> getRoleExceptAdmin(string roleName)
         {
-            return await _context.roles.Where(r => !r.role_name.Equals(CJConstant.ADMIN, StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync(r => r.role_name == roleName);
+            return await _context.roles.Where(r => !r.role_name.Equals("PhatViec", StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync(r => r.role_name == roleName);
         }
 
         public async Task<RoleModel> getRoleByName(string roleName)
