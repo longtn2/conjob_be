@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Hosting;
+using System.Linq.Expressions;
 
 namespace ConJob.Data
 {
@@ -25,7 +26,11 @@ namespace ConJob.Data
                     .WithOne(e => e.role)
                     .HasForeignKey("role_id")
                     .IsRequired();
-
+            modelBuilder.Entity<JobModel>()
+                    .HasMany(e => e.posts)
+                    .WithOne(e => e.job)
+                    .HasForeignKey("job_id")
+                    .IsRequired();
             modelBuilder.Entity<UserModel>()
                     .HasMany(e => e.jwts)
                     .WithOne(e => e.user)
@@ -96,47 +101,46 @@ namespace ConJob.Data
                 .HasForeignKey("receive_user_id")
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<PostModel>()
-                .HasMany(p => p.comments)
-                .WithOne(c => c.post)
-                .HasForeignKey(c => c.post_id)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<JobModel>()
-                .HasMany(j => j.posts)
-                .WithOne(p => p.job)
-                .HasForeignKey(p => p.job_id)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<PostModel>()
-                .Property(p => p.job_id)
-                .IsRequired(false);
-
-            modelBuilder.Entity<UserModel>().Ignore(u => u.followers);
 
             base.OnModelCreating(modelBuilder);
+            var entityTypes = modelBuilder.Model.GetEntityTypes();
+
+            foreach (var entityType in entityTypes)
+            {
+                var entityClrType = entityType.ClrType;
+
+                var isSoftDeleteEnabled = entityClrType.GetProperty("is_deleted") != null;
+
+                if (isSoftDeleteEnabled)
+                {
+                    var parameter = Expression.Parameter(entityClrType, "e");
+                    var property = Expression.Property(parameter, "is_deleted");
+                    var notDeleted = Expression.Not(property);
+                    var lambda = Expression.Lambda(notDeleted, parameter);
+
+                    entityType.SetQueryFilter(lambda);
+                }
+            }
             new DbInitializer(modelBuilder).Seed();
         }
 
 
-        public virtual DbSet<UserModel> Users { get; set; }
-        public virtual DbSet<UserRoleModel> UserRoles { get; set; }
-        public virtual DbSet<RoleModel> Roles { get; set; }
-        public virtual DbSet<ApplicantModel> Applicants { get; set; }
-        public virtual DbSet<CategoryModel> Categories { get; set; }
-        public virtual DbSet<MessageModel> Messages { get; set; }
-        public virtual DbSet<Personal_skillModel> Persional_Skills { get; set; }
-        public virtual DbSet<CommentModel> Comments { get; set; }
-        public virtual DbSet<FileModel> Files { get; set; }
-        public virtual DbSet<FollowModel> Follows { get; set; }
-        public virtual DbSet<JobModel> Jobs { get; set; }
+        public virtual DbSet<UserModel> users { get; set; }
+        public virtual DbSet<UserRoleModel> user_roles { get; set; }
+        public virtual DbSet<RoleModel> roles { get; set; }
+        public virtual DbSet<ApplicantModel> applicants { get; set; }
+        public virtual DbSet<MessengerModel> messages { get; set; }
+        public virtual DbSet<Personal_skillModel> persional_skills { get; set; }
+        public virtual DbSet<FileModel> files { get; set; }
+        public virtual DbSet<FollowModel> follows { get; set; }
+        public virtual DbSet<JobModel> jobs { get; set; }
 
-        public virtual DbSet<JWTModel> JWTs { get; set; }
-        public virtual DbSet<LikeModel> Likes { get; set; }
-        public virtual DbSet<NotificationModel> Notifications { get; set; }
-        public virtual DbSet<PostModel> Posts { get; set; }
-        public virtual DbSet<ReportModel> Reports { get; set; }
-        public virtual DbSet<SkillModel> Skills { get; set; }
+        public virtual DbSet<JWTModel> jwts { get; set; }
+        public virtual DbSet<LikeModel> likes { get; set; }
+        public virtual DbSet<NotificationModel> notifications { get; set; }
+        public virtual DbSet<PostModel> posts { get; set; }
+        public virtual DbSet<ReportModel> reports { get; set; }
+        public virtual DbSet<SkillModel> skills { get; set; }
 
         #region Auto add created-time, updated-time
         public override int SaveChanges()

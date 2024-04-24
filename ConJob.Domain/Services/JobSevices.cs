@@ -29,10 +29,6 @@ namespace ConJob.Domain.Services
             _filterHelper = filterHelper;
         }
 
-        private IQueryable<JobModel> GetJobs()
-        {
-            return _context.Jobs;
-        }
         public async Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid, JobDetailsDTO job)
         {
             var serviceResponse = new ServiceResponse<JobDetailsDTO>();
@@ -42,7 +38,6 @@ namespace ConJob.Domain.Services
                 if (user != null)
                 {
                     var toAddjob = _mapper.Map<JobModel>(job);
-                    toAddjob.category = _context.Categories.Where(c => c.id == job.category_id).First();
                     toAddjob.user = user;
                     await _jobRepository.AddAsync(toAddjob);
                     serviceResponse.ResponseType = EResponseType.Success;
@@ -74,7 +69,7 @@ namespace ConJob.Domain.Services
                     var toAddjob = _mapper.Map<JobModel>(job);
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Data = _mapper.Map<JobDTO>(toAddjob);
-                    await _jobRepository.RemoveAsync(job);
+                    await _jobRepository.SoftDelete(job);
                 }
                 else
                 {
@@ -89,9 +84,9 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<JobDTO>> GetJobAsync(int id)
+        public async Task<ServiceResponse<JobDetailsDTO>> GetJobAsync(int id)
         {
-            var serviceResponse = new ServiceResponse<JobDTO>();
+            var serviceResponse = new ServiceResponse<JobDetailsDTO>();
             try
             {
                 var job = _jobRepository.GetById(id);
@@ -102,7 +97,7 @@ namespace ConJob.Domain.Services
                 else
                 {
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Data = _mapper.Map<JobDTO>(job);
+                    serviceResponse.Data = _mapper.Map<JobDetailsDTO>(job);
                 }
             }
             catch (DbException ex)
@@ -118,10 +113,9 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>>();
             try
             {
-                var job = _jobRepository.GetAll();
+                var job = _jobRepository.GetAllAsync();
                 serviceResponse.ResponseType = EResponseType.Success;
-                serviceResponse.Data = _mapper.Map<IEnumerable<JobDTO>>(job);
-
+                serviceResponse.Data = _mapper.ProjectTo<JobDTO>(job);
             }
             catch (DbException ex)
             {
@@ -139,7 +133,7 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
             try
             {
-                var job = _mapper.ProjectTo<JobDTO>(GetJobs())
+                var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
                     .Where(predicate)
                     .AsNoTracking();
                 var sortedJob = _filterHelper.ApplySorting(job, searchJob.OrderBy);
@@ -148,13 +142,12 @@ namespace ConJob.Domain.Services
                 {
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Data = pagedJob;
-
                 }
             }
-            catch(DbException ex) 
+            catch (DbException ex)
             {
                 serviceResponse.ResponseType = EResponseType.BadRequest;
-                serviceResponse.Message = "Somthing wrong"+ex.Message;
+                serviceResponse.Message = "Somthing wrong" + ex.Message;
             }
             return serviceResponse;
         }

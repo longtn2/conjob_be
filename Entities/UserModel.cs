@@ -79,18 +79,14 @@ namespace ConJob.Entities
         [JsonIgnore]
         public virtual ICollection<LikeModel> likes { get; set; }
         [JsonIgnore]
-        public virtual ICollection<CommentModel> comments { get; set; }
-        [JsonIgnore]
         public virtual ICollection<FollowModel> followers { get; set; }
         [JsonIgnore]
         public virtual ICollection<FollowModel> following { get; set; }
         [JsonIgnore]
         public virtual ICollection<NotificationModel> from_user_notifications { get; set; }
         [JsonIgnore]
-        public virtual ICollection<NotificationModel> to_user_notifications { get; set; }
+        public virtual ICollection<MessengerModel> send_users { get; set; }
         [JsonIgnore]
-        public virtual ICollection<MessageModel> send_users { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<MessageModel> receive_users { get; set; }
+        public virtual ICollection<MessengerModel> receive_users { get; set; }
     }
 }

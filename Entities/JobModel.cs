@@ -30,16 +30,11 @@ namespace ConJob.Entities
         public job_typeenum job_type { get; set; }
         public string location { get; set; }
         public DateTime expired_day { get; set; }
-        public int quanlity { get; set; }
-        public string status { get; set; }
-        [JsonIgnore]
+        public int quantity { get; set; }
+        public int status { get; set; }
         public virtual ICollection<ApplicantModel> applicants { get; set; }
         [JsonIgnore]
         public virtual ICollection<PostModel> posts { get; set; }
-        public int category_id { get; set; }
-        [JsonIgnore]
-        [ForeignKey("category_id")]
-        public CategoryModel category { get; set; }
         public int user_id { get; set; }
         [JsonIgnore]
         [ForeignKey("user_id")]

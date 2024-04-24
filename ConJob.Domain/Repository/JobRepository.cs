@@ -20,7 +20,7 @@ namespace ConJob.Domain.Repository
 
         public IQueryable<JobModel> searchJob(string search, string location)
         {
-            return _context.Jobs.Where(e => e.title.Contains(search) && e.location.Contains(location))
+            return _context.jobs.Where(e => e.title.Contains(search) && e.location.Contains(location))
                      .Include(e => e.posts);
         }
     }

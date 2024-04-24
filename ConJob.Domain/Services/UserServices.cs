@@ -171,7 +171,7 @@ namespace ConJob.Domain.Services
                 tofollow.from_user_follow = _userRepository.GetById(tofollow.from_user_id)!;
                 tofollow.to_user_follow = _userRepository.GetById(tofollow.to_user_id)!;
 
-                var checkfollow = _context.Follows.Where(e => e.to_user_follow.id == tofollow.to_user_id && e.from_user_follow.id == tofollow.from_user_id).FirstOrDefault();
+                var checkfollow = _context.follows.Where(e => e.to_user_follow.id == tofollow.to_user_id && e.from_user_follow.id == tofollow.from_user_id).FirstOrDefault();
                 if (tofollow.to_user_follow == null || tofollow.from_user_follow == null)
                     serviceResponse.ResponseType = EResponseType.BadRequest;
                 else if (checkfollow == null)
@@ -201,7 +201,7 @@ namespace ConJob.Domain.Services
                 var toRemove = _mapper.Map<FollowModel>(follow);
                 toRemove.from_user_follow = _userRepository.GetById(toRemove.from_user_id)!;
                 toRemove.to_user_follow = _userRepository.GetById(toRemove.to_user_id)!;
-                var result = await _context.Follows.Where(e => e.from_user_id == follow.FromUserID && e.to_user_id == follow.ToUserID).FirstOrDefaultAsync();
+                var result = await _context.follows.Where(e => e.from_user_id == follow.FromUserID && e.to_user_id == follow.ToUserID).FirstOrDefaultAsync();
                 if (result == null)
                 {
                     serviceResponse.ResponseType = EResponseType.NotFound;
