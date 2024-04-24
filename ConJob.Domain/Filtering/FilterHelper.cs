@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ConJob.Domain.Filtering
 {
-	public class FilterHelper<T> : IFilterHelper<T>
+    public class FilterHelper<T> : IFilterHelper<T>
 	{
 		public IQueryable<T> ApplySorting(IQueryable<T> source, string orderByQueryString)
 		{

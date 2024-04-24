@@ -1,13 +1,13 @@
-﻿using ConJob.Data;
+﻿using AutoMapper;
+using ConJob.Data;
+using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using ConJob.Domain.DTOs.User;
 
 namespace ConJob.Domain.Repository
 {
-    public class UserRepository: GenericRepository<UserModel>, IUserRepository
+    public class UserRepository : GenericRepository<UserModel>, IUserRepository
     {
 
         public UserRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
@@ -61,6 +61,29 @@ namespace ConJob.Domain.Repository
             return await _context.users
                     .Include(c => c.posts)
                     .FirstAsync(c => c.id == user_id);
+        }
+
+        public async Task<UserModel> GetDetailsUserAsync(int user_id)
+        {
+            return await _context.users.Include(c => c.posts)
+                                            .ThenInclude(p => p.file)
+                                        .Include(c => c.posts)
+                                            .ThenInclude(p => p.job)
+                                        .Include(c => c.jobs)
+                                            .ThenInclude(j => j.posts)
+                                        .Include(c => c.followers)
+                                        .Include(c => c.following)
+                                        .Include(c => c.personal_skills)
+                                            .ThenInclude(p => p.skill)
+                                        .Include(c => c.user_roles)
+                                            .ThenInclude(r => r.role)
+                                        .FirstAsync(c => c.id == user_id);
+        }
+
+        public async Task<UserModel> GetUserNotIsAdminAsync(int id)
+        {
+            var user = await _context.user_roles.Where(x => x.user_id == id && x.role_id != 1).Select(u => u.user).FirstOrDefaultAsync();
+            return user;
         }
     }
 }

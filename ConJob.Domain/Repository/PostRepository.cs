@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using ConJob.Data;
+using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
-using ConJob.Domain.DTOs.Post;
-using System.Data.Entity;
 namespace ConJob.Domain.Repository
 {
     public class PostRepository : GenericRepository<PostModel>, IPostRepository
@@ -34,28 +33,20 @@ namespace ConJob.Domain.Repository
 
         public async Task DeleteAsync(int post_id)
         {
-            var post = _context.posts.FirstOrDefault(p => p.id == post_id);
+            var post = _context.posts.Where(p => p.is_deleted == false && p.is_actived == false).FirstOrDefault(p => p.id == post_id);
             if (post != null)
             {
-                post.is_deleted = !post.is_deleted;
-                if (post.is_actived == true)
-                {
-                    post.is_actived = false;
-                }
+                post.is_deleted = true;
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task ActiveAsync(int post_id)
         {
-            var post = _context.posts.FirstOrDefault(p => p.id == post_id);
+            var post = _context.posts.Where(p => p.is_deleted == false && p.is_actived == false).FirstOrDefault(p => p.id == post_id);
             if (post != null)
             {
-                post.is_actived = !post.is_actived;
-                if (post.is_deleted == true)
-                {
-                    post.is_deleted = false;
-                }
+                post.is_actived = true;
                 await _context.SaveChangesAsync();
             }
         }

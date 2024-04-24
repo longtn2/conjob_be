@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-
-namespace ConJob.Domain.Filtering
+﻿namespace ConJob.Domain.Filtering
 {
     public interface IFilterHelper<T>
     {

@@ -1,13 +1,10 @@
-﻿using ConJob.Domain.DTOs.Report;
-using ConJob.Domain.Repository.Interfaces;
+﻿using ConJob.Domain.DTOs.Post;
+using ConJob.Domain.DTOs.Report;
 using ConJob.Domain.Response;
-using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.API.Controllers
 {

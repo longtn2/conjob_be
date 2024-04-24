@@ -1,12 +1,12 @@
-﻿using ConJob.Domain.DTOs.User;
-using ConJob.Domain.Services;
-using Microsoft.AspNetCore.Mvc;
-using static ConJob.Domain.Response.EServiceResponseTypes;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using ConJob.Domain.Services.Interfaces;
+﻿using ConJob.Domain.DTOs.Follow;
+using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Response;
-using ConJob.Domain.DTOs.Follow;
+using ConJob.Domain.Services;
+using ConJob.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.API.Controllers
 {
@@ -57,13 +57,23 @@ namespace ConJob.API.Controllers
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userid == null)
             {
-                return BadRequest(new ServiceResponse<UserInfoDTO> { Message = "User Not Found!", ResponseType = EResponseType.BadRequest});
+                return BadRequest(new ServiceResponse<UserDetailsDTO> { Message = "User Not Found!", ResponseType = EResponseType.BadRequest});
             }
             else
             {
-                var serviceResponse = await _userServices.GetUserInfoAsync(userid);
+                var serviceResponse = await _userServices.GetUserInfoAsync(int.Parse(userid));
                 return Ok(serviceResponse.getData());
             }
+        }
+
+        [Route("info/{id}")]
+        [Produces("application/json")]
+        [HttpGet]
+        public async Task<ActionResult> getUserInfoById(int id)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = await _userServices.GetUserByIdAsync(id, int.Parse(userid));
+            return Ok(serviceResponse);
         }
 
         [Route("upload-avatar")]
@@ -81,7 +91,6 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> followUser(int toUserid)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
             var serviceResponse = await _userServices.followUser(new FollowDTO()
             {
                 FromUserID = int.Parse(userid!),
@@ -96,7 +105,6 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> unfollowUser(int toUserid)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
             var serviceResponse = await _userServices.unfollowUser(new FollowDTO()
             {
                 FromUserID = int.Parse(userid!),

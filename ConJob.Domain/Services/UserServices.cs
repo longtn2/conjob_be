@@ -11,6 +11,7 @@ using ConJob.Domain.Encryption;
 using ConJob.Domain.DTOs.Follow;
 using ConJob.Domain.Constant;
 using ConJob.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace ConJob.Domain.Services
 {
@@ -38,25 +39,43 @@ namespace ConJob.Domain.Services
             _followRepository = followRepository;
         }
 
-        public async Task<UserDTO?> GetUserByIdAsync(int id)
+        public async Task<ServiceResponse<UserDetailsDTO?>> GetUserByIdAsync(int user_id, int currentUser_id)
         {
-            var user = _userRepository.GetById(id);
-            return _mapper.Map<UserDTO>(user);
-        }
-
-        public async Task<ServiceResponse<UserInfoDTO>> GetUserInfoAsync(string? id)
-        {
-            var serviceResponse = new ServiceResponse<UserInfoDTO>();
+            var serviceResponse = new ServiceResponse<UserDetailsDTO>();
             try
             {
-                var user = _userRepository.GetById(int.Parse(id));
-                UserInfoDTO userInfo = _mapper.Map<UserInfoDTO>(user);
+                var user = await _userRepository.GetUserNotIsAdminAsync(user_id);
+                if (user == null && currentUser_id != user_id)
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "User Not Found.";
+                }
+                else
+                {
+                    serviceResponse = await GetUserInfoAsync(user_id);
+                }
+            }
+            catch (BadHttpRequestException ex)
+            {
+                throw new BadHttpRequestException(CJConstant.SOMETHING_WENT_WRONG);
+            }
+            catch { throw; }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<UserDetailsDTO>> GetUserInfoAsync(int id)
+        {
+            var serviceResponse = new ServiceResponse<UserDetailsDTO>();
+            try
+            {
+                var user = await _userRepository.GetDetailsUserAsync(id);
+                var userInfo = _mapper.Map<UserDetailsDTO>(user);
                 serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Data = userInfo;
             }
-            catch (DbUpdateException ex)
+            catch (BadHttpRequestException ex)
             {
-                throw new DbUpdateException("User not found.");
+                throw new BadHttpRequestException(CJConstant.SOMETHING_WENT_WRONG);
             }
             catch { throw; }
             return serviceResponse;
@@ -89,7 +108,7 @@ namespace ConJob.Domain.Services
 
         public async Task<ServiceResponse<UserDTO>> SelectRole(SelectRoleDTO Role, string? userid)
         {
-            RoleModel selectedRole = await _roleRepository.getRoleExceptAdmin(Role.RoleName);
+            RoleModel selectedRole = await _roleRepository.getRoleExceptAdmin(Role.role_name);
             var serviceResponse = new ServiceResponse<UserDTO>();
             try
             {
@@ -120,7 +139,6 @@ namespace ConJob.Domain.Services
 
         public async Task<ServiceResponse<UserInfoDTO>> updateUserInfo(UserInfoDTO updateUser, string? id)
         {
-
             var serviceResponse = new ServiceResponse<UserInfoDTO>();
             try
             {
@@ -130,7 +148,7 @@ namespace ConJob.Domain.Services
                 serviceResponse.Message = "Update user successfully!";
                 serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 throw new DbUpdateException("Error Occur While updating data.");
             }
@@ -238,5 +256,6 @@ namespace ConJob.Domain.Services
             }
             return serviceResponse;
         }
+
     }
 }

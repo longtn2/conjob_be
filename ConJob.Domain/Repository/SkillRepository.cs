@@ -1,14 +1,7 @@
-﻿using AutoMapper;
-using ConJob.Data;
+﻿using ConJob.Data;
 using ConJob.Domain.Repository.Interfaces;
-using ConJob.Domain.Services;
 using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConJob.Domain.Repository
 {

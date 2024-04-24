@@ -1,12 +1,10 @@
-﻿
-using ConJob.Domain.DTOs.Authentication;
+﻿using ConJob.Domain.DTOs.Authentication;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
-using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.API.Controllers
 {

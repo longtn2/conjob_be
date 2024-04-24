@@ -188,10 +188,18 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<object>();
             try
             {
-                var post = _postRepository.GetById(id);
-                await _postRepository.ActiveAsync(post.id);
-                serviceResponse.ResponseType = EResponseType.Success;
-                serviceResponse.Message = "Post has been successfully approved.";
+                var post = _postRepository.GetById(id); 
+                if (post != null)
+                {
+                    await _postRepository.ActiveAsync(post.id);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Message = "Post has been successfully approved.";
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found";
+                }
             }
             catch (DbUpdateConcurrencyException)
             {

@@ -8,7 +8,7 @@ namespace ConJob.Domain.DTOs.Role
 {
     public class SelectRoleDTO
     {
-        public string RoleName { get; set;}
+        public string role_name { get; set;}
 
     }
 }

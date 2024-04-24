@@ -8,8 +8,8 @@ namespace ConJob.Domain.DTOs.Role
 {
     public class RolesDTO
     { 
-        public string RoleName {  get; set; }
-        public string RoleDescription { get; set; }
+        public string role_name {  get; set; }
+        public string role_description { get; set; }
 
     }
 }
