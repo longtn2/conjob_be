@@ -68,15 +68,16 @@ namespace ConJob.Domain.Services
             try
             {
                 var toAdd = _mapper.Map<UserModel>(user);
-                var role = await _roleRepository.getRoleByName("TimViec");
-                if (role == null) ;
+                var role = await _roleRepository.getRoleByName(CJConstant.JOB_SEEKER);
                 await _userRoleRepository.AddAsync(new UserRoleModel()
                 {
                     role = role,
                     user = toAdd
                 });
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Message = "Register Successfully! Please check your email to confirm account!";
+                await _emailServices.sendActivationEmail(toAdd);
             }
             catch (DbUpdateException ex)
             {
