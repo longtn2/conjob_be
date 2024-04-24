@@ -41,51 +41,36 @@ namespace ConJob.Domain.Services
             try
             {
                 var user = await _userRepository.getUserByEmail(userdata.email);
-                if (user != null)
+                if (user != null && _pwHasher.verify(userdata.password, user.password))
                 {
-                    var checkCredential = _pwHasher.verify(userdata.password, user.password);
-                    if (checkCredential)
+                    var userDTO = _mapper.Map<UserModel, UserDTO>(user);
+                    string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
+                    string? refreshToken = await _jWTHelper.GenerateJWTRefreshToken(user.id, DateTime.UtcNow.AddMonths(6));
+                    await _jwtServices.InsertJWTToken(new JwtDTO()
                     {
-                        var userDTO = _mapper.Map<UserModel,UserDTO>(user);
-                        string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
-                        string? refreshToken = await _jWTHelper.GenerateJWTRefreshToken(user.id, DateTime.UtcNow.AddMonths(6));
-
-
-                        await _jwtServices.InsertJWTToken(new JwtDTO()
-                        {
-                            user = user,
-                            ExpiredDate = DateTime.UtcNow.AddMonths(6),
-                            Token = refreshToken,
-                        });
-
-                        serviceResponse.Data = _mapper.Map<CredentialDTO>(user);
-                        serviceResponse.Data.RefreshToken = refreshToken;
-                        serviceResponse.Data.Token = token;
-                    }
-                    else
-                    {
-                        serviceResponse.ResponseType = EResponseType.Unauthorized;
-                        serviceResponse.Message = "Login Fail! Wrong password.";
-
-                    }
+                        user = user,
+                        ExpiredDate = DateTime.UtcNow.AddMonths(6),
+                        Token = refreshToken,
+                    });
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Data = _mapper.Map<CredentialDTO>(user);
+                    serviceResponse.Data.RefreshToken = refreshToken;
+                    serviceResponse.Data.Token = token;
                 }
                 else
                 {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Login Fail! Could not found Account by Username!.";
+                    throw new UnauthorizedAccessException("The user or password you entered is incorrect");
                 }
-
                 return serviceResponse;
             }
-            catch
+            catch (Exception ex)
             {
-
                 throw;
             }
         }
         public async Task verifyEmailAsync(string userid)
         {
-            var u = _userRepository.GetById(int.Parse(userid)); 
+            var u = _userRepository.GetById(int.Parse(userid));
             if (u == null || u.is_email_confirmed == true)
             {
                 return;
@@ -127,7 +112,7 @@ namespace ConJob.Domain.Services
                         _tokendto.Token = token;
                         serviceResponse.Data = _tokendto;
                     }
-                    
+
                 }
             }
             else
@@ -138,29 +123,30 @@ namespace ConJob.Domain.Services
             return serviceResponse;
 
         }
-        public async Task<ServiceResponse<Object>> activeEmailAsync(string Token)
+        public async Task<ServiceResponse<object>> activeEmailAsync(string Token)
         {
-            var serviceResponse = new ServiceResponse<Object>();
+            var serviceResponse = new ServiceResponse<object>();
             try
             {
                 var claim = _jWTHelper.ValidateToken(Token);
                 var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
                 var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
 
-                var user =  _userRepository.GetById(int.Parse(userid));
-                if (user == null || action == null || user.is_email_confirmed == true) {
+                var user = _userRepository.GetById(int.Parse(userid));
+                if (user == null || action == null || user.is_email_confirmed == true)
+                {
                     serviceResponse.ResponseType = EResponseType.Unauthorized;
                     serviceResponse.Message = "Could not found User or activated already.";
                     return serviceResponse;
                 }
-                if(action == "confirm")
+                if (action == "confirm")
                 {
                     user.is_email_confirmed = true;
                     _context.Update(user);
                     _context.SaveChanges();
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Activate Success.";
-                    
+
                 }
             }
             catch (Exception ex)
@@ -171,7 +157,7 @@ namespace ConJob.Domain.Services
         }
         public async Task<ServiceResponse<object>> sendForgotEmailVerify(string useremail)
         {
-            var serviceResponse = new ServiceResponse<Object>();
+            var serviceResponse = new ServiceResponse<object>();
             try
             {
                 var user = await _userRepository.getUserByEmail(useremail);
@@ -191,6 +177,21 @@ namespace ConJob.Domain.Services
 
             }
             return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<object>> logout(string reftoken)
+        {
+           var serviceResponse = new ServiceResponse<object>();
+            try { 
+                await _jwtServices.InvalidateToken(reftoken);
+                serviceResponse.ResponseType = EResponseType.Success;
+                serviceResponse.Message = "Log out successful!";
+                return serviceResponse;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

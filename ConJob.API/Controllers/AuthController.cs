@@ -1,9 +1,11 @@
 ﻿
 using ConJob.Domain.DTOs.Authentication;
+using ConJob.Domain.DTOs.Common;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Net;
 using System.Security.Claims;
 using static ConJob.Domain.Response.EServiceResponseTypes;
@@ -25,16 +27,37 @@ namespace ConJob.API.Controllers
             _userServices = userService;
             _authService = authService;
         }
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userdata"></param>
+
+        /// <response code="201">User registration successful!</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Route("register")]
         [Produces("application/json")]
         [HttpPost]
+        [ProducesResponseType(typeof(CommonResponseDTO), 201)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), 400)]
+        [ProducesResponseType(typeof(CommonResponseDTO), 500)]
         public async Task<ActionResult> Register(UserRegisterDTO userdata)
         {
             var serviceResponse = await _userServices.RegisterAsync(userdata);
-            return CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.Message);
+            return CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.getMessage());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userdata"></param>
+        /// <returns></returns>
+        /// <response code="200">Login Success!</response>
+        /// <response code="401">Login Attemp Fail! Wrong email or password.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [ProducesResponseType(typeof(CommonResponseDataDTO<CredentialDTO>), 200)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), 400)]
+        [ProducesResponseType(typeof(CommonResponseDTO), 401)]
+        [ProducesResponseType(typeof(CommonResponseDTO), 500)]
         [Route("login")]
         [Produces("application/json")]
         [HttpPost]
@@ -43,7 +66,7 @@ namespace ConJob.API.Controllers
             var serviceResponse = await _authService.LoginAsync(userdata);
             return serviceResponse.ResponseType switch
             {
-                EResponseType.Success => Ok(serviceResponse.Data),
+                EResponseType.Success => Ok(serviceResponse.getData()),
                 EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
                 EResponseType.BadRequest => BadRequest(serviceResponse.Message),    
                 _ => throw new NotImplementedException()
@@ -88,7 +111,7 @@ namespace ConJob.API.Controllers
                 _ => throw new NotImplementedException()
             };
         }
-        [Route("forgot-password")]
+        [Route("forgot")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> forgotPassword(string email)
@@ -101,6 +124,15 @@ namespace ConJob.API.Controllers
                 EResponseType.BadRequest => BadRequest(serviceResponse.Message),
                 _ => throw new NotImplementedException()
             };
+        }
+
+        [Route("logout")]
+        [Produces("application/json")]
+        [HttpPost]
+        public async Task<ActionResult> logout(TokenDTO token)
+        {
+            var serviceResponse = await _authService.logout(token.Token);
+            return Ok(serviceResponse.getMessage());
         }
     }
 }

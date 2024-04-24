@@ -22,7 +22,7 @@ namespace ConJob.Domain.Repository
 
         public async Task<PostModel> UpdateAsync(int id, PostDTO postDTO)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.id == id);
+            var post = _context.posts.FirstOrDefault(p => p.id == id);
             if (post != null)
             {
                 post = _mapper.Map(postDTO, post);
@@ -33,7 +33,7 @@ namespace ConJob.Domain.Repository
 
         public async Task DeleteAsync(int post_id)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.id == post_id);
+            var post = _context.posts.FirstOrDefault(p => p.id == post_id);
             if (post != null)
             {
                 post.is_deleted = !post.is_deleted;
@@ -47,7 +47,7 @@ namespace ConJob.Domain.Repository
 
         public async Task ActiveAsync(int post_id)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.id == post_id);
+            var post = _context.posts.FirstOrDefault(p => p.id == post_id);
             if (post != null)
             {
                 post.is_actived = !post.is_actived;
@@ -61,31 +61,31 @@ namespace ConJob.Domain.Repository
 
         public int CountLikePost(int post_id)
         {
-            return _context.Likes.Where(p => p.post_id == post_id).Count();
+            return _context.likes.Where(p => p.post_id == post_id).Count();
         }
 
         public IQueryable<PostModel> GetUserPosts(int userId)
         {
-            return _context.Posts
+            return _context.posts
                 .Where(c => c.user.id == userId);
         }
 
         public IQueryable<PostModel> GetPosts()
         {
-            return _context.Posts;
+            return _context.posts;
         }
 
         public IQueryable<PostModel> GetPostNotDeleted()
         {
-            var posts = _context.Posts.AsQueryable();
-            posts = _context.Posts.Where(p => p.is_deleted == false);
+            var posts = _context.posts.AsQueryable();
+            posts = _context.posts.Where(p => p.is_deleted == false);
             return posts;
         }
 
         public IQueryable<PostModel> GetPostNotApproved()
         {
-            var posts = _context.Posts.AsQueryable();
-            posts = _context.Posts.Where(p => p.is_deleted == false).Where(p => p.is_actived == false);
+            var posts = _context.posts.AsQueryable();
+            posts = _context.posts.Where(p => p.is_deleted == false).Where(p => p.is_actived == false);
             return posts;
         }
     }
