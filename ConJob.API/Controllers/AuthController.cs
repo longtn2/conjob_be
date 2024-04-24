@@ -13,7 +13,7 @@ namespace ConJob.API.Controllers
     [AllowAnonymous]
     [ApiController]
     [ApiVersion("1")]
-    [Route("api/v{version:apiVersion}/[controller]/")]
+    [Route("api/v{version:apiVersion}/auth/")]
     public class AuthController : Controller
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
@@ -32,7 +32,7 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> Register(UserRegisterDTO userdata)
         {
             var serviceResponse = await _userServices.RegisterAsync(userdata);
-            return CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.Message);
+            return CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.getMessage());
         }
 
         [Route("login")]
@@ -41,14 +41,9 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> Login(UserLoginDTO userdata)
         {
             var serviceResponse = await _authService.LoginAsync(userdata);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),    
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getData());
         }
+
         [Route("verify")]
         [Produces("application/json")]
         [HttpPost]
@@ -66,41 +61,25 @@ namespace ConJob.API.Controllers
         {
             var decode = WebUtility.UrlDecode(token);
             var serviceResponse = await _authService.activeEmailAsync(decode);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Message),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
+
         [Route("refresh")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> refreshToken(TokenDTO token)
         {
             var serviceResponse = await _authService.refreshTokenAsync(token.Token);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => CreatedAtAction(nameof(refreshToken), new { version = "1" }, serviceResponse.Data),
-                EResponseType.Unauthorized => BadRequest(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return CreatedAtAction(nameof(refreshToken), new { version = "1" }, serviceResponse.getData());
         }
-        [Route("forgot-password")]
+        [Route("forgot")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> forgotPassword(string email)
         {
 
             var serviceResponse = await _authService.sendForgotEmailVerify(email);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Message),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
     }
 }

@@ -14,7 +14,7 @@ namespace ConJob.API.Controllers
     [ApiController]
     [Authorize(Policy = "emailverified")]
     [ApiVersion("1")]
-    [Route("api/v{version:apiVersion}/[controller]/")]
+    [Route("api/v{version:apiVersion}/user/")]
     public class UserController : ControllerBase
     {
         private readonly ILogger _logger;
@@ -35,13 +35,7 @@ namespace ConJob.API.Controllers
             var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
             var serviceResponse = await _userServices.updateUserInfo(userdata, userid);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
-                EResponseType.Forbid => Forbid(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
         [Route("change-password")]
@@ -52,13 +46,7 @@ namespace ConJob.API.Controllers
             var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string? userid = claims == null ? null : claims.Value.ToString();
             var serviceResponse = await _userServices.changePassword(passwordDTO, userid);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
-                EResponseType.Forbid => Forbid(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
         [Route("profile")]
@@ -74,13 +62,7 @@ namespace ConJob.API.Controllers
             else
             {
                 var serviceResponse = await _userServices.GetUserInfoAsync(userid);
-                return serviceResponse.ResponseType switch
-                {
-                    EResponseType.Success => Ok(serviceResponse.Data),
-                    EResponseType.NotFound => BadRequest(serviceResponse.Message),
-                    EResponseType.Forbid => Forbid(serviceResponse.Message),
-                    _ => throw new NotImplementedException()
-                };
+                return Ok(serviceResponse.getData());
             }
         }
 
@@ -93,7 +75,7 @@ namespace ConJob.API.Controllers
             await _w3Services.UploadImage(file);
         }
 
-        [Route("/follow")]
+        [Route("follow")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> followUser([FromBody] FollowerDTO followUser)
@@ -105,18 +87,10 @@ namespace ConJob.API.Controllers
                 FromUserID = int.Parse(userid!),
                 ToUserID = int.Parse(followUser.toUser)
             });
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                EResponseType.Forbid => Forbid(serviceResponse.Message),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
-                EResponseType.NotFound => NotFound(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
-        [Route("/unfollow")]
+        [Route("unfollow")]
         [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult> unfollowUser([FromBody] FollowerDTO followUser)
@@ -128,15 +102,7 @@ namespace ConJob.API.Controllers
                 FromUserID = int.Parse(userid!),
                 ToUserID = int.Parse(followUser.toUser),
             });
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                EResponseType.Forbid => Forbid(serviceResponse.Message),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
-                EResponseType.NotFound => NotFound(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
     }

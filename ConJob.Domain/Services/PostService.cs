@@ -2,7 +2,6 @@
 using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Filtering;
-using ConJob.Domain.Repository;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
@@ -49,8 +48,7 @@ namespace ConJob.Domain.Services
                 serviceResponse.Message = "Add post successfully";
             } catch (InvalidOperationException)
             {
-                serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Owner (User) of post not found.";
+                throw new InvalidOperationException("Owner (User) of post not found.");
             }
             return serviceResponse;
         }
@@ -62,21 +60,15 @@ namespace ConJob.Domain.Services
             {
                 var posts = _mapper.ProjectTo<PostDTO>(_postRepository.GetPostNotDeleted())
                         .AsNoTracking();
-
                 #region paging
                 var result = await _filterHelper2.ApplyPaging(posts, pageNo, PAGE_SIZE);
                 #endregion
-                
-                if (result != null)
-                {
-                    serviceResponse.Data = result;
-                    serviceResponse.Message = "Get all posts successfully!";
-                }
-                else
-                {
-                    serviceResponse.ResponseType = EResponseType.NotFound;
-                    serviceResponse.Message = "Post not found.";
-                }
+                serviceResponse.Data = result;
+                serviceResponse.Message = "Get all posts successfully!";
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException("Post and/or Owner (User) not found.");
             }
             catch { throw; }
             return serviceResponse;
@@ -94,8 +86,7 @@ namespace ConJob.Domain.Services
             }
             catch (InvalidOperationException)
             {
-                serviceResponse.ResponseType = EResponseType.NotFound;
-                serviceResponse.Message = "Post and/or Owner (User) not found.";
+                throw new InvalidOperationException("Post and/or Owner (User) not found.");
             }
             catch { throw; }
             return serviceResponse;
@@ -136,8 +127,7 @@ namespace ConJob.Domain.Services
             }
             catch (InvalidOperationException)
             {
-                serviceResponse.ResponseType = EResponseType.NotFound;
-                serviceResponse.Message = "Post and/or Owner (User) not found.";
+                throw new InvalidOperationException("Post and / or Owner(User) not found.");
             }
             catch { throw; }
             return serviceResponse;
@@ -148,20 +138,49 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<object>();
             try
             {
-                var post = _postRepository.GetById(id);
-                await _postRepository.DeleteAsync(post.id);
-                serviceResponse.Message = "Delete post successfully!";
+                var post = await _postRepository.GetUserPosts(userId)
+                    .FirstAsync(c => c.id == id);
+                if (post != null)
+                {
+                    post = _postRepository.GetById(id);
+                    await _postRepository.DeleteAsync(post.id);
+                    serviceResponse.Message = "Delete post successfully!";
+                }
             }
-            catch (DbUpdateConcurrencyException)
+            catch (InvalidOperationException)
             {
-                serviceResponse.ResponseType = EResponseType.NotFound;
-                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
+                throw new InvalidOperationException("Post and / or Owner(User) not found.");
             }
             catch { throw; }
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<object>> ActiveAsync(int userId, int id)
+        public async Task<ServiceResponse<object>> DeleteAsync(int id)
+        {
+            var serviceResponse = new ServiceResponse<object>();
+            try
+            {
+                var post = _postRepository.GetById(id);
+                if (post != null)
+                {
+                    await _postRepository.DeleteAsync(post.id);
+                    serviceResponse.Message = "Delete post successfully!";
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found";
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
+            }
+            catch { throw; }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<object>> ActiveAsync(int id)
         {
             var serviceResponse = new ServiceResponse<object>();
             try
@@ -201,16 +220,12 @@ namespace ConJob.Domain.Services
                 // apply sorting and paging
                 var sortedPosts = _filterHelper.ApplySorting(posts, filterParameters.OrderBy);
                 var pagedPosts = await _filterHelper.ApplyPaging(sortedPosts, filterParameters.Page, filterParameters.Limit);
-                if (pagedPosts?.Items?.Any() == true)
-                {
-                    serviceResponse.Data = pagedPosts;
-                    serviceResponse.Message = "Get and filter posts successfully!";
-                }
-                else
-                {
-                    serviceResponse.ResponseType = EResponseType.NotFound;
-                    serviceResponse.Message = "Post and/or Owner (User) not found.";
-                }
+
+                serviceResponse.Data = pagedPosts;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
             }
             catch { throw; }
             return serviceResponse;

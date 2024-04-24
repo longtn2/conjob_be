@@ -47,18 +47,18 @@ namespace ConJob.Domain.Services
         public async Task<ServiceResponse<UserInfoDTO>> GetUserInfoAsync(string? id)
         {
             var serviceResponse = new ServiceResponse<UserInfoDTO>();
-            var user = _userRepository.GetById(int.Parse(id));
-            if (user == null)
+            try
             {
-                serviceResponse.ResponseType = EResponseType.NotFound;
-                serviceResponse.Message = "User not found";
-            }
-            else
-            {
+                var user = _userRepository.GetById(int.Parse(id));
                 UserInfoDTO userInfo = _mapper.Map<UserInfoDTO>(user);
+                serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Data = userInfo;
-                serviceResponse.Message = "Get user profile successfully";
             }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("User not found.");
+            }
+            catch { throw; }
             return serviceResponse;
         }
 
@@ -124,23 +124,14 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<UserInfoDTO>();
             try {
                 var user = _userRepository.GetById(int.Parse(id));
-                if (user == null)
-                {
-                    serviceResponse.ResponseType = EResponseType.NotFound;
-                    serviceResponse.Message = "User not found!";
-                }
-                else
-                {
-                    user = await _userRepository.updateAsync(updateUser, user);
-                    serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Message = "Update user successfully!";
-                    serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
-                }
+                user = await _userRepository.updateAsync(updateUser, user);
+                serviceResponse.ResponseType = EResponseType.Success;
+                serviceResponse.Message = "Update user successfully!";
+                serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
             }
             catch (DbUpdateException ex)
             {
-                serviceResponse.ResponseType = EResponseType.CannotUpdate;
-                serviceResponse.Message = "Error Occur While updating data.";
+                throw new DbUpdateException("Error Occur While updating data.");
             }
             return serviceResponse;
         }

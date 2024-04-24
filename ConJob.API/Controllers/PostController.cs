@@ -10,7 +10,7 @@ namespace ConJob.API.Controllers
     [ApiController]
     [Authorize(Policy = "emailverified")]
     [ApiVersion("1")]
-    [Route("api/v{version:apiVersion}/[controller]/")]
+    [Route("api/v{version:apiVersion}/post/")]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
@@ -27,13 +27,9 @@ namespace ConJob.API.Controllers
             switch (serviceResponse.ResponseType)
             {
                 case EResponseType.Success:
-                    Response.Headers.Add("X-Paging-PageNo", serviceResponse.Data?.CurrentPage.ToString());
-                    Response.Headers.Add("X-Paging-PageSize", serviceResponse.Data?.PageSize.ToString());
-                    Response.Headers.Add("X-Paging-PageCount", serviceResponse.Data?.TotalPages.ToString());
-                    Response.Headers.Add("X-Paging-TotalRecordCount", serviceResponse.Data?.TotalCount.ToString());
-                    return Ok(serviceResponse.Data?.Items);
+                    return Ok(serviceResponse.getData());
                 case EResponseType.NotFound:
-                    return NotFound(serviceResponse);
+                    return NotFound(serviceResponse.getMessage());
                 default:
                     throw new NotImplementedException();
             }
@@ -44,12 +40,7 @@ namespace ConJob.API.Controllers
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.SaveAsync(int.Parse(userid), newPost);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => CreatedAtAction(nameof(addPost), new { version = "1" }, serviceResponse.Data),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return CreatedAtAction(nameof(addPost), new { version = "1" }, serviceResponse.getMessage());
         }
 
         [Route("get-user-post/{id}")]
@@ -59,12 +50,7 @@ namespace ConJob.API.Controllers
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.FindByIdAsync(int.Parse(userid), id);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.NotFound => NotFound(),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getData());
         }
 
         [Route("get-post/{id}")]
@@ -73,12 +59,7 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> getPostById(int id)
         {
             var serviceResponse = await _postService.FindByIdAsync(id);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.NotFound => NotFound(),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getData());
         }
 
         [HttpPut("{id}")]
@@ -86,13 +67,7 @@ namespace ConJob.API.Controllers
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.UpdateAsync(int.Parse(userid), id, post);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.NotFound => NotFound(serviceResponse.Message),
-                EResponseType.CannotUpdate => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
         [HttpDelete("{id}")]
@@ -100,12 +75,7 @@ namespace ConJob.API.Controllers
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.DeleteAsync(int.Parse(userid), id);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => NoContent(),
-                EResponseType.NotFound => NotFound(),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
         [Route("like")]
@@ -114,12 +84,7 @@ namespace ConJob.API.Controllers
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.UserLikePost(int.Parse(userid), post_id);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.CannotCreate => BadRequest(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
         [Route("add-job")]
@@ -128,7 +93,7 @@ namespace ConJob.API.Controllers
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.AddJobToPost(int.Parse(userid), job_id, post_id);
-            return Ok(serviceResponse.Message);
+            return Ok(serviceResponse.getMessage());
         }
 
     }

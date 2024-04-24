@@ -57,7 +57,7 @@ namespace ConJob.Domain.Services
                             ExpiredDate = DateTime.UtcNow.AddMonths(6),
                             Token = refreshToken,
                         });
-
+                        serviceResponse.ResponseType = EResponseType.Success;
                         serviceResponse.Data = _mapper.Map<CredentialDTO>(user);
                         serviceResponse.Data.RefreshToken = refreshToken;
                         serviceResponse.Data.Token = token;

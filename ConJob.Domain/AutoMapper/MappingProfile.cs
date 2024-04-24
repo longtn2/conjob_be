@@ -39,6 +39,7 @@ namespace ConJob.Domain.AutoMapper
                                             .ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
                                             .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
                                             .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
+                                            .ForMember(dto => dto.avatar_author, opt => opt.MapFrom(x => x.user.avatar))
                                             .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
                                             .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
