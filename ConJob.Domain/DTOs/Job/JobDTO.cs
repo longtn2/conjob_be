@@ -22,7 +22,7 @@ namespace ConJob.Domain.DTOs.Job
         public string location { get; set; }
         public DateTime expired_day { get; set; }
         public int quanlity { get; set; }
-        public string status { get; set; }
+        public int status { get; set; }
         public virtual ICollection<PostDTO>? posts { get; set; }
     }
 }

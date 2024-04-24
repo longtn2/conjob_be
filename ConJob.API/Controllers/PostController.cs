@@ -87,6 +87,5 @@ namespace ConJob.API.Controllers
             var serviceResponse = await _postService.AddJobToPost(int.Parse(userid), job_id, post_id);
             return Ok(serviceResponse.getMessage());
         }
-
     }
 }

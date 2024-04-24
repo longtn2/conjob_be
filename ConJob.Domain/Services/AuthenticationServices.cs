@@ -77,47 +77,27 @@ namespace ConJob.Domain.Services
         }
         public async Task<ServiceResponse<TokenDTO>> refreshTokenAsync(string reftoken)
         {
-            var serviceResponse = new ServiceResponse<TokenDTO>();
-
-            var claim = _jWTHelper.ValidateToken(reftoken);
-
-            if (claim.HasClaim(claim => claim.Type == ClaimTypes.NameIdentifier))
+            try
             {
+                var serviceResponse = new ServiceResponse<TokenDTO>();
+                if (!await _jwtServices.IsJWTValid(reftoken))
+                {
+                    throw new UnauthorizedAccessException("Access denied due to invalid credentials. Please verify your login details.");
+                }
+                var claim = _jWTHelper.ValidateToken(reftoken);
                 var userid = claim.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
                 var user = _userRepository.GetById(int.Parse(userid));
-                if (user == null)
-                {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Could not found User from token.";
-                }
-                else
-                {
-
-                    var userDTO = _mapper.Map<UserModel, UserDTO>(user);
-
-                    string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
-
-                    if (token == null)
-                    {
-                        serviceResponse.ResponseType = EResponseType.Unauthorized;
-                        serviceResponse.Message = "Could not found User from token.";
-                    }
-                    else
-                    {
-                        TokenDTO _tokendto = new TokenDTO();
-                        _tokendto.Token = token;
-                        serviceResponse.Data = _tokendto;
-                    }
-
-                }
+                var userDTO = _mapper.Map<UserModel, UserDTO>(user);
+                string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
+                TokenDTO _tokendto = new TokenDTO();
+                _tokendto.Token = token;
+                serviceResponse.Data = _tokendto;
+                return serviceResponse;
             }
-            else
+            catch (Exception ex)
             {
-                serviceResponse.ResponseType = EResponseType.Unauthorized;
-                serviceResponse.Message = "Could not found User from token.";
+                throw new UnauthorizedAccessException("Access denied due to invalid credentials. Please verify your login details.");
             }
-            return serviceResponse;
 
         }
         public async Task<ServiceResponse<object>> activeEmailAsync(string Token)
@@ -128,14 +108,7 @@ namespace ConJob.Domain.Services
                 var claim = _jWTHelper.ValidateToken(Token);
                 var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
                 var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
-
                 var user = _userRepository.GetById(int.Parse(userid));
-                if (user == null || action == null || user.is_email_confirmed == true)
-                {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Could not found User or activated already.";
-                    return serviceResponse;
-                }
                 if (action == "confirm")
                 {
                     user.is_email_confirmed = true;
@@ -143,12 +116,11 @@ namespace ConJob.Domain.Services
                     _context.SaveChanges();
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Activate Success.";
-
                 }
             }
             catch (Exception ex)
             {
-
+                throw new BadHttpRequestException("Invalid Activation link!");
             }
             return serviceResponse;
         }
@@ -158,27 +130,20 @@ namespace ConJob.Domain.Services
             try
             {
                 var user = await _userRepository.getUserByEmail(useremail);
-                if (user == null)
-                {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Could not found user";
-                }
-                else
-                {
-                    await _emailServies.sendForgotPassword(user);
-                }
+                await _emailServies.sendForgotPassword(user ?? throw new BadHttpRequestException("Could not found user"));
             }
             catch (Exception e)
             {
-
+                throw;
             }
             return serviceResponse;
         }
 
         public async Task<ServiceResponse<object>> logout(string reftoken)
         {
-           var serviceResponse = new ServiceResponse<object>();
-            try { 
+            var serviceResponse = new ServiceResponse<object>();
+            try
+            {
                 await _jwtServices.InvalidateToken(reftoken);
                 serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Message = "Log out successful!";
