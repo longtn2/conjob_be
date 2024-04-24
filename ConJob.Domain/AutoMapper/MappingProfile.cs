@@ -17,7 +17,7 @@ namespace ConJob.Domain.AutoMapper
         public MappingProfile(IPasswordHasher pwdHasher)
         {
             _pwdHasher = pwdHasher;
-
+            CreateMap<SkillDTO, SkillModel>().ReverseMap();
             CreateMap<UserRegisterDTO, UserModel>().ForMember(dest=>dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.password)));
             CreateMap<UserModel, UserDTO>()
                  .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())); 
