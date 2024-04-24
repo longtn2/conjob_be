@@ -1946,7 +1946,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Dat",
-                            password = "$2a$11$5Xnh5Np30LZJRaupUMoFa..ivaF.J0Y/Ms7UnMrTg.9W6w46K.eDy",
+                            password = "$2a$11$5nZX1qTnXrylK.d3TaSGFuOBS2Y0bVPRjhoMECzpG4r.vRb/mixNi",
                             phone_number = "0335487991"
                         },
                         new
@@ -1963,7 +1963,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Alexandros",
-                            password = "$2a$11$cIFxaqcIPZ5xGt0bLcyG1OtRIrLwCxZWCib6qxei3YCUqx5UjaMgK",
+                            password = "$2a$11$NgOvCGCpZNXC18dpD2YOPOhM2DMOtmf2CopIibFfQjzwBOuMOZn3O",
                             phone_number = "0354579415"
                         },
                         new
@@ -1980,7 +1980,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Pancoast",
-                            password = "$2a$11$xzzf6.jjdFb/kUuAp.cJA.J7kugtqfa1Xz1/AHkUiSp4ZunohCHGi",
+                            password = "$2a$11$zjkcSOxCOsJzRbB.3LAsGelEYy2JBVsrK.fIwbMWDceQP93YWofWe",
                             phone_number = "0354596415"
                         },
                         new
@@ -1997,7 +1997,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Dat",
-                            password = "$2a$11$RXRA5MVhlGRomR5csaoVN.QI1AvVyC6nToQl4sCJ0sU7HEp695LgW",
+                            password = "$2a$11$WDHChQhkZo5MF8xtRvEdFujFugkbamOR5rtDfgYMM8xB/jgb4thYK",
                             phone_number = "0354579415"
                         },
                         new
@@ -2014,7 +2014,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "khong chin",
-                            password = "$2a$11$PuyUjoctHNR3kfQbAXsLw.agx5jb.k0Lk4G5vVRsHLkkkoFvyr9XG",
+                            password = "$2a$11$O7.s8DGGKVQgAi5/gZUd3uJLQCTOzHirndnJcigTFdt/wd9roZeF6",
                             phone_number = "0354579415"
                         });
                 });
@@ -2243,7 +2243,7 @@ namespace ConJob.Data.Migrations
                     b.HasOne("ConJob.Entities.JobModel", "job")
                         .WithMany("posts")
                         .HasForeignKey("job_id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ConJob.Entities.UserModel", "user")
                         .WithMany("posts")
