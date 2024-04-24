@@ -78,14 +78,14 @@ namespace ConJob.API.Controllers
         [Route("follow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> followUser([FromBody] FollowerDTO followUser)
+        public async Task<ActionResult> followUser(int toUserid)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var serviceResponse = await _userServices.followUser(new FollowDTO()
             {
                 FromUserID = int.Parse(userid!),
-                ToUserID = int.Parse(followUser.toUser)
+                ToUserID = toUserid
             });
             return Ok(serviceResponse.getMessage());
         }
@@ -93,14 +93,14 @@ namespace ConJob.API.Controllers
         [Route("unfollow")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult> unfollowUser([FromBody] FollowerDTO followUser)
+        public async Task<ActionResult> unfollowUser(int toUserid)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var serviceResponse = await _userServices.unfollowUser(new FollowDTO()
             {
                 FromUserID = int.Parse(userid!),
-                ToUserID = int.Parse(followUser.toUser),
+                ToUserID = toUserid,
             });
             return Ok(serviceResponse.getMessage());
         }

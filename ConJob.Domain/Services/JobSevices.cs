@@ -39,6 +39,7 @@ namespace ConJob.Domain.Services
                 {
                     var toAddjob = _mapper.Map<JobModel>(job);
                     toAddjob.user = user;
+                    toAddjob.posts = null!;
                     await _jobRepository.AddAsync(toAddjob);
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Data = _mapper.Map<JobDetailsDTO>(toAddjob);
@@ -129,8 +130,8 @@ namespace ConJob.Domain.Services
         {
             var predicate = PredicateBuilder.New<JobDTO>();
             predicate = predicate.Or(p => p.title.Contains(searchJob.SearchTerm));
-
             var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
+
             try
             {
                 var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
@@ -147,36 +148,45 @@ namespace ConJob.Domain.Services
             catch (DbException ex)
             {
                 serviceResponse.ResponseType = EResponseType.BadRequest;
-                serviceResponse.Message = "Somthing wrong" + ex.Message;
+                serviceResponse.Message = "Something wrong" + ex.Message;
             }
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<JobDTO>> UpdateJobAsync(int id, JobDTO jobDTO)
+        public async Task<ServiceResponse<JobDTO>> UpdateJobAsync(int userid, int id, JobDTO jobDTO)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();
             try
             {
                 var job = _jobRepository.GetById(id);
                 var toAddjob = _mapper.Map(jobDTO, job);
-                if (toAddjob != null)
+                toAddjob!.posts = null!;
+                if (_jobRepository.checkOwner(userid, id) != null)
                 {
-                    await _jobRepository.UpdateAsync(toAddjob!);
-                    serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Data = _mapper.Map<JobDTO>(toAddjob);
+                    if (toAddjob != null)
+                    {
+                        await _jobRepository.UpdateAsync(toAddjob!);
+                        serviceResponse.ResponseType = EResponseType.Success;
+                        serviceResponse.Data = _mapper.Map<JobDTO>(toAddjob);
+                    }
+                    else
+                    {
+                        serviceResponse.ResponseType = EResponseType.BadRequest;
+                        serviceResponse.Message = "Something wrong";
+                    }
                 }
                 else
                 {
-                    serviceResponse.ResponseType = EResponseType.BadRequest;
-                    serviceResponse.Message = "Something wrong";
+                    serviceResponse.ResponseType= EResponseType.BadRequest;
+                    serviceResponse.Message = "User is not own";
                 }
+
             }
             catch (DbException ex)
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
                 serviceResponse.Message = ex.Message;
             }
-
             return serviceResponse;
         }
     }

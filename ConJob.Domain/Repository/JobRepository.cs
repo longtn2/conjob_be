@@ -18,6 +18,11 @@ namespace ConJob.Domain.Repository
                 .Where(c => c.user.id == userId);
         }
 
+        public JobModel checkOwner(int userid, int jobid)
+        {
+            return _context.jobs.Where(e => e.user_id == userid && e.id == jobid).FirstOrDefault()!;
+        }
+
         public IQueryable<JobModel> searchJob(string search, string location)
         {
             return _context.jobs.Where(e => e.title.Contains(search) && e.location.Contains(location))

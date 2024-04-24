@@ -2,6 +2,7 @@
 using ConJob.Domain.Filtering;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using static ConJob.Domain.Response.EServiceResponseTypes;
@@ -9,6 +10,7 @@ using static ConJob.Domain.Response.EServiceResponseTypes;
 namespace ConJob.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/job/")]
     [Produces("application/json")]
@@ -26,19 +28,7 @@ namespace ConJob.API.Controllers
         public async Task<IActionResult> searchjob([FromQuery] FilterOptions filterOptions)
         {
             var serviceResponse = await _jobServices.searchJobAsync(filterOptions);
-            switch (serviceResponse.ResponseType)
-            {
-                case EResponseType.Success:
-                    Response.Headers["X-Paging-PageNo"] = serviceResponse.Data?.CurrentPage.ToString();
-                    Response.Headers["X-Paging-PageSize"] = serviceResponse.Data?.PageSize.ToString();
-                    Response.Headers["X-Paging-PageCount"] = serviceResponse.Data?.TotalPages.ToString();
-                    Response.Headers["X-Paging-TotalRecordCount"] = serviceResponse.Data?.TotalCount.ToString();
-                    return Ok(serviceResponse.Data?.Items);
-                case EResponseType.NotFound:
-                    return NotFound();
-                default:
-                    throw new NotImplementedException();
-            }
+            return Ok(serviceResponse.getData());
         }
         [HttpGet("get/{id}")]
         [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status200OK)]
@@ -48,26 +38,14 @@ namespace ConJob.API.Controllers
         {
             var serviceResponse = new ServiceResponse<JobDetailsDTO>();
             serviceResponse = await _jobServices.GetJobAsync(id);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.BadRequest => BadRequest(serviceResponse),
-                EResponseType.NotFound => NotFound(serviceResponse),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getData());
         }
         [HttpGet("getAll")]
         public async Task<IActionResult> getAll()
         {
             var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>>();
             serviceResponse = await _jobServices.GetJobsAsync();
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse),
-                EResponseType.BadRequest => BadRequest(serviceResponse),
-                EResponseType.NotFound => NotFound(serviceResponse),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getData());
         }
         [HttpPost("create")]
         [ProducesResponseType(typeof(ServiceResponse<JobDetailsDTO>), StatusCodes.Status200OK)]
@@ -78,41 +56,24 @@ namespace ConJob.API.Controllers
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = new ServiceResponse<JobDetailsDTO>();
             serviceResponse = await _jobServices.AddJobAsync(int.Parse(userid!), jobDTO);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                EResponseType.NotFound => NotFound(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            return Ok(serviceResponse.getMessage());
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] JobDTO jobDTO)
+        public async Task<IActionResult> Update(int id, [FromBody] JobDTO jobDTO)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();
-            serviceResponse = await _jobServices.UpdateJobAsync(int.Parse(id), jobDTO);
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                EResponseType.NotFound => NotFound(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            serviceResponse = await _jobServices.UpdateJobAsync(int.Parse(userid!),id, jobDTO);
+            return Ok(serviceResponse.getMessage());
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             var serviceResponse = new ServiceResponse<JobDTO>();
-            serviceResponse = await _jobServices.DeleteJobAsync(int.Parse(id));
-            return serviceResponse.ResponseType switch
-            {
-                EResponseType.Success => Ok(serviceResponse.Data),
-                EResponseType.BadRequest => BadRequest(serviceResponse.Message),
-                EResponseType.NotFound => NotFound(serviceResponse.Message),
-                _ => throw new NotImplementedException()
-            };
+            serviceResponse = await _jobServices.DeleteJobAsync(id);
+            return Ok(serviceResponse.getMessage());
         }
     }
 }

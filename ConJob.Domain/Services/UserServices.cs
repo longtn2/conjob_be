@@ -122,7 +122,8 @@ namespace ConJob.Domain.Services
         {
 
             var serviceResponse = new ServiceResponse<UserInfoDTO>();
-            try {
+            try
+            {
                 var user = _userRepository.GetById(int.Parse(id));
                 user = await _userRepository.updateAsync(updateUser, user);
                 serviceResponse.ResponseType = EResponseType.Success;
@@ -170,25 +171,34 @@ namespace ConJob.Domain.Services
                 var tofollow = _mapper.Map<FollowModel>(follow);
                 tofollow.from_user_follow = _userRepository.GetById(tofollow.from_user_id)!;
                 tofollow.to_user_follow = _userRepository.GetById(tofollow.to_user_id)!;
-
-                var checkfollow = _context.follows.Where(e => e.to_user_follow.id == tofollow.to_user_id && e.from_user_follow.id == tofollow.from_user_id).FirstOrDefault();
-                if (tofollow.to_user_follow == null || tofollow.from_user_follow == null)
-                    serviceResponse.ResponseType = EResponseType.BadRequest;
-                else if (checkfollow == null)
+                if (follow.ToUserID != follow.FromUserID)
                 {
-                    await _followRepository.AddAsync(tofollow);
-                    serviceResponse.Data = _mapper.Map<FollowDTO>(tofollow);
+                    var checkfollow = _followRepository.GetFollowbyUser(tofollow.from_user_follow, tofollow.to_user_follow);
+                    if (tofollow.to_user_follow == null || tofollow.from_user_follow == null)
+                        serviceResponse.ResponseType = EResponseType.BadRequest;
+                    else if (checkfollow == null)
+                    {
+                        await _followRepository.AddAsync(tofollow);
+                        serviceResponse.ResponseType = EResponseType.Success;
+                        serviceResponse.Message = "Success follow user";
+                    }
+                    else
+                    {
+                        serviceResponse.ResponseType = EResponseType.BadRequest;
+                        serviceResponse.Message = "User is followed";
+                    }
                 }
                 else
                 {
                     serviceResponse.ResponseType = EResponseType.BadRequest;
-                    serviceResponse.Message = "User is followed";
+                    serviceResponse.Message = "You can't follow yourself";
                 }
+
             }
             catch
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Somthing wrong.";
+                serviceResponse.Message = "Something wrong.";
             }
             return serviceResponse;
         }
@@ -201,21 +211,30 @@ namespace ConJob.Domain.Services
                 var toRemove = _mapper.Map<FollowModel>(follow);
                 toRemove.from_user_follow = _userRepository.GetById(toRemove.from_user_id)!;
                 toRemove.to_user_follow = _userRepository.GetById(toRemove.to_user_id)!;
-                var result = await _context.follows.Where(e => e.from_user_id == follow.FromUserID && e.to_user_id == follow.ToUserID).FirstOrDefaultAsync();
-                if (result == null)
+                if (follow.ToUserID != follow.FromUserID)
                 {
-                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    var result = _followRepository.GetFollowbyUser(toRemove.from_user_follow, toRemove.to_user_follow);
+                    if (result == null)
+                    {
+                        serviceResponse.ResponseType = EResponseType.NotFound;
+                    }
+                    else
+                    {
+                        await _followRepository.RemoveAsync(result!);
+                        serviceResponse.ResponseType = EResponseType.Success;
+                        serviceResponse.Message = "Success follow user";
+                    }
                 }
                 else
                 {
-                    await _followRepository.RemoveAsync(result!);
-                    serviceResponse.Data = _mapper.Map<FollowDTO>(toRemove);
+                    serviceResponse.ResponseType = EResponseType.BadRequest;
+                    serviceResponse.Message = "Something wrong";
                 }
             }
             catch
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = "Somthing wrong.";
+                serviceResponse.Message = "Something wrong.";
             }
             return serviceResponse;
         }

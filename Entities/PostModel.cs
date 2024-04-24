@@ -16,7 +16,6 @@ namespace ConJob.Entities
         public int id { get; set; }
         public string title { get; set; }
         public string caption { get; set; }
-        public bool is_deleted { get; set; }
         public bool is_actived {  get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public int user_id { get; set; }    
