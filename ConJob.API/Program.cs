@@ -112,6 +112,7 @@ builder.Services.AddTransient<IPostRepository, PostRepository>();
 builder.Services.AddTransient<ILikeRepository, LikeRepository>();
 builder.Services.AddTransient<IFollowRepository, FollowRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
+
 #endregion
 
 builder.Services.AddControllers();
