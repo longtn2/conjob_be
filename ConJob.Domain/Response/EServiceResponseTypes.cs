@@ -4,14 +4,14 @@
     {
         public enum EResponseType
         {
-            Success,
-            NotFound,
-            CannotCreate,
-            CannotUpdate,
-            CannotDelete,
-            Forbid,
-            BadRequest,
-            Unauthorized
+            Success = 200,
+            NotFound = 404,
+            CannotCreate = 400,
+            CannotUpdate = 400,
+            CannotDelete = 400,
+            Forbid = 403,
+            BadRequest = 400,
+            Unauthorized = 401
         }
     }
 }

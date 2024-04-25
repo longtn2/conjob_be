@@ -5,11 +5,6 @@ using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.Domain.Services
@@ -20,15 +15,13 @@ namespace ConJob.Domain.Services
         private readonly IReportRepository _reportRespository;
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
-        private readonly AppDbContext _context;
 
-        public ReportServices(IMapper mapper, IReportRepository reportRespository, IUserRepository userRepository, IPostRepository postRepository, AppDbContext context)
+        public ReportServices(IMapper mapper, IReportRepository reportRespository, IUserRepository userRepository, IPostRepository postRepository)
         {
             _mapper = mapper;
             _reportRespository = reportRespository;
             _userRepository = userRepository;
             _postRepository = postRepository;
-            _context = context;
         }
 
         public async Task<ServiceResponse<ReportByUserDTO>> reportPost(ReportDTO reportDTO)
@@ -54,7 +47,7 @@ namespace ConJob.Domain.Services
                     {
                         await _reportRespository.AddAsync(report);
                         serviceReponse.ResponseType = EResponseType.Success;
-                        serviceReponse.Data = _mapper.Map<ReportByUserDTO>(report);
+                        serviceReponse.Message = "Successful reported";
                     }
                     else
                     {

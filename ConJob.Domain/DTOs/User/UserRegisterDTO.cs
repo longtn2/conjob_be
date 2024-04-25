@@ -1,5 +1,6 @@
 ﻿using ConJob.Domain.DTOs.Authentication;
 using ConJob.Entities;
+using ConJob.Entities.Utils.Variable;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -17,12 +18,12 @@ namespace ConJob.Domain.DTOs.User
         public string last_name { get; set; }
 
         [Required]
-        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Email format is not Valid!")]
+        [RegularExpression(RegexUtils.EMAIL, ErrorMessage = "Email format is not Valid!")]
         [StringLength(70, MinimumLength = 5, ErrorMessage = "Email length must between 5 and 70 character")]
         public string email { get; set; }
 
         [Required]
-        [RegularExpression("(84|0)[3|5|7|8|9]([0-9]{8})", ErrorMessage = "Phone number is not valid format!")]
+        [RegularExpression(RegexUtils.PHONE_NUMBER, ErrorMessage = "Phone number is not valid format!")]
         [StringLength(11, MinimumLength = 9)]
         public string phone_number { get; set; }
         [Required]

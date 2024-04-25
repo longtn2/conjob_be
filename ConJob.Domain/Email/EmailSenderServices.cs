@@ -29,7 +29,7 @@ namespace DataLayer.Email
             {
                 using (MimeMessage emailMessage = new MimeMessage())
                 {
-                    MailboxAddress emailFrom = new MailboxAddress(_mailSettings.sendername, _mailSettings.senderemail);
+                    MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName , _mailSettings.SenderEmail);
                     emailMessage.From.Add(emailFrom);
 
                     MailboxAddress emailTo = new MailboxAddress(email, email);
@@ -44,8 +44,8 @@ namespace DataLayer.Email
 
                     using (SmtpClient mailClient = new SmtpClient())
                     {
-                        mailClient.Connect(_mailSettings.server, _mailSettings.port, MailKit.Security.SecureSocketOptions.StartTls);
-                        mailClient.Authenticate(_mailSettings.username, _mailSettings.password);
+                        mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                        mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
                         await mailClient.SendAsync(emailMessage);
                         mailClient.Disconnect(true);
                     }
@@ -55,9 +55,9 @@ namespace DataLayer.Email
             catch (Exception ex)
             {
                 // Exception Details
-
+                throw new UnauthorizedAccessException(ex.Message);
             }
         }
-        
+
     }
 }

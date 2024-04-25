@@ -8,27 +8,13 @@ using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Entities;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using ConJob.Domain.DTOs.User;
-using Microsoft.AspNetCore.Http;
-using ConJob.Domain.Encryption;
-using ConJob.Domain.Authentication;
-using MailKit;
-using ConJob.Domain.DTOs.Authentication;
 using static ConJob.Domain.Response.EServiceResponseTypes;
-using ConJob.Data;
 
 namespace ConJob.Domain.Services
 {
     public class AuthenticationServices : IAuthenticationServices
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _pwHasher;
         private readonly IJWTHelper _jWTHelper;
@@ -36,14 +22,13 @@ namespace ConJob.Domain.Services
         private readonly IEmailServices _emailServies;
         private readonly IJwtServices _jwtServices;
         private readonly AppDbContext _context;
-        public AuthenticationServices(IUserRepository userRepository, IPasswordHasher pwhasher, IJWTHelper jWTHelper, IMapper mapper, IJwtServices jwtServices, IHttpContextAccessor httpContextAccessor, IEmailServices emailServies, AppDbContext context)
+        public AuthenticationServices(IUserRepository userRepository, IPasswordHasher pwhasher, IJWTHelper jWTHelper, IMapper mapper, IJwtServices jwtServices, IEmailServices emailServies, AppDbContext context)
         {
             _userRepository = userRepository;
             _pwHasher = pwhasher;
             _jWTHelper = jWTHelper;
             _mapper = mapper;
             _jwtServices = jwtServices;
-            _httpContextAccessor = httpContextAccessor;
             _emailServies = emailServies;
             _context = context;
         }
@@ -56,7 +41,7 @@ namespace ConJob.Domain.Services
                 var user = await _userRepository.getUserByEmail(userdata.email);
                 if (user != null)
                 {
-                    var checkCredential = _pwHasher.verify(userdata.Password, user.password);
+                    var checkCredential = _pwHasher.verify(userdata.password, user.password);
                     if (checkCredential)
                     {
                         var userDTO = _mapper.Map<UserModel,UserDTO>(user);
@@ -70,7 +55,7 @@ namespace ConJob.Domain.Services
                             ExpiredDate = DateTime.UtcNow.AddMonths(6),
                             Token = refreshToken,
                         });
-
+                        serviceResponse.ResponseType = EResponseType.Success;
                         serviceResponse.Data = _mapper.Map<CredentialDTO>(user);
                         serviceResponse.Data.RefreshToken = refreshToken;
                         serviceResponse.Data.Token = token;
@@ -103,8 +88,7 @@ namespace ConJob.Domain.Services
             {
                 return;
             }
-            var request = _httpContextAccessor.HttpContext!.Request;
-            await _emailServies.sendActivationEmail(u, $"{request.Scheme}://{request.Host}{request.PathBase}");
+            await _emailServies.sendActivationEmail(u);
         }
         public async Task<ServiceResponse<TokenDTO>> refreshTokenAsync(string reftoken)
         {
@@ -195,8 +179,7 @@ namespace ConJob.Domain.Services
                 }
                 else
                 {
-                    var request = _httpContextAccessor.HttpContext!.Request;
-                    await _emailServies.sendForgotPassword(user, $"{request.Scheme}://{request.Host}{request.PathBase}");
+                    await _emailServies.sendForgotPassword(user);
                 }
             }
             catch (Exception e)

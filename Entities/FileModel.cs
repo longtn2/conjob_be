@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace ConJob.Entities
 {
@@ -15,7 +10,7 @@ namespace ConJob.Entities
         Img
     }
     public class FileModel:BaseModel
-    { 
+    {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
@@ -26,7 +21,6 @@ namespace ConJob.Entities
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public FileEnum type { get; set; }
-        public double size { get; set; }
         public string url { get; set; }
         public virtual ICollection<PostModel> posts { get; set; }
         

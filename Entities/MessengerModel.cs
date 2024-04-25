@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ConJob.Entities
 {
-    public class MessageModel :BaseModel
+    public class MessengerModel :BaseModel
     {
         public int id {  get; set; }
         public string message_content { get; set; }

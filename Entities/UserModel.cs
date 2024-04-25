@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Converters;
+﻿using ConJob.Entities.Utils.Variable;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -14,10 +15,9 @@ namespace ConJob.Entities
     public class UserModel: BaseModel
     {
         [Key]
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
-   
+
         [Required]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "First Name must contain at least 1 character and maximum to 50 character")]
         public string first_name { get; set; }
@@ -28,7 +28,7 @@ namespace ConJob.Entities
         public string last_name { get; set; }
 
         [Required]
-        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "Email format is not Valid!")]
+        [RegularExpression(RegexUtils.EMAIL, ErrorMessage = "Email format is not Valid!")]
         [StringLength(70, MinimumLength = 5, ErrorMessage = "Email length must between 5 and 70 character")]
         public string email { get; set; }
 
@@ -46,23 +46,20 @@ namespace ConJob.Entities
         public Gender gender { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        public DateTime dob {  get; set; }
+        public DateTime dob { get; set; }
         [Required]
-        public string address {  get; set; }
+        public string address { get; set; }
 
-        public string? fcm_token {  get; set; }
+        public string? fcm_token { get; set; }
 
         [Required]
-        [RegularExpression("([84|0])([3|5|7|8|9])+([0-9]{8})", ErrorMessage = "Phone number is not valid format!")]
+        [RegularExpression(RegexUtils.PHONE_NUMBER, ErrorMessage = "Phone number is not valid format!")]
         [StringLength(11, MinimumLength = 9)]
         public string phone_number { get; set; }
 
         [Column(TypeName = "text")]
         public string? avatar { get; set; }
 
-
-        [JsonIgnore, Required]
-        public bool is_deleted { get; set; } = false;
         [JsonIgnore]
         public virtual ICollection<UserRoleModel> user_roles { get; set; }
         [JsonIgnore]
@@ -80,19 +77,14 @@ namespace ConJob.Entities
         [JsonIgnore]
         public virtual ICollection<LikeModel> likes { get; set; }
         [JsonIgnore]
-        public virtual ICollection<CommentModel> comments { get; set; }
-        [JsonIgnore]
         public virtual ICollection<FollowModel> followers { get; set; }
         [JsonIgnore]
         public virtual ICollection<FollowModel> following { get; set; }
         [JsonIgnore]
-        public virtual ICollection<NotificationModel> from_user_notiofications { get; set; }
+        public virtual ICollection<NotificationModel> from_user_notifications { get; set; }
         [JsonIgnore]
-        public virtual ICollection<NotificationModel> to_user_notiofications { get; set; }
+        public virtual ICollection<MessengerModel> send_users { get; set; }
         [JsonIgnore]
-        public virtual ICollection<MessageModel> send_users { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<MessageModel> receive_users { get; set; }
-
+        public virtual ICollection<MessengerModel> receive_users { get; set; }
     }
 }

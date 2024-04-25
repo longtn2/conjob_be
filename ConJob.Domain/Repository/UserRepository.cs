@@ -16,13 +16,13 @@ namespace ConJob.Domain.Repository
 
         public async Task<UserModel> getUserByEmail(string email)
         {
-            var user =  await _context.Users.Where(x => x.email == email).Include(x => x.user_roles).ThenInclude(x => x.role).FirstOrDefaultAsync();
+            var user = await _context.users.Where(x => x.email == email).Include(x => x.user_roles).ThenInclude(x => x.role).FirstOrDefaultAsync();
             return user;
         }
 
         public async Task<bool> updateAvatar(string? userid, string avatar)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.id == int.Parse(userid));
+            var user = await _context.users.FirstOrDefaultAsync(x => x.id == int.Parse(userid));
             if (user != null)
             {
                 user.avatar = avatar;
@@ -42,7 +42,8 @@ namespace ConJob.Domain.Repository
                 user.password = newPassword;
                 await _context.SaveChangesAsync();
                 return true;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return false;
             }
@@ -53,6 +54,13 @@ namespace ConJob.Domain.Repository
             var user = _mapper.Map(userDTO, userModel);
             await _context.SaveChangesAsync();
             return user;
+        }
+
+        public async Task<UserModel> findUserPostAsync(int user_id)
+        {
+            return await _context.users
+                    .Include(c => c.posts)
+                    .FirstAsync(c => c.id == user_id);
         }
     }
 }
