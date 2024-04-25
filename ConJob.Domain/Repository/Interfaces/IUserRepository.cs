@@ -13,5 +13,6 @@ namespace ConJob.Domain.Repository.Interfaces
         Task<UserModel> findUserPostAsync(int user_id);
         Task<UserModel> GetDetailsUserAsync(int id);
         Task<UserModel> GetUserNotIsAdminAsync(int id);
+        IQueryable<SkillModel> GetSkillsAsync(int userid);
     }
 }

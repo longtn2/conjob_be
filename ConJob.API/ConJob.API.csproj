@@ -6,6 +6,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Content Include="Properties\launchSettings.json" />
+	</ItemGroup>
+
   <ItemGroup>
     <None Include="example.appsettings.json" />
   </ItemGroup>
