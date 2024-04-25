@@ -10,7 +10,7 @@ namespace ConJob.Domain.DTOs.User
         public string last_name { get; set; }
         public string phone_number { get; set; }
         [DataType(DataType.Date)]
-        public DateTime dob { get; set; }
+        public DateOnly dob { get; set; }
         public string address { get; set; }
         public string? avatar { get; set; }
 

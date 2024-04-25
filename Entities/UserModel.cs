@@ -46,7 +46,7 @@ namespace ConJob.Entities
         public Gender gender { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        public DateTime dob { get; set; }
+        public DateOnly dob { get; set; }
         [Required]
         public string address { get; set; }
 

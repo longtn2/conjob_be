@@ -9,21 +9,27 @@ using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.DTOs.Follow;
 using ConJob.Domain.DTOs.Category;
+using ConJob.Domain.Services.Interfaces;
+using ConJob.Domain.Storage;
 namespace ConJob.Domain.AutoMapper
 {
     public class MappingProfile :Profile
     {
         private readonly IPasswordHasher _pwdHasher;
-        public MappingProfile(IPasswordHasher pwdHasher)
+        private readonly IS3Services _s3Services;
+        public MappingProfile(IPasswordHasher pwdHasher, IS3Services s3Services)
         {
             _pwdHasher = pwdHasher;
+            _s3Services = s3Services;
+
             CreateMap<SkillDTO, SkillModel>().ReverseMap();
             CreateMap<UserRegisterDTO, UserModel>().ForMember(dest=>dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.password)));
             CreateMap<UserModel, UserDTO>()
-                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())); 
+                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()))
+                 .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url)); 
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.Hash(src.Token)));
-            ////Reverse can map from 1->2 || 2->1
             CreateMap<UserModel, UserInfoDTO>().ReverseMap(); 
+            CreateMap<UserDTO, CredentialDTO>().ReverseMap();
             CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())).ReverseMap();
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
             CreateMap<FollowModel, FollowDTO>()

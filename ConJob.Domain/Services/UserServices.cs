@@ -11,6 +11,7 @@ using ConJob.Domain.Encryption;
 using ConJob.Domain.DTOs.Follow;
 using ConJob.Domain.Constant;
 using ConJob.Data;
+using ConJob.Domain.DTOs.File;
 
 namespace ConJob.Domain.Services
 {
@@ -237,6 +238,17 @@ namespace ConJob.Domain.Services
                 serviceResponse.Message = "Something wrong.";
             }
             return serviceResponse;
+        }
+        public async void updateAvatar(FileDTO fileDTO, string? id)
+        {
+            try
+            {
+                _userRepository.updateAvatar(id, $"{id}/{fileDTO.file_type}/{fileDTO.file_name}");
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

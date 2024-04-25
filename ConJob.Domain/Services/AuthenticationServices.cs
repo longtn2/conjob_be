@@ -56,7 +56,7 @@ namespace ConJob.Domain.Services
                             Token = refreshToken,
                         });
                         serviceResponse.ResponseType = EResponseType.Success;
-                        serviceResponse.Data = _mapper.Map<CredentialDTO>(user);
+                        serviceResponse.Data = _mapper.Map<CredentialDTO>(userDTO);
                         serviceResponse.Data.RefreshToken = refreshToken;
                         serviceResponse.Data.Token = token;
                     }

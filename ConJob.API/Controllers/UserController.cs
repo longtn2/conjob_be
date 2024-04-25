@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.DTOs.Follow;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+using ConJob.Domain.DTOs.File;
 
 namespace ConJob.API.Controllers
 {
@@ -19,12 +21,12 @@ namespace ConJob.API.Controllers
     {
         private readonly ILogger _logger;
         private readonly IUserServices _userServices;
-        private readonly IS3Services _w3Services;
-        public UserController(ILogger<UserController> logger, IUserServices userService, IS3Services w3Services)
+        private readonly IS3Services _s3Services;
+        public UserController(ILogger<UserController> logger, IUserServices userService, IS3Services s3Services)
         {
             _logger = logger;
             _userServices = userService;
-            _w3Services = w3Services;
+            _s3Services = s3Services;
         }
 
         [Route("update-profile")]
@@ -69,10 +71,12 @@ namespace ConJob.API.Controllers
         [Route("upload-avatar")]
         [Produces("application/json")]
         [HttpPost]
-        public async Task uploadAvatar(IFormFile file)
+        public async Task<ActionResult> uploadAvatar(FileDTO file)
         {
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            await _w3Services.UploadImage(file);
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var serviceResponse = _s3Services.PresignedUpload(file.file_name, file.file_type, userid);
+            _userServices.updateAvatar(file, userid);
+            return Ok(serviceResponse.getData());
         }
 
         [Route("follow")]
