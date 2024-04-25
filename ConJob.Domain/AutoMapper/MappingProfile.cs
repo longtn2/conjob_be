@@ -18,7 +18,7 @@ namespace ConJob.Domain.AutoMapper
         {
             _pwdHasher = pwdHasher;
             CreateMap<SkillDTO, SkillModel>().ReverseMap();
-            CreateMap<UserRegisterDTO, UserModel>().ForMember(dest=>dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.password)));
+            CreateMap<UserRegisterDTO, UserModel>().ForMember(dest => dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.password)));
             CreateMap<UserModel, UserDTO>()
                  .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())); 
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.md5(src.Token)));
@@ -42,8 +42,13 @@ namespace ConJob.Domain.AutoMapper
                 .ForMember(dest => dest.ToUserID, opt => opt.MapFrom(src => src.to_user_id)).ReverseMap();
 
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
-            CreateMap<JobModel, JobDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x => x.posts)).ReverseMap();
-            CreateMap<JobModel, JobDetailsDTO>().ReverseMap();
+            CreateMap<JobModel, JobDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x => x.posts))
+                                         .ForMember(dto => dto.create_by, opt => opt.MapFrom(x => x.user.last_name))
+                                         .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => x.user.avatar))
+                                         .ReverseMap();
+            CreateMap<JobModel, JobDetailsDTO>().ForMember(dto => dto.create_by, opt => opt.MapFrom(x => x.user.last_name))
+                                                .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => x.user.avatar))
+                                                .ReverseMap();
             CreateMap<PostModel, PostDTO>().ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
                                            .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
                                            .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
