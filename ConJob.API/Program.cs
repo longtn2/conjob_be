@@ -91,6 +91,7 @@ builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetails
 builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IReportServices, ReportServices>();
+builder.Services.AddScoped<IApplicantService, ApplicantService>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
@@ -116,8 +117,8 @@ builder.Services.AddTransient<IFollowRepository, FollowRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IApplicantRepository, ApplicantRepository>();
 #endregion
-
 
 builder.Services.AddControllers();
 

@@ -315,7 +315,7 @@ namespace ConJob.Data
 
                    address = "Hue",
                    is_email_confirmed = true,
-                   avatar= "https://i.pinimg.com/originals/27/0c/be/270cbeb639f6d0ed64f3106daaeccc1d.jpg"
+                   avatar = "https://i.pinimg.com/originals/27/0c/be/270cbeb639f6d0ed64f3106daaeccc1d.jpg"
 
                },
                new UserModel()
@@ -870,7 +870,7 @@ namespace ConJob.Data
                     user_id = 2,
                     job_id = 1,
                     apply_date = new DateTime(2024, 4, 29),
-                    status = "Đã nộp",
+                    status = status_applicants.init,
                 },
                 new ApplicantModel()
                 {
@@ -878,7 +878,7 @@ namespace ConJob.Data
                     user_id = 4,
                     job_id = 2,
                     apply_date = new DateTime(2024, 4, 29),
-                    status = "Đã nộp",
+                    status = status_applicants.init,
                 }
                 );
             modelBuilder.Entity<PostModel>().HasData(
@@ -913,35 +913,35 @@ namespace ConJob.Data
                     created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
-               {
-                   id = 4,
-                   caption = "Chúng tôi đang tìm kiếm một Lập trình viên Backend tài năng để tham gia vào dự án web và đóng góp vào việc phát triển trong 2 tháng.",
-                   user_id = 3,
-                   job_id = 4,
-                   file_id = 10,
-                   title = "Lập trình viên Backend toàn thời gian",
-                   created_at = new DateTime(2024, 4, 29)
-               },
+                {
+                    id = 4,
+                    caption = "Chúng tôi đang tìm kiếm một Lập trình viên Backend tài năng để tham gia vào dự án web và đóng góp vào việc phát triển trong 2 tháng.",
+                    user_id = 3,
+                    job_id = 4,
+                    file_id = 10,
+                    title = "Lập trình viên Backend toàn thời gian",
+                    created_at = new DateTime(2024, 4, 29)
+                },
                 new PostModel()
-               {
-                   id = 5,
-                   caption = "Bạn có khả năng chỉnh sửa video và muốn tham gia vào các dự án sáng tạo khác nhau? Hãy gia nhập đội ngũ của chúng tôi và đóng góp vào việc tạo ra video chất lượng cao!",
-                   user_id = 3,
-                   job_id = 5,
-                   file_id = 9,
-                   title = "Biên tập video bán thời gian",
-                   created_at = new DateTime(2024, 4, 29)
-               },
+                {
+                    id = 5,
+                    caption = "Bạn có khả năng chỉnh sửa video và muốn tham gia vào các dự án sáng tạo khác nhau? Hãy gia nhập đội ngũ của chúng tôi và đóng góp vào việc tạo ra video chất lượng cao!",
+                    user_id = 3,
+                    job_id = 5,
+                    file_id = 9,
+                    title = "Biên tập video bán thời gian",
+                    created_at = new DateTime(2024, 4, 29)
+                },
                 new PostModel()
-               {
-                   id = 6,
-                   caption = "Bạn có khả năng tạo ra nội dung sáng tạo và muốn thể hiện tài năng của mình trên blog của công ty? Hãy tham gia vào đội ngũ của chúng tôi và tạo ra những bài viết hấp dẫn!",
-                   user_id = 3,
-                   job_id = 11,
-                   file_id = 8,
-                   title = "Người viết nội dung tại chỗ",
-                   created_at = new DateTime(2024, 4, 29)
-               },
+                {
+                    id = 6,
+                    caption = "Bạn có khả năng tạo ra nội dung sáng tạo và muốn thể hiện tài năng của mình trên blog của công ty? Hãy tham gia vào đội ngũ của chúng tôi và tạo ra những bài viết hấp dẫn!",
+                    user_id = 3,
+                    job_id = 11,
+                    file_id = 8,
+                    title = "Người viết nội dung tại chỗ",
+                    created_at = new DateTime(2024, 4, 29)
+                },
                 new PostModel()
                 {
                     id = 7,
@@ -963,45 +963,45 @@ namespace ConJob.Data
                     created_at = new DateTime(2024, 4, 29)
                 },
                 new PostModel()
-                  {
-                      id = 9,
-                      caption = "Bạn là một kỹ sư phần mềm tài năng và muốn tham gia vào việc phát triển ứng dụng phần mềm toàn thời gian? Hãy tham gia vào đội ngũ của chúng tôi và đóng góp vào dự án công nghệ của chúng tôi.",
-                      user_id = 3,
-                      job_id = 9,
-                      file_id = 5,
-                      title = "Kỹ sư phần mềm toàn thời gian",
-                      created_at = new DateTime(2024, 4, 29)
-                  },
+                {
+                    id = 9,
+                    caption = "Bạn là một kỹ sư phần mềm tài năng và muốn tham gia vào việc phát triển ứng dụng phần mềm toàn thời gian? Hãy tham gia vào đội ngũ của chúng tôi và đóng góp vào dự án công nghệ của chúng tôi.",
+                    user_id = 3,
+                    job_id = 9,
+                    file_id = 5,
+                    title = "Kỹ sư phần mềm toàn thời gian",
+                    created_at = new DateTime(2024, 4, 29)
+                },
                 new PostModel()
-               {
-                   id = 10,
-                   caption = "Bạn có khả năng quản lý truyền thông xã hội và muốn làm việc từ xa? Hãy tham gia vào đội ngũ của chúng tôi và quản lý tài khoản truyền thông xã hội cho các chiến dịch tiếp thị của chúng tôi.",
-                   user_id = 5,
-                   job_id = 16,
-                   file_id = 4,
-                   title = "Quản lý truyền thông xã hội từ xa",
-                   created_at = new DateTime(2024, 4, 29)
-               },
+                {
+                    id = 10,
+                    caption = "Bạn có khả năng quản lý truyền thông xã hội và muốn làm việc từ xa? Hãy tham gia vào đội ngũ của chúng tôi và quản lý tài khoản truyền thông xã hội cho các chiến dịch tiếp thị của chúng tôi.",
+                    user_id = 5,
+                    job_id = 16,
+                    file_id = 4,
+                    title = "Quản lý truyền thông xã hội từ xa",
+                    created_at = new DateTime(2024, 4, 29)
+                },
                 new PostModel()
-               {
-                   id = 11,
-                   caption = "Bạn là một người sáng tạo và muốn tạo nội dung độc đáo cho các nền tảng trực tuyến? Chúng tôi đang tìm kiếm Người tạo nội dung bán thời gian để tham gia vào các dự án sáng tạo.",
-                   user_id = 5,
-                   job_id = 15,
-                   file_id = 3,
-                   title = "Người tạo nội dung bán thời gian",
-                   created_at = new DateTime(2024, 4, 29)
-               },
+                {
+                    id = 11,
+                    caption = "Bạn là một người sáng tạo và muốn tạo nội dung độc đáo cho các nền tảng trực tuyến? Chúng tôi đang tìm kiếm Người tạo nội dung bán thời gian để tham gia vào các dự án sáng tạo.",
+                    user_id = 5,
+                    job_id = 15,
+                    file_id = 3,
+                    title = "Người tạo nội dung bán thời gian",
+                    created_at = new DateTime(2024, 4, 29)
+                },
                 new PostModel()
-               {
-                   id = 12,
-                   caption = "Bạn là một chuyên gia tiếp thị sáng tạo và muốn tham gia vào việc phát triển các chiến lược tiếp thị? Chúng tôi đang tìm kiếm Chuyên gia tiếp thị kết hợp để đóng góp vào các dự án tiếp thị của chúng tôi.",
-                   user_id = 5,
-                   job_id = 12,
-                   file_id = 2,
-                   title = "Chuyên gia tiếp thị kết hợp",
-                   created_at = new DateTime(2024, 4, 29)
-               },
+                {
+                    id = 12,
+                    caption = "Bạn là một chuyên gia tiếp thị sáng tạo và muốn tham gia vào việc phát triển các chiến lược tiếp thị? Chúng tôi đang tìm kiếm Chuyên gia tiếp thị kết hợp để đóng góp vào các dự án tiếp thị của chúng tôi.",
+                    user_id = 5,
+                    job_id = 12,
+                    file_id = 2,
+                    title = "Chuyên gia tiếp thị kết hợp",
+                    created_at = new DateTime(2024, 4, 29)
+                },
                 new PostModel()
                 {
                     id = 13,
@@ -1111,7 +1111,7 @@ namespace ConJob.Data
                     file_id = 10,
                     title = "Nhà thiết kế đồ họa",
                     created_at = new DateTime(2024, 4, 29)
-                }, 
+                },
                 new PostModel()
                 {
                     id = 24,
