@@ -22,17 +22,24 @@ namespace ConJob.Domain.Repository
 
         public async Task<bool> updateAvatar(string? userid, string avatar)
         {
-            var user = await _context.users.FirstOrDefaultAsync(x => x.id == int.Parse(userid));
-            if (user != null)
+            try
             {
-                user.avatar = avatar;
+                var user = await _context.users.FirstOrDefaultAsync(x => x.id == int.Parse(userid));
+                if (user != null)
+                {
+                    user.avatar = avatar;
+                }
+                else
+                {
+                    return false;
+                }
+                await _context.SaveChangesAsync();
+                return true;
             }
-            else
+            catch (Exception ex)
             {
-                return false;
+                throw;
             }
-            _context.SaveChanges();
-            return true;
         }
 
         public async Task<bool> changPasswordAsync(string newPassword, UserModel user)

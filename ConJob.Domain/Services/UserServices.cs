@@ -12,6 +12,7 @@ using ConJob.Domain.DTOs.Follow;
 using ConJob.Domain.Constant;
 using ConJob.Data;
 using Microsoft.AspNetCore.Http;
+using ConJob.Domain.DTOs.File;
 
 namespace ConJob.Domain.Services
 {
@@ -77,7 +78,7 @@ namespace ConJob.Domain.Services
             {
                 throw new BadHttpRequestException(CJConstant.SOMETHING_WENT_WRONG);
             }
-            catch { throw; }
+            catch(Exception e) { _logger.LogError(e.Message); throw; }
             return serviceResponse;
         }
 
@@ -256,6 +257,16 @@ namespace ConJob.Domain.Services
             }
             return serviceResponse;
         }
-
+        public async Task updateAvatar(FileDTO fileDTO, string? id)
+        {
+            try
+            {
+                await _userRepository.updateAvatar(id, $"{id}/{CJConstant.AVATAR_PATH}/{fileDTO.file_name}");
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

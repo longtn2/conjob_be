@@ -1,4 +1,5 @@
-﻿using ConJob.Domain.DTOs.Follow;
+﻿using ConJob.Domain.DTOs.File;
+using ConJob.Domain.DTOs.Follow;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Response;
@@ -13,6 +14,7 @@ namespace ConJob.Domain.Services
         Task<ServiceResponse<UserDetailsDTO?>> GetUserByIdAsync(int user_id, int currentUser_id);
         Task<ServiceResponse<UserDTO>> SelectRole(SelectRoleDTO role,string? userid);
         Task<ServiceResponse<object>> changePassword(UPasswordDTO passwordDTO, string? id);
+        Task updateAvatar(FileDTO fileDTO, string? id);
         Task<ServiceResponse<FollowDTO>> followUser(FollowDTO follow);
         Task<ServiceResponse<FollowDTO>> unfollowUser(FollowDTO follow);
     }
