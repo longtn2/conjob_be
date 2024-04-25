@@ -89,6 +89,7 @@ builder.Services.AddScoped<IS3Services,  S3Services>();
 builder.Services.AddScoped<IJobServices, JobSevices>();
 builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
 builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
+builder.Services.AddScoped<IReportServices, ReportServices>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
@@ -112,7 +113,7 @@ builder.Services.AddTransient<IPostRepository, PostRepository>();
 builder.Services.AddTransient<ILikeRepository, LikeRepository>();
 builder.Services.AddTransient<IFollowRepository, FollowRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
-
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
 #endregion
 
 builder.Services.AddControllers();
