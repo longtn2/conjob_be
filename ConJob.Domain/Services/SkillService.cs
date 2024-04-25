@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
-using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.DTOs.Skill;
-using ConJob.Domain.Filtering;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.Domain.Services
