@@ -1,4 +1,5 @@
-﻿using ConJob.Domain.DTOs.Post;
+﻿using ConJob.Domain.DTOs.Common;
+using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.DTOs.Report;
 using ConJob.Domain.Filtering;
 using ConJob.Domain.Response;
@@ -94,6 +95,16 @@ namespace ConJob.API.Controllers
             };
             serviceResponse = await _reportServices.reportPost(report);
             return Ok(serviceResponse.getMessage());
+        }
+
+        [Route("matching")]
+        [HttpGet]
+        [ProducesResponseType(typeof(CommonResponseDataDTO<PagingReturnModel<PostMatchDTO>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> recommendPost([FromQuery]FilterJobs filter)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = await _postService.suggestPost(int.Parse(userid!), filter);
+            return Ok(serviceResponse.getData());
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ConJob.Data;
+using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.Filtering;
 using ConJob.Domain.Repository.Interfaces;
@@ -96,7 +96,10 @@ namespace ConJob.Domain.Services
                 else
                 {
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Data = _mapper.Map<JobDetailsDTO>(job);
+                    serviceResponse.Data = await _mapper.ProjectTo<JobDetailsDTO>(_jobRepository.GetAllAsync())
+                                                      .Where(e => e.id == id)
+                                                      .AsNoTracking()
+                                                      .FirstAsync()!;
                 }
             }
             catch (DbException ex)
@@ -135,7 +138,7 @@ namespace ConJob.Domain.Services
                 var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
                     .Where(predicate)
                     .AsNoTracking();
-                var sortedJob = _filterHelper.ApplySorting(job, searchJob.order_by);
+                var sortedJob = _filterHelper.ApplySorting(job, searchJob.order_by!);
                 var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.page, searchJob.limit);
                 if (job.Any() == true)
                 {
@@ -175,7 +178,7 @@ namespace ConJob.Domain.Services
                 }
                 else
                 {
-                    serviceResponse.ResponseType= EResponseType.BadRequest;
+                    serviceResponse.ResponseType = EResponseType.BadRequest;
                     serviceResponse.Message = "User is not own";
                 }
 
@@ -183,7 +186,7 @@ namespace ConJob.Domain.Services
             catch (DbException ex)
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = ex.Message;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG + " " + ex.Message;
             }
             return serviceResponse;
         }

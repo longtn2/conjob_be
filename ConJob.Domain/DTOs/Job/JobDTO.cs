@@ -1,12 +1,4 @@
 ﻿using ConJob.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using ConJob.Domain.DTOs.Post;
 
 namespace ConJob.Domain.DTOs.Job

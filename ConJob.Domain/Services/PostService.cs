@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using LinqKit;
 using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Filtering;
+using ConJob.Domain.Helper;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using static ConJob.Domain.Response.EServiceResponseTypes;
+
 
 namespace ConJob.Domain.Services
 {
@@ -22,8 +25,9 @@ namespace ConJob.Domain.Services
         private readonly IMapper _mapper;
         private readonly IFilterHelper<PostValidatorDTO> _filterHelper;
         private readonly IFilterHelper<PostDetailsDTO> _filterHelper2;
+        private readonly IFilterHelper<PostMatchDTO> _filterHelperMatch;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostValidatorDTO> filterHelper, IFilterHelper<PostDetailsDTO> filterHelper2) 
+        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostValidatorDTO> filterHelper, IFilterHelper<PostDetailsDTO> filterHelper2, IFilterHelper<PostMatchDTO> filterHelperMatch) 
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -32,6 +36,7 @@ namespace ConJob.Domain.Services
             _mapper = mapper;
             _filterHelper = filterHelper;
             _filterHelper2 = filterHelper2;
+            _filterHelperMatch = filterHelperMatch;
         }
 
         public async Task<ServiceResponse<PostDTO>> SaveAsync(int userId, PostDTO newPost)
@@ -45,7 +50,8 @@ namespace ConJob.Domain.Services
                 serviceResponse.Data = _mapper.Map<PostDTO>(post);
                 serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Message = "Add post successfully";
-            } catch (InvalidOperationException)
+            }
+            catch (InvalidOperationException)
             {
                 throw new InvalidOperationException("Owner (User) of post not found.");
             }
@@ -317,7 +323,7 @@ namespace ConJob.Domain.Services
 
         public async Task<ServiceResponse<object>> AddJobToPost(int userId, int jobId, int postId)
         {
-            var serviceResponse = new ServiceResponse<object>(); 
+            var serviceResponse = new ServiceResponse<object>();
             try
             {
                 var post = await _postRepository.GetUserPosts(userId)
@@ -351,6 +357,56 @@ namespace ConJob.Domain.Services
             catch { throw; }
             return serviceResponse;
         }
-
+        public async Task<ServiceResponse<PagingReturnModel<PostMatchDTO>>> suggestPost(int userid, FilterJobs filter)
+        {
+            var serviceResponse = new ServiceResponse<PagingReturnModel<PostMatchDTO>>();
+            var predicate = PredicateBuilder.New<PostMatchDTO>();
+            predicate = predicate.Or(p => p.title.Contains(filter.search_term));
+            predicate = predicate.Or(p => p.caption.Contains(filter.search_term));
+            predicate = predicate.Or(p => p.author.Contains(filter.search_term));
+            predicate = predicate.And(p => p.job!.location.ToLower().Contains(filter.location.ToLower()));
+            try
+            {
+                var user = _userRepository.GetById(userid);
+                if (user == null)
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "user not found.";
+                    return serviceResponse;
+                }
+                var Skills = await _userRepository.GetSkillsAsync(userid).Select(e => e.description.ToLower())
+                                                  .ToListAsync();
+                var posts = await _mapper.ProjectTo<PostMatchDTO>(_postRepository.GetAllAsync())
+                                       .AsNoTracking()
+                                       .ToListAsync();
+                if (filter.search_term.IsNullOrEmpty() && filter.location.IsNullOrEmpty())
+                    posts = posts.OrderByDescending(post => TFIDFhelp.TFIDFScore(post.job!.description.ToLower(), Skills))
+                                 .ToList();
+                else
+                {
+                    posts = posts.Where(predicate)
+                                 .OrderByDescending(post => TFIDFhelp.TFIDFScore(post.job!.description.ToLower(), Skills))
+                                 .ToList();
+                }
+                var result = await _filterHelperMatch.ApplyPaging(posts, filter.page, filter.limit);
+                if (result != null)
+                {
+                    serviceResponse.Data = result;
+                    serviceResponse.Message = "Get matching posts successfully!";
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found.";
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                serviceResponse.ResponseType = EResponseType.NotFound;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
+            }
+            catch { throw; }
+            return serviceResponse;
+        }
     }
 }

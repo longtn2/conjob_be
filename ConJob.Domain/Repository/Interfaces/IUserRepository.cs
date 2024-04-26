@@ -4,7 +4,7 @@ using ConJob.Entities;
 
 namespace ConJob.Domain.Repository.Interfaces
 {
-    public interface IUserRepository: IGenericRepository<UserModel>
+    public interface IUserRepository : IGenericRepository<UserModel>
     {
         Task<UserModel> getUserByEmail(string email);
         Task<bool> updateAvatar(string? userid, string avatar);
