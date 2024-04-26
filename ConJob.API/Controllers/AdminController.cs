@@ -2,6 +2,7 @@
 using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ConJob.API.Controllers
 {
@@ -18,15 +19,16 @@ namespace ConJob.API.Controllers
         }
 
         [Route("post/delete/{id}")]
-        [HttpPost]
+        [HttpDelete]
         public async Task<ActionResult> DeletePost(int id)
         {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.DeleteAsync(id);
             return Ok(serviceResponse.getMessage());
         }
 
         [Route("post/active/{id}")]
-        [HttpPost]
+        [HttpPut]
         public async Task<ActionResult> ActivePost(int id)
         {
             var serviceResponse = await _postService.ActiveAsync(id);
