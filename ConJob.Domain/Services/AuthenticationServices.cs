@@ -45,7 +45,7 @@ namespace ConJob.Domain.Services
                     if (checkCredential)
                     {
                         var userDTO = _mapper.Map<UserModel,UserDTO>(user);
-                        string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
+                        string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(60), userDTO);
                         string? refreshToken = await _jWTHelper.GenerateJWTRefreshToken(user.id, DateTime.UtcNow.AddMonths(6));
 
 
@@ -62,15 +62,13 @@ namespace ConJob.Domain.Services
                     }
                     else
                     {
-                        serviceResponse.ResponseType = EResponseType.Unauthorized;
-                        serviceResponse.Message = "Login Fail! Wrong password.";
+                        throw new UnauthorizedAccessException("Login Fail! Wrong password.");
 
                     }
                 }
                 else
                 {
-                    serviceResponse.ResponseType = EResponseType.Unauthorized;
-                    serviceResponse.Message = "Login Fail! Could not found Account by Username!.";
+                    throw new UnauthorizedAccessException("Login Fail! Could not found Account by Username!.");
                 }
 
                 return serviceResponse;

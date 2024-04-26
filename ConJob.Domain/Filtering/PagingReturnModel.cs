@@ -1,5 +1,4 @@
-﻿
-namespace ConJob.Domain.Filtering
+﻿namespace ConJob.Domain.Filtering
 {
 	public class PagingReturnModel<T>
 	{

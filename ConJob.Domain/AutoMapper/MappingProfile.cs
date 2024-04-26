@@ -1,18 +1,17 @@
-﻿using ConJob.Domain.DTOs.Authentication;
+﻿using AutoMapper;
+using ConJob.Domain.DTOs.Authentication;
+using ConJob.Domain.DTOs.Follow;
+using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.DTOs.Post;
+using ConJob.Domain.DTOs.Report;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.DTOs.Skill;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Encryption;
 using ConJob.Entities;
-using AutoMapper;
-using ConJob.Domain.DTOs.Post;
-using ConJob.Domain.DTOs.Job;
-using ConJob.Domain.DTOs.Follow;
-using ConJob.Domain.DTOs.Category;
-using ConJob.Domain.DTOs.Report;
 namespace ConJob.Domain.AutoMapper
 {
-    public class MappingProfile :Profile
+    public class MappingProfile : Profile
     {
         private readonly IPasswordHasher _pwdHasher;
         public MappingProfile(IPasswordHasher pwdHasher)
@@ -24,7 +23,16 @@ namespace ConJob.Domain.AutoMapper
                  .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())); 
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.Hash(src.Token)));
             ////Reverse can map from 1->2 || 2->1
-            CreateMap<UserModel, UserInfoDTO>().ReverseMap(); 
+            CreateMap<UserInfoDTO, UserModel>();
+            CreateMap<UserModel, UserInfoDTO>().ReverseMap();
+            CreateMap<UserModel, UserDetailsDTO>()
+                .ForMember(dest => dest.dob, opt => opt.MapFrom(src => src.dob))
+                .ForMember(dest => dest.posts, opt => opt.MapFrom(src => src.posts))
+                .ForMember(dest => dest.jobs, opt => opt.MapFrom(src => src.jobs))
+                .ForMember(dest => dest.skills, opt => opt.MapFrom(src => src.personal_skills))
+                .ForMember(dest => dest.followers, opt => opt.MapFrom(src => src.followers.Select(l => l.to_user_id).Count()))
+                .ForMember(dest => dest.following, opt => opt.MapFrom(src => src.following.Select(l => l.from_user_id).Count()))
+                .ForMember(dest => dest.roles, opt => opt.MapFrom(src => src.user_roles.Select(y => y.role).ToList()));
             CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())).ReverseMap();
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
             CreateMap<FollowModel, FollowDTO>()

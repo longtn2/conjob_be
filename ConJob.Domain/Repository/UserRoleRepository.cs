@@ -3,6 +3,7 @@ using ConJob.Data;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 using System.Data.Entity;
+using System.Linq.Dynamic.Core;
 
 namespace ConJob.Domain.Repository
 {

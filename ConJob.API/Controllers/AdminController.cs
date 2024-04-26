@@ -1,9 +1,7 @@
-﻿using ConJob.Domain.Services.Interfaces;
+﻿using ConJob.Domain.Filtering;
+using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static ConJob.Domain.Response.EServiceResponseTypes;
-using System.Security.Claims;
-using ConJob.Domain.Filtering;
 
 namespace ConJob.API.Controllers
 {

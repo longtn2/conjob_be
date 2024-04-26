@@ -13,7 +13,6 @@ namespace ConJob.Domain.DTOs.User
         public DateTime dob { get; set; }
         public string address { get; set; }
         public string? avatar { get; set; }
-
         public List<RoleModel> roles { get; set; }
     }
 }

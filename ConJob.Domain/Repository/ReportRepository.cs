@@ -2,13 +2,6 @@
 using ConJob.Data;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConJob.Domain.Repository
 {

@@ -5,7 +5,6 @@ using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.API.Controllers
 {
