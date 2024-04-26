@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
-using ConJob.Data;
+using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.Filtering;
+using ConJob.Domain.Helper;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using LinqKit;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System.Data.Common;
 using System.Data.Entity;
 using static ConJob.Domain.Response.EServiceResponseTypes;
@@ -16,17 +19,17 @@ namespace ConJob.Domain.Services
     public class JobSevices : IJobServices
     {
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
         private readonly IJobRepository _jobRepository;
         private readonly IUserRepository _userRepository;
-        private readonly AppDbContext _context;
         private readonly IFilterHelper<JobDTO> _filterHelper;
-        public JobSevices(IMapper mapper, IJobRepository jobRepository, IUserRepository userRepository, AppDbContext context, IFilterHelper<JobDTO> filterHelper)
+        public JobSevices(IMapper mapper, ILogger<JobSevices> logger, IJobRepository jobRepository, IUserRepository userRepository, IFilterHelper<JobDTO> filterHelper)
         {
             _mapper = mapper;
             _jobRepository = jobRepository;
             _userRepository = userRepository;
-            _context = context;
             _filterHelper = filterHelper;
+            _logger = logger;
         }
 
         public async Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid, JobDetailsDTO job)
@@ -98,7 +101,10 @@ namespace ConJob.Domain.Services
                 else
                 {
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Data = _mapper.Map<JobDetailsDTO>(job);
+                    serviceResponse.Data = _mapper.ProjectTo<JobDetailsDTO>(_jobRepository.GetAllAsync())
+                                                      .Where(e => e.id == id)
+                                                      .AsNoTracking()
+                                                      .First()!;
                 }
             }
             catch (DbException ex)
@@ -137,7 +143,7 @@ namespace ConJob.Domain.Services
                 var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
                     .Where(predicate)
                     .AsNoTracking();
-                var sortedJob = _filterHelper.ApplySorting(job, searchJob.OrderBy);
+                var sortedJob = _filterHelper.ApplySorting(job, searchJob.OrderBy!);
                 var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.Page, searchJob.Limit);
                 if (job.Any() == true)
                 {
@@ -177,7 +183,7 @@ namespace ConJob.Domain.Services
                 }
                 else
                 {
-                    serviceResponse.ResponseType= EResponseType.BadRequest;
+                    serviceResponse.ResponseType = EResponseType.BadRequest;
                     serviceResponse.Message = "User is not own";
                 }
 
@@ -185,9 +191,11 @@ namespace ConJob.Domain.Services
             catch (DbException ex)
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
-                serviceResponse.Message = ex.Message;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG + " " + ex.Message;
             }
             return serviceResponse;
         }
+
+
     }
 }

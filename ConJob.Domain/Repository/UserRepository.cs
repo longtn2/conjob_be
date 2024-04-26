@@ -92,5 +92,10 @@ namespace ConJob.Domain.Repository
             var user = await _context.user_roles.Where(x => x.user_id == id && x.role_id != 1).Select(u => u.user).FirstOrDefaultAsync();
             return user;
         }
+
+        public IQueryable<SkillModel> GetSkillsAsync(int userid)
+        {
+             return _context.persional_skills.Where(e=>e.user_id==userid).Select(e=>e.skill);
+        }
     }
 }

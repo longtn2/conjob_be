@@ -105,6 +105,8 @@ builder.Services.AddHangfireServer();
 
 #region  Paging & Sorting on Web-Request
 builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
+builder.Services.AddScoped<IFilterHelper<PostDTO>, FilterHelper<PostDTO>>();
+builder.Services.AddScoped<IFilterHelper<PostMatchDTO>, FilterHelper<PostMatchDTO>>();
 #endregion
 
 #region Repositories

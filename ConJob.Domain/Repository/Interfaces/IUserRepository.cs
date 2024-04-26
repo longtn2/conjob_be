@@ -4,7 +4,7 @@ using ConJob.Entities;
 
 namespace ConJob.Domain.Repository.Interfaces
 {
-    public interface IUserRepository: IGenericRepository<UserModel>
+    public interface IUserRepository : IGenericRepository<UserModel>
     {
         Task<UserModel> getUserByEmail(string email);
         Task<bool> updateAvatar(string? userid, string avatar);
@@ -13,5 +13,6 @@ namespace ConJob.Domain.Repository.Interfaces
         Task<UserModel> findUserPostAsync(int user_id);
         Task<UserModel> GetDetailsUserAsync(int id);
         Task<UserModel> GetUserNotIsAdminAsync(int id);
+        IQueryable<SkillModel> GetSkillsAsync(int userid);
     }
 }

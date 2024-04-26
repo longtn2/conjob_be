@@ -16,5 +16,6 @@ namespace ConJob.Domain.Services.Interfaces
         Task<ServiceResponse<object>> UndoDeletedAsync(int id);
         Task<ServiceResponse<int>> UserLikePost(int userId, int postId);
         Task<ServiceResponse<object>> AddJobToPost(int userId, int jobId, int postId);
+        Task<ServiceResponse<PagingReturnModel<PostMatchDTO>>> suggestPost(int userid, FilterJobs filter);
     }
 }

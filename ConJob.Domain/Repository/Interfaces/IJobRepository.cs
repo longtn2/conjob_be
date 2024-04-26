@@ -2,7 +2,7 @@
 using ConJob.Entities;
 namespace ConJob.Domain.Repository.Interfaces
 {
-    public interface IJobRepository:IGenericRepository<JobModel>
+    public interface IJobRepository : IGenericRepository<JobModel>
     {
         IQueryable<JobModel> searchJob(string search, string location);
         IQueryable<JobModel> GetUserJobs(int userId);

@@ -8,7 +8,7 @@ using static Amazon.S3.Util.S3EventNotification;
 
 namespace ConJob.Domain.Repository
 {
-    public class GenericRepository<T>: IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly AppDbContext _context;
 
@@ -25,10 +25,11 @@ namespace ConJob.Domain.Repository
                 await _context.Set<T>().AddAsync(entity);
                 _context.SaveChanges();
             }
-            catch (DbUpdateException ex) {
+            catch (DbUpdateException ex)
+            {
                 throw;
             }
-            
+
         }
         public async Task UpdateAsync(T entity)
         {
@@ -55,7 +56,7 @@ namespace ConJob.Domain.Repository
         {
             return _context.Set<T>().ToList();
         }
-        public  IQueryable<T>GetAllAsync()
+        public IQueryable<T> GetAllAsync()
         {
             return _context.Set<T>();
         }
@@ -63,7 +64,7 @@ namespace ConJob.Domain.Repository
         {
             return _context.Set<T>().Find(id);
         }
-        public  Task RemoveAsync(T entity)
+        public Task RemoveAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
             return _context.SaveChangesAsync();
