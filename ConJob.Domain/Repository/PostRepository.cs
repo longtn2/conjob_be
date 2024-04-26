@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using ConJob.Data;
+using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
-using ConJob.Domain.DTOs.Post;
-using System.Data.Entity;
 namespace ConJob.Domain.Repository
 {
     public class PostRepository : GenericRepository<PostModel>, IPostRepository

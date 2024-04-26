@@ -1,8 +1,6 @@
 ﻿using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static ConJob.Domain.Response.EServiceResponseTypes;
-using System.Security.Claims;
 using ConJob.Domain.Filtering;
 
 namespace ConJob.API.Controllers
@@ -20,7 +18,7 @@ namespace ConJob.API.Controllers
         }
 
         [Route("post/delete/{id}")]
-        [HttpPost]
+        [HttpDelete]
         public async Task<ActionResult> DeletePost(int id)
         {
             var serviceResponse = await _postService.DeleteAsync(id);
@@ -28,7 +26,7 @@ namespace ConJob.API.Controllers
         }
 
         [Route("post/active/{id}")]
-        [HttpPost]
+        [HttpPut]
         public async Task<ActionResult> ActivePost(int id)
         {
             var serviceResponse = await _postService.ActiveAsync(id);

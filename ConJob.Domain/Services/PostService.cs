@@ -75,24 +75,6 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PostDetailsDTO>> FindByIdAsync(int userId, int id)
-        {
-            var serviceResponse = new ServiceResponse<PostDetailsDTO>();
-            try
-            {
-                serviceResponse.ResponseType = EResponseType.Success;
-                serviceResponse.Data = await _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetUserPosts(userId))
-                    .AsNoTracking()
-                    .FirstAsync(c => c.id == id);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException("Post and/or Owner (User) not found.");
-            }
-            catch { throw; }
-            return serviceResponse;
-        }
-
         public async Task<ServiceResponse<PostDetailsDTO>> FindByIdAsync(int id)
         {
             var serviceResponse = new ServiceResponse<PostDetailsDTO>();
@@ -201,7 +183,7 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions filterParameters, string statusFilter)
+        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions? filterParameters, string? statusFilter)
         {
             var predicate = PredicateBuilder.New<PostDetailsDTO>();
             predicate = predicate.Or(p => p.title.Contains(filterParameters.SearchTerm));

@@ -1,13 +1,11 @@
 ﻿using ConJob.Domain.DTOs.Report;
-using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static ConJob.Domain.Response.EServiceResponseTypes;
+using ConJob.Domain.Filtering;
 
 namespace ConJob.API.Controllers
 {
@@ -26,9 +24,9 @@ namespace ConJob.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> getAllPosts(int pageNo)
+        public async Task<ActionResult> getAllPosts([FromQuery] FilterOptions? filter)
         {
-            var serviceResponse = await _postService.GetAllAsync(pageNo);
+            var serviceResponse = await _postService.FilterAllAsync(filter, null);
             return Ok(serviceResponse.getData());
         }
 
@@ -40,18 +38,7 @@ namespace ConJob.API.Controllers
             return CreatedAtAction(nameof(addPost), new { version = "1" }, serviceResponse.getMessage());
         }
 
-        [Route("get-user-post/{id}")]
-        [HttpGet]
-        [Produces("application/json")]
-        public async Task<ActionResult> getPostByIdSecurity(int id)
-        {
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var serviceResponse = await _postService.FindByIdAsync(int.Parse(userid), id);
-            return Ok(serviceResponse.getData());
-        }
-
-        [Route("get-post/{id}")]
-        [HttpGet]
+        [HttpGet("{id}")]
         [Produces("application/json")]
         public async Task<ActionResult> getPostById(int id)
         {
@@ -92,6 +79,7 @@ namespace ConJob.API.Controllers
             var serviceResponse = await _postService.AddJobToPost(int.Parse(userid), job_id, post_id);
             return Ok(serviceResponse.getMessage());
         }
+
         [Route("report")]
         [HttpPost]
         public async Task<IActionResult> reportPost([FromBody] ReportByUserDTO reportPost)
