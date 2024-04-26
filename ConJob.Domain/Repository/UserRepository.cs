@@ -100,11 +100,7 @@ namespace ConJob.Domain.Repository
 
         public IQueryable<SkillModel> GetSkillsAsync(int userid)
         {
-            return _context.users
-                        .Include(c => c.personal_skills)
-                        .ThenInclude(e => e.skill)
-                        .Where(e => e.id == userid)
-                        .SelectMany(u => u.personal_skills.Select(ps => ps.skill));
+             return _context.persional_skills.Where(e=>e.user_id==userid).Select(e=>e.skill);
         }
     }
 }

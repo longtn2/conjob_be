@@ -129,8 +129,9 @@ namespace ConJob.Domain.Services
                 var userid = claim.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
                 var action = claim.Claims.FirstOrDefault(c => c.Type == "action")!.Value;
 
-                var user =  _userRepository.GetById(int.Parse(userid));
-                if (user == null || action == null || user.is_email_confirmed == true) {
+                var user = _userRepository.GetById(int.Parse(userid));
+                if (user == null || action == null || user.is_email_confirmed == true)
+                {
                     serviceResponse.ResponseType = EResponseType.Unauthorized;
                     serviceResponse.Message = "Could not found User or activated already.";
                     return serviceResponse;
@@ -142,7 +143,7 @@ namespace ConJob.Domain.Services
                     _context.SaveChanges();
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Activate Success.";
-                    
+
                 }
             }
             catch (Exception ex)

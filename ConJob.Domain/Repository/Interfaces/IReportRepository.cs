@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace ConJob.Domain.Repository.Interfaces
 {
-    public interface IReportRepository:IGenericRepository<ReportModel>
+    public interface IReportRepository : IGenericRepository<ReportModel>
     {
-        ReportModel GetReport( int user_id, int post_id);
+        ReportModel GetReport(int user_id, int post_id);
     }
 }
