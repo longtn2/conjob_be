@@ -23,8 +23,6 @@ namespace ConJob.Domain.Services
         private readonly IFilterHelper<PostDetailsDTO> _filterHelper;
         private readonly IFilterHelper<PostDTO> _filterHelper2;
 
-        public static int PAGE_SIZE { get; set; } = 1;
-
         public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper, IFilterHelper<PostDTO> filterHelper2) 
         {
             _postRepository = postRepository;
@@ -54,45 +52,6 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PagingReturnModel<PostDTO>>> GetAllAsync(int pageNo)
-        {
-            var serviceResponse = new ServiceResponse<PagingReturnModel<PostDTO>>();
-            try
-            {
-                var posts = _mapper.ProjectTo<PostDTO>(_postRepository.GetPostNotDeleted())
-                        .AsNoTracking();
-                #region paging
-                var result = await _filterHelper2.ApplyPaging(posts, pageNo, PAGE_SIZE);
-                #endregion
-                serviceResponse.ResponseType = EResponseType.Success;
-                serviceResponse.Data = result;
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException("Post and/or Owner (User) not found.");
-            }
-            catch { throw; }
-            return serviceResponse;
-        }
-
-        public async Task<ServiceResponse<PostDetailsDTO>> FindByIdAsync(int userId, int id)
-        {
-            var serviceResponse = new ServiceResponse<PostDetailsDTO>();
-            try
-            {
-                serviceResponse.ResponseType = EResponseType.Success;
-                serviceResponse.Data = await _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetUserPosts(userId))
-                    .AsNoTracking()
-                    .FirstAsync(c => c.id == id);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException("Post and/or Owner (User) not found.");
-            }
-            catch { throw; }
-            return serviceResponse;
-        }
-
         public async Task<ServiceResponse<PostDetailsDTO>> FindByIdAsync(int id)
         {
             var serviceResponse = new ServiceResponse<PostDetailsDTO>();
@@ -105,8 +64,7 @@ namespace ConJob.Domain.Services
             }
             catch (InvalidOperationException)
             {
-                serviceResponse.ResponseType = EResponseType.NotFound;
-                serviceResponse.Message = "Post and/or Owner (User) not found.";
+                throw new InvalidOperationException("Post and / or Owner(User) not found.");
             }
             catch { throw; }
             return serviceResponse;
@@ -125,10 +83,15 @@ namespace ConJob.Domain.Services
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Update post successfully!";
                 }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found";
+                }
             }
-            catch (InvalidOperationException)
+            catch (DbUpdateConcurrencyException)
             {
-                throw new InvalidOperationException("Post and / or Owner(User) not found.");
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
             }
             catch { throw; }
             return serviceResponse;
@@ -148,10 +111,15 @@ namespace ConJob.Domain.Services
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Delete post successfully!";
                 }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found";
+                }
             }
-            catch (InvalidOperationException)
+            catch (DbUpdateConcurrencyException)
             {
-                throw new InvalidOperationException("Post and / or Owner(User) not found.");
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
             }
             catch { throw; }
             return serviceResponse;
@@ -209,7 +177,7 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions filterParameters, string statusFilter)
+        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions? filterParameters, string? statusFilter)
         {
             var predicate = PredicateBuilder.New<PostDetailsDTO>();
             predicate = predicate.Or(p => p.title.Contains(filterParameters.SearchTerm));
@@ -287,7 +255,8 @@ namespace ConJob.Domain.Services
                     }
                     else
                     {
-                        throw new DbUpdateException(serviceResponse.Message = "Post already exist job.");
+                        serviceResponse.ResponseType = EResponseType.CannotUpdate;
+                        serviceResponse.Message = "Post already exist job.";
                     }
                 }
                 else
