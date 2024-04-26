@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ConJob.Data;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Encryption;
 using ConJob.Domain.Repository.Interfaces;
@@ -14,7 +13,7 @@ namespace ConJob.Domain.Services
         private readonly IJwtRepository _jwtRepository;
         private readonly IPasswordHasher _hasher;
 
-        public JwtServices(IMapper mapper, AppDbContext context, IJwtRepository jwtRepository, IPasswordHasher hasher)
+        public JwtServices(IMapper mapper, IJwtRepository jwtRepository, IPasswordHasher hasher)
         {
             _mapper = mapper;
             _jwtRepository = jwtRepository;

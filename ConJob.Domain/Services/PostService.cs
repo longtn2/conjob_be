@@ -21,11 +21,8 @@ namespace ConJob.Domain.Services
         private readonly IJobRepository _jobRepository;
         private readonly IMapper _mapper;
         private readonly IFilterHelper<PostDetailsDTO> _filterHelper;
-        private readonly IFilterHelper<PostDTO> _filterHelper2;
 
-        public static int PAGE_SIZE { get; set; } = 1;
-
-        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper, IFilterHelper<PostDTO> filterHelper2) 
+        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper) 
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -33,7 +30,6 @@ namespace ConJob.Domain.Services
             _jobRepository = jobRepository;
             _mapper = mapper;
             _filterHelper = filterHelper;
-            _filterHelper2 = filterHelper2;
         }
 
         public async Task<ServiceResponse<PostDTO>> SaveAsync(int userId, PostDTO newPost)
@@ -54,45 +50,6 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PagingReturnModel<PostDTO>>> GetAllAsync(int pageNo)
-        {
-            var serviceResponse = new ServiceResponse<PagingReturnModel<PostDTO>>();
-            try
-            {
-                var posts = _mapper.ProjectTo<PostDTO>(_postRepository.GetPostNotDeleted())
-                        .AsNoTracking();
-                #region paging
-                var result = await _filterHelper2.ApplyPaging(posts, pageNo, PAGE_SIZE);
-                #endregion
-                serviceResponse.ResponseType = EResponseType.Success;
-                serviceResponse.Data = result;
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException("Post and/or Owner (User) not found.");
-            }
-            catch { throw; }
-            return serviceResponse;
-        }
-
-        public async Task<ServiceResponse<PostDetailsDTO>> FindByIdAsync(int userId, int id)
-        {
-            var serviceResponse = new ServiceResponse<PostDetailsDTO>();
-            try
-            {
-                serviceResponse.ResponseType = EResponseType.Success;
-                serviceResponse.Data = await _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetUserPosts(userId))
-                    .AsNoTracking()
-                    .FirstAsync(c => c.id == id);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException("Post and/or Owner (User) not found.");
-            }
-            catch { throw; }
-            return serviceResponse;
-        }
-
         public async Task<ServiceResponse<PostDetailsDTO>> FindByIdAsync(int id)
         {
             var serviceResponse = new ServiceResponse<PostDetailsDTO>();
@@ -105,8 +62,7 @@ namespace ConJob.Domain.Services
             }
             catch (InvalidOperationException)
             {
-                serviceResponse.ResponseType = EResponseType.NotFound;
-                serviceResponse.Message = "Post and/or Owner (User) not found.";
+                throw new InvalidOperationException("Post and / or Owner(User) not found.");
             }
             catch { throw; }
             return serviceResponse;
@@ -125,10 +81,15 @@ namespace ConJob.Domain.Services
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Update post successfully!";
                 }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found";
+                }
             }
-            catch (InvalidOperationException)
+            catch (DbUpdateConcurrencyException)
             {
-                throw new InvalidOperationException("Post and / or Owner(User) not found.");
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
             }
             catch { throw; }
             return serviceResponse;
@@ -148,10 +109,15 @@ namespace ConJob.Domain.Services
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Delete post successfully!";
                 }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found";
+                }
             }
-            catch (InvalidOperationException)
+            catch (DbUpdateConcurrencyException)
             {
-                throw new InvalidOperationException("Post and / or Owner(User) not found.");
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
             }
             catch { throw; }
             return serviceResponse;
@@ -209,12 +175,12 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions filterParameters, string statusFilter)
+        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions? filterParameters, DateDTO? dateFilter, string? status_filter)
         {
             var predicate = PredicateBuilder.New<PostDetailsDTO>();
-            predicate = predicate.Or(p => p.title.Contains(filterParameters.SearchTerm));
-            predicate = predicate.Or(p => p.caption.Contains(filterParameters.SearchTerm));
-            predicate = predicate.Or(p => p.author.Contains(filterParameters.SearchTerm));
+            predicate = predicate.Or(p => p.title.Contains(filterParameters.search_term));
+            predicate = predicate.Or(p => p.caption.Contains(filterParameters.search_term));
+            predicate = predicate.Or(p => p.author.Contains(filterParameters.search_term));
 
             var serviceResponse = new ServiceResponse<PagingReturnModel<PostDetailsDTO>>();
             try
@@ -222,15 +188,26 @@ namespace ConJob.Domain.Services
                 var posts = _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetPosts())
                         .Where(predicate)
                         .AsNoTracking();
-                if (statusFilter == "is_deleted")
-                    posts = _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetSoftDelete());
-                else if (statusFilter == "is_actived")
+                #region filter status of post
+                if (status_filter == "is_deleted")
+                    posts = _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetSoftDelete())
+                        .Where(predicate)
+                        .AsNoTracking();
+                else if (status_filter == "is_actived")
                     posts = posts.Where(p => p.is_actived == true);
                 else
                     posts = posts.Where(p => p.is_deleted == false && p.is_actived == false);
-                // apply sorting and paging
-                var sortedPosts = _filterHelper.ApplySorting(posts, filterParameters.OrderBy);
-                var pagedPosts = await _filterHelper.ApplyPaging(sortedPosts, filterParameters.Page, filterParameters.Limit);
+                #endregion
+                #region filter create date of post
+                if (dateFilter.start_date != null)
+                    posts = posts.Where(p => p.created_at >= dateFilter.start_date);
+                if (dateFilter.end_date != null)
+                    posts = posts.Where(p => p.created_at <= dateFilter.end_date);
+                #endregion
+                #region apply sorting and paging
+                var sortedPosts = _filterHelper.ApplySorting(posts, filterParameters.order_by);
+                var pagedPosts = await _filterHelper.ApplyPaging(sortedPosts, filterParameters.page, filterParameters.limit);
+                #endregion
                 serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Data = pagedPosts;
             }
@@ -287,7 +264,8 @@ namespace ConJob.Domain.Services
                     }
                     else
                     {
-                        throw new DbUpdateException(serviceResponse.Message = "Post already exist job.");
+                        serviceResponse.ResponseType = EResponseType.CannotUpdate;
+                        serviceResponse.Message = "Post already exist job.";
                     }
                 }
                 else

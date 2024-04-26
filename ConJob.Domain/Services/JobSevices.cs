@@ -129,7 +129,7 @@ namespace ConJob.Domain.Services
         public async Task<ServiceResponse<PagingReturnModel<JobDTO>>> searchJobAsync(FilterOptions searchJob)
         {
             var predicate = PredicateBuilder.New<JobDTO>();
-            predicate = predicate.Or(p => p.title.Contains(searchJob.SearchTerm));
+            predicate = predicate.Or(p => p.title.Contains(searchJob.search_term));
             var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
 
             try
@@ -137,8 +137,8 @@ namespace ConJob.Domain.Services
                 var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
                     .Where(predicate)
                     .AsNoTracking();
-                var sortedJob = _filterHelper.ApplySorting(job, searchJob.OrderBy);
-                var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.Page, searchJob.Limit);
+                var sortedJob = _filterHelper.ApplySorting(job, searchJob.order_by);
+                var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.page, searchJob.limit);
                 if (job.Any() == true)
                 {
                     serviceResponse.ResponseType = EResponseType.Success;

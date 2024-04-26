@@ -1,15 +1,10 @@
 ﻿using Amazon.Runtime;
-using Amazon.S3.Transfer;
 using Amazon.S3;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConJob.Entities.Config;
-using Microsoft.Extensions.Options;
+using Amazon.S3.Transfer;
 using ConJob.Domain.Services.Interfaces;
+using ConJob.Entities.Config;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace ConJob.Domain.Services
 {
@@ -17,11 +12,11 @@ namespace ConJob.Domain.Services
     {
         private readonly S3Settings _w3Settings;
 
-
         public S3Services(IOptions<S3Settings> w3Settings)
         {
             _w3Settings = w3Settings.Value;
         }
+
         public async Task UploadImage(IFormFile file)
         {
             var credentials = new BasicAWSCredentials(_w3Settings.AccessKey, _w3Settings.SecretKey);

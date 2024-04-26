@@ -7,7 +7,6 @@ using ConJob.Domain.Encryption;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Entities;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 
