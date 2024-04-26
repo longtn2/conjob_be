@@ -1,7 +1,6 @@
 ﻿using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Hosting;
 using System.Linq.Expressions;
 
 namespace ConJob.Data

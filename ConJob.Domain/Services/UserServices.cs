@@ -94,7 +94,7 @@ namespace ConJob.Domain.Services
                     user = toAdd
                 });
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
-                serviceResponse.ResponseType = EResponseType.Success;
+                serviceResponse.ResponseType = EResponseType.Created;
                 serviceResponse.Message = "Register Successfully! Please check your email to confirm account!";
                 await _emailServices.sendActivationEmail(toAdd);
             }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ConJob.Data;
 using ConJob.Domain.DTOs.User;
+using ConJob.Domain.Encryption;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
 
@@ -11,11 +12,13 @@ namespace ConJob.Domain.Services
     {
         private readonly IMapper _mapper;
         private readonly IJwtRepository _jwtRepository;
+        private readonly IPasswordHasher _hasher;
 
-        public JwtServices(IMapper mapper, AppDbContext context, IJwtRepository jwtRepository)
+        public JwtServices(IMapper mapper, AppDbContext context, IJwtRepository jwtRepository, IPasswordHasher hasher)
         {
             _mapper = mapper;
             _jwtRepository = jwtRepository;
+            _hasher = hasher;
         }
 
         public async Task InsertJWTToken(JwtDTO jwt)
@@ -27,7 +30,24 @@ namespace ConJob.Domain.Services
             }
             else
             {
-                throw new Exception("Loi: cap cuu!");
+                throw new Exception();
+            }
+        }
+        public async Task<bool> IsJWTValid(string token)
+        {
+
+            return await _jwtRepository.FindByValue(_hasher.Hash(token)) != null;
+
+        }
+        public async Task InvalidateToken(string token)
+        {
+            try
+            {
+                await _jwtRepository.InvalidToken(_hasher.md5(token));
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }

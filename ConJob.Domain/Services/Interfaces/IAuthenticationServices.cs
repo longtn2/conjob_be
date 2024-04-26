@@ -28,7 +28,7 @@ namespace ConJob.Domain.Services
         /// </summary>
         /// <param name="Token">Token attach in the email box.</param>
 
-        Task<ServiceResponse<Object>> activeEmailAsync(string Token);
+        Task<ServiceResponse<object>> activeEmailAsync(string Token);
 
         /// <summary>
         /// When ever token of user expire. This method verify refreshtoken to reissue new short term token.
@@ -38,9 +38,14 @@ namespace ConJob.Domain.Services
         Task<ServiceResponse<TokenDTO>> refreshTokenAsync(string reftoken);
 
         /// <summary>
-        /// Send an email with forgot link to user email box;
+        /// Send an email with forgot link to user email box
         /// </summary>
-        /// <param name="usermail">Thông tin đăng nhập của người dùng</param>
-        Task<ServiceResponse<Object>> sendForgotEmailVerify(string useremail);
+        /// <param name="useremail">Thông tin đăng nhập của người dùng</param>
+        Task<ServiceResponse<object>> sendForgotEmailVerify(string useremail);
+        /// <summary>
+        /// Invalidate a refresh token store in DB
+        /// </summary>
+        /// <param name="reftoken">Long term token store in User storage.</param>
+        Task<ServiceResponse<object>> logout(string reftoken);
     }
 }
