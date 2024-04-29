@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Apllicant;
+using ConJob.Domain.DTOs.Job;
+using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
+using Microsoft.EntityFrameworkCore;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.Domain.Services
@@ -50,6 +54,67 @@ namespace ConJob.Domain.Services
             {
                 serviceResponse.ResponseType = EResponseType.CannotCreate;
                 serviceResponse.Message = "Something wrong" + ex.Message;
+            }
+            return serviceResponse;
+        }
+        public async Task<ServiceResponse<IEnumerable<UserInfoDTO>>> getByJobAsync(int userid, int jobid)
+        {
+            var serviceResponse = new ServiceResponse<IEnumerable<UserInfoDTO>>();
+            try
+            {
+                if (_jobRepository.checkOwner(userid, jobid) != null)
+                {
+                    var applicants = _mapper.ProjectTo<UserInfoDTO>(_appliRepository.FindbyJob(jobid))
+                                            .AsNoTracking()
+                                            .ToList();
+                    if (applicants.Any() == true)
+                    {
+                        serviceResponse.Data = applicants;
+                        serviceResponse.ResponseType = EResponseType.Success;
+                    }
+                    else
+                    {
+                        serviceResponse.ResponseType = EResponseType.NotFound;
+                        serviceResponse.Message = "Applicants not found.";
+                    }
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "not owner.";
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.ResponseType = EResponseType.BadRequest;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
+            }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<IEnumerable<JobDTO>>> getByUserAsync(int userid)
+        {
+            var serviceResponse = new ServiceResponse<IEnumerable<JobDTO>>();
+            try
+            {
+                var applicants = _mapper.ProjectTo<JobDTO>(_appliRepository.FindbyUser(userid))
+                                        .AsNoTracking()
+                                        .ToList();
+                if (applicants.Any() == true)
+                {
+                    serviceResponse.Data = applicants;
+                    serviceResponse.ResponseType = EResponseType.Success;
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Applicants not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.ResponseType = EResponseType.BadRequest;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
             }
             return serviceResponse;
         }
