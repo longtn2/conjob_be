@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Apllicant;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
@@ -53,7 +54,58 @@ namespace ConJob.Domain.Services
             }
             return serviceResponse;
         }
-
+        public async Task<ServiceResponse<ApplicantDTO>> rejectJobAsync(int userid, int jobid)
+        {
+            var serviceResponse = new ServiceResponse<ApplicantDTO>();
+            try
+            {
+                var applicant = _appliRepository.getByJob(userid, jobid)!;
+                if (applicant != null)
+                {
+                    applicant.status = status_applicants.reject;
+                    await _appliRepository.UpdateAsync(applicant);
+                    serviceResponse.Message = "Reject application";
+                    serviceResponse.ResponseType = EResponseType.Success;
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "not found applicants";
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.ResponseType = EResponseType.CannotCreate;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
+            }
+            return serviceResponse;
+        }
+        public async Task<ServiceResponse<ApplicantDTO>> updateStatusAsync(int userid, int jobid, int status)
+        {
+            var serviceResponse = new ServiceResponse<ApplicantDTO>();
+            try
+            {
+                var applicant = _appliRepository.getByJob(userid, jobid)!;
+                if (applicant != null)
+                {
+                    applicant.status = (status_applicants)status;
+                    await _appliRepository.UpdateAsync(applicant);
+                    serviceResponse.Message = "Status application updated";
+                    serviceResponse.ResponseType = EResponseType.Success;
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "not found applicants";
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.ResponseType = EResponseType.CannotCreate;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
+            }
+            return serviceResponse;
+        }
     }
 }
 

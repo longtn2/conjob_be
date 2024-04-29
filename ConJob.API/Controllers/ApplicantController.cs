@@ -3,6 +3,7 @@ using ConJob.Domain.DTOs.Common;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services;
 using ConJob.Domain.Services.Interfaces;
+using ConJob.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -30,7 +31,6 @@ namespace ConJob.API.Controllers
         [Route("apply")]
         [Produces("application/json")]
         [HttpPost]
-
         public async Task<IActionResult> applyJob(int job_id)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -39,6 +39,40 @@ namespace ConJob.API.Controllers
             return serviceResponse.ResponseType switch
             {
                 EResponseType.Success => CreatedAtAction(nameof(applyJob), new { version = "1" }, serviceResponse.getMessage()),
+                EResponseType.NotFound => NotFound(serviceResponse.getMessage()),
+                EResponseType.BadRequest => BadRequest(serviceResponse.getMessage()),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        [Route("reject")]
+        [Produces("application/json")]
+        [HttpPost]
+        public async Task<IActionResult> rejectJob(int job_id)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = new ServiceResponse<ApplicantDTO>();
+            serviceResponse = await _applicantService.rejectJobAsync(int.Parse(userid!), job_id);
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => CreatedAtAction(nameof(rejectJob), new { version = "1" }, serviceResponse.getMessage()),
+                EResponseType.NotFound => NotFound(serviceResponse.getMessage()),
+                EResponseType.BadRequest => BadRequest(serviceResponse.getMessage()),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        [Route("updateStatus")]
+        [Produces("application/json")]
+        [HttpGet]
+        public async Task<IActionResult> updateStatus(int job_id, status_applicants status)
+        {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = new ServiceResponse<ApplicantDTO>();
+            serviceResponse = await _applicantService.updateStatusAsync(int.Parse(userid!), job_id, (int)status);
+            return serviceResponse.ResponseType switch
+            {
+                EResponseType.Success => CreatedAtAction(nameof(updateStatus), new { version = "1" }, serviceResponse.getMessage()),
                 EResponseType.NotFound => NotFound(serviceResponse.getMessage()),
                 EResponseType.BadRequest => BadRequest(serviceResponse.getMessage()),
                 _ => throw new NotImplementedException()
