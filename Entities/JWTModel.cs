@@ -15,6 +15,7 @@ namespace ConJob.Entities
         public string token_hash_value { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime expired_date { get; set; }
+        public string? fcm_token { get; set; }
         public int user_id { get; set; }
         [JsonIgnore]
         [ForeignKey("user_id")]

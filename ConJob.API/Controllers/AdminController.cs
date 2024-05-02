@@ -1,4 +1,5 @@
-﻿using ConJob.Domain.Filtering;
+﻿using ConJob.Domain.DTOs.Post;
+using ConJob.Domain.Filtering;
 using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using System.Security.Claims;
 
 namespace ConJob.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin", Policy = "emailverified")]
     [ApiController]
     [Route("api/v{version:apiVersion}/admin/")]
     public class AdminController : ControllerBase
@@ -44,9 +45,10 @@ namespace ConJob.API.Controllers
 
         [Route("post")]
         [HttpGet]
-        public async Task<ActionResult> FilterAllPosts([FromQuery] FilterOptions? filter, string? statusFilter)
+        public async Task<ActionResult> FilterAllPosts([FromQuery] FilterOptions? filter, [FromQuery] DateDTO? date_filter, string? status_filter)
         {
-            var serviceResponse = await _postService.FilterAllAsync(filter, statusFilter);
+            var user_id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var serviceResponse = await _postService.FilterAllAsync(int.Parse(user_id), filter, date_filter, status_filter);
             return Ok(serviceResponse.getData());
         }
     }

@@ -93,6 +93,11 @@ namespace ConJob.Domain.Repository
             return user;
         }
 
+        public int GetRoleByUserId(int id)
+        {
+            return _context.user_roles.Where(u => u.user_id == id).Select(u => u.role_id).FirstOrDefault();
+        }
+
         public IQueryable<SkillModel> GetSkillsAsync(int userid)
         {
             return _context.users

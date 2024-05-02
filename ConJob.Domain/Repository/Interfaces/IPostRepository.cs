@@ -7,7 +7,7 @@ namespace ConJob.Domain.Repository.Interfaces
     {
         IQueryable<PostModel> GetUserPosts(int userId);
         IQueryable<PostModel> GetPosts();
-        PostModel getDeletedPost(int id);
+        PostModel GetPostById(int id);
         Task<PostModel> AddPostAsync(UserModel userpost, PostModel post);
         Task<PostModel> UpdateAsync(int post_id, PostDTO post);
         Task DeleteAsync(int post_id);

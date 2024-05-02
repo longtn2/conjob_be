@@ -6,7 +6,8 @@ namespace ConJob.Domain.Services.Interfaces
 {
     public interface IPostService
     {
-        Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions? filterParameters, string? statusFilter);
+        Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> GetAllAsync(FilterOptions? filter_parameters);
+        Task<ServiceResponse<PagingReturnModel<PostValidatorDTO>>> FilterAllAsync(int user_id, FilterOptions? filter_parameters, DateDTO? date_filter, string? status_filter);
         Task<ServiceResponse<PostDTO>> SaveAsync(int userId, PostDTO newPost);
         Task<ServiceResponse<PostDetailsDTO>> FindByIdAsync(int id);
         Task<ServiceResponse<PostDetailsDTO>> UpdateAsync(int userId, int id, PostDTO post);

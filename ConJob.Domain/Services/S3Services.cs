@@ -1,21 +1,15 @@
-﻿using Amazon.Runtime;
-using Amazon.S3.Transfer;
+﻿using Amazon;
+using Amazon.Runtime;
 using Amazon.S3;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConJob.Entities.Config;
-using Microsoft.Extensions.Options;
-using ConJob.Domain.Services.Interfaces;
 using Amazon.S3.Model;
-using Amazon;
+using Amazon.S3.Transfer;
+using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.File;
 using ConJob.Domain.Response;
-using Microsoft.VisualBasic.FileIO;
-using ConJob.Domain.Constant;
+using ConJob.Domain.Services.Interfaces;
+using ConJob.Entities.Config;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace ConJob.Domain.Services
 {
@@ -23,16 +17,17 @@ namespace ConJob.Domain.Services
     {
         private readonly S3Settings _s3Settings;
 
-
         public S3Services(IOptions<S3Settings> s3Settings)
         {
             _s3Settings = s3Settings.Value;
         }
+
         private string GetPath(string file_name, string file_type, string user_id)
         {
             var result = String.Format(_s3Settings.PathUpload, user_id, file_type, file_name);
             return result;
         }
+
         public async Task UploadImage(IFormFile file)
         {
             var credentials = new BasicAWSCredentials(_s3Settings.AccessKey, _s3Settings.SecretKey);
@@ -55,6 +50,7 @@ namespace ConJob.Domain.Services
             var fileTransferUtility = new TransferUtility(client);
             await fileTransferUtility.UploadAsync(uploadRequest);
         }
+
         private string GetURL(string Key, HttpVerb verb)
         {
             try

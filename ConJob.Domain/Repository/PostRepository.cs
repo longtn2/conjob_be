@@ -89,14 +89,9 @@ namespace ConJob.Domain.Repository
             await _context.SaveChangesAsync();
         }
 
-        public PostModel getDeletedPost(int id)
+        public PostModel GetPostById(int id)
         {
-            var post = _context.posts.IgnoreQueryFilters().Where(p => p.id == id).FirstOrDefault();
-            if (post != null && post.is_deleted)
-            {
-                return post;
-            }
-            return null;
+            return _context.posts.IgnoreQueryFilters().Where(p => p.id == id).FirstOrDefault();
         }
 
         public async Task UndoDeletedAsync(PostModel post)

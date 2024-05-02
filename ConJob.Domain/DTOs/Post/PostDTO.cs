@@ -1,4 +1,6 @@
 ﻿
+using System.Text.Json.Serialization;
+
 namespace ConJob.Domain.DTOs.Post
 {
     public enum FileEnum
@@ -10,7 +12,8 @@ namespace ConJob.Domain.DTOs.Post
     {
         public string title { get; set; }
         public string caption { get; set; }
-        public string author { get; set; }
+        [JsonIgnore]
+        public string? author { get; set; }
         public FileEnum type_file { get; set; }
         public string name_file { get; set; }
         public string url_file { get; set; }
