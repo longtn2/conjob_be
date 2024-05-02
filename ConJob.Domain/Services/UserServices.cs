@@ -10,7 +10,6 @@ using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.Encryption;
 using ConJob.Domain.DTOs.Follow;
 using ConJob.Domain.Constant;
-using ConJob.Data;
 using Microsoft.AspNetCore.Http;
 
 namespace ConJob.Domain.Services
@@ -25,9 +24,8 @@ namespace ConJob.Domain.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IFollowRepository _followRepository;
-        private readonly AppDbContext _context;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IEmailServices emailServices, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, AppDbContext context, IFollowRepository followRepository)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IEmailServices emailServices, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, IFollowRepository followRepository)
         {
             _logger = logger;
             _mapper = mapper;

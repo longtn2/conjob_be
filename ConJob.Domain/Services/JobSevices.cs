@@ -18,14 +18,12 @@ namespace ConJob.Domain.Services
         private readonly IMapper _mapper;
         private readonly IJobRepository _jobRepository;
         private readonly IUserRepository _userRepository;
-        private readonly AppDbContext _context;
         private readonly IFilterHelper<JobDTO> _filterHelper;
-        public JobSevices(IMapper mapper, IJobRepository jobRepository, IUserRepository userRepository, AppDbContext context, IFilterHelper<JobDTO> filterHelper)
+        public JobSevices(IMapper mapper, IJobRepository jobRepository, IUserRepository userRepository, IFilterHelper<JobDTO> filterHelper)
         {
             _mapper = mapper;
             _jobRepository = jobRepository;
             _userRepository = userRepository;
-            _context = context;
             _filterHelper = filterHelper;
         }
 
@@ -129,7 +127,7 @@ namespace ConJob.Domain.Services
         public async Task<ServiceResponse<PagingReturnModel<JobDTO>>> searchJobAsync(FilterOptions searchJob)
         {
             var predicate = PredicateBuilder.New<JobDTO>();
-            predicate = predicate.Or(p => p.title.Contains(searchJob.SearchTerm));
+            predicate = predicate.Or(p => p.title.Contains(searchJob.search_term));
             var serviceResponse = new ServiceResponse<PagingReturnModel<JobDTO>>();
 
             try
@@ -137,8 +135,8 @@ namespace ConJob.Domain.Services
                 var job = _mapper.ProjectTo<JobDTO>(_jobRepository.GetAllAsync())
                     .Where(predicate)
                     .AsNoTracking();
-                var sortedJob = _filterHelper.ApplySorting(job, searchJob.OrderBy);
-                var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.Page, searchJob.Limit);
+                var sortedJob = _filterHelper.ApplySorting(job, searchJob.order_by);
+                var pagedJob = await _filterHelper.ApplyPaging(sortedJob, searchJob.page, searchJob.limit);
                 if (job.Any() == true)
                 {
                     serviceResponse.ResponseType = EResponseType.Success;

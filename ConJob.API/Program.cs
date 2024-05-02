@@ -26,7 +26,6 @@ using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.DTOs.Post;
 using ConJob.API.Middleware;
 using Hangfire;
-using System.Net.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,6 +88,7 @@ builder.Services.AddScoped<IS3Services,  S3Services>();
 builder.Services.AddScoped<IJobServices, JobSevices>();
 builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
 builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
+builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IReportServices, ReportServices>();
 builder.Services.AddControllers()
