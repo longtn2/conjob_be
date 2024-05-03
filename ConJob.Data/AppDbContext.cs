@@ -1,14 +1,21 @@
-﻿using ConJob.Entities;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using ConJob.Entities;
 
 namespace ConJob.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -124,7 +131,7 @@ namespace ConJob.Data
             new DbInitializer(modelBuilder).Seed();
         }
 
-
+        #region DbSet implementation omitted
         public virtual DbSet<UserModel> users { get; set; }
         public virtual DbSet<UserRoleModel> user_roles { get; set; }
         public virtual DbSet<RoleModel> roles { get; set; }
@@ -141,11 +148,11 @@ namespace ConJob.Data
         public virtual DbSet<PostModel> posts { get; set; }
         public virtual DbSet<ReportModel> reports { get; set; }
         public virtual DbSet<SkillModel> skills { get; set; }
+        #endregion
 
         #region Auto add created-time, updated-time
         public override int SaveChanges()
         {
-
             try
             {
                 AddTimestamps();
@@ -155,8 +162,6 @@ namespace ConJob.Data
             {
                 throw;
             }
-
-
         }
 
         public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -172,24 +177,36 @@ namespace ConJob.Data
                 throw;
             }
         }
+
         private void AddTimestamps()
         {
             var entities = ChangeTracker.Entries()
                 .Where(x => x.Entity is BaseModel && (x.State == EntityState.Added || x.State == EntityState.Modified));
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var currentUserId = !string.IsNullOrEmpty(userId)
+                ? userId
+                : "0";
 
             foreach (var entity in entities)
             {
-                var now = DateTime.UtcNow; // current datetime
-
+                // Get the current UTC time
+                DateTime nowUtc = DateTime.UtcNow;  
+                // Get the time zone information for Asia Standard Time
+                TimeZoneInfo AsiaZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                // Convert the UTC time to Asia Standard Time
+                DateTime now = TimeZoneInfo.ConvertTimeFromUtc(nowUtc, AsiaZone);
+                var user = int.Parse(currentUserId); 
                 if (entity.State == EntityState.Added)
                 {
                     ((BaseModel)entity.Entity).created_at = now;
+                    ((BaseModel)entity.Entity).created_by = user;
                 }
                 ((BaseModel)entity.Entity).updated_at = now;
+                ((BaseModel)entity.Entity).changed_by = user;
             }
         }
 
         #endregion
     }
 }
-
