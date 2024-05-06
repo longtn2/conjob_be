@@ -35,6 +35,7 @@ builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("C
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.Configure<S3Settings>(builder.Configuration.GetSection("S3Settings"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<RocketChatSettings>(builder.Configuration.GetSection("RocketChatSettings"));
 #endregion
 
 #region add Version
@@ -91,6 +92,7 @@ builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetails
 builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IReportServices, ReportServices>();
+builder.Services.AddScoped<IRocketChatServices, RocketChatServices>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 #endregion
