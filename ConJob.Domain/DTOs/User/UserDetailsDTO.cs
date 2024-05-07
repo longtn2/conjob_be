@@ -1,4 +1,5 @@
-﻿using ConJob.Domain.DTOs.Job;
+﻿using ConJob.Domain.DTOs.Apllicant;
+using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.DTOs.Role;
 using ConJob.Entities;
@@ -21,8 +22,8 @@ namespace ConJob.Domain.DTOs.User
         [Column(TypeName = "text")]
         public string? avatar { get; set; }
         public ICollection<RolesDTO> roles { get; set; }
-        public ICollection<PostDetailsDTO> posts { get; set; }
-        public ICollection<JobDetailsDTO> jobs { get; set; }
+        public ICollection<PostDTO> posts { get; set; }
+        public ICollection<JobMatchDTO> jobs { get; set; }
         public ICollection<Personal_skillModel> skills { get; set; }
         public int followers { get; set; }
         public int following { get; set; }

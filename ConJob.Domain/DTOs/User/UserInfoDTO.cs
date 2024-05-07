@@ -1,5 +1,6 @@
 ﻿using ConJob.Entities;
 using ConJob.Entities.Utils.Variable;
+using ConJob.Entities.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConJob.Domain.DTOs.User

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ConJob.Entities.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -24,6 +25,7 @@ namespace ConJob.Entities
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public job_typeenum job_type { get; set; }
         public string location { get; set; }
+        [DateInTheFuture]
         public DateTime expired_day { get; set; }
         public int quantity { get; set; }
         public int status { get; set; }

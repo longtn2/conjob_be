@@ -1,4 +1,5 @@
 ﻿using ConJob.Entities.Utils.Variable;
+using ConJob.Entities.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -38,6 +39,7 @@ namespace ConJob.Entities
         public Gender gender { get; set; }
         [Required]
         [DataType(DataType.Date)]
+        [AgeRequirementAttribure(15)]
         public DateOnly dob { get; set; }
         [Required]
         public string address { get; set; }
