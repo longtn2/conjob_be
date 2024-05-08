@@ -12,5 +12,6 @@ namespace ConJob.Domain.Constant
         public const int CURRENT_PAGE = 1;
         public const string ACCEPT_TYPE = "mp3|mp4|mov|jpg|png";
         public const string AVATAR_PATH = "avatar";
+        public const string ROCKET_CHAT_TEAM = "team";
     }
 }
