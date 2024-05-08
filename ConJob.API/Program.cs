@@ -77,6 +77,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 #region Add Services 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IPasswordHasher, Bcrypt>();
+
 builder.Services.AddSingleton<IJWTHelper, JWTHelper>();
 builder.Services.AddTransient<IEmailSender, EmailSenderServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
@@ -85,7 +86,7 @@ builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
 builder.Services.AddTransient<IPostService, PostService>();
-builder.Services.AddScoped<IS3Services,  S3Services>();
+builder.Services.AddSingleton<IS3Services,  S3Services>();
 builder.Services.AddScoped<IJobServices, JobSevices>();
 builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
 builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
@@ -93,6 +94,8 @@ builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IReportServices, ReportServices>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
 #endregion
 #region add Hangfire 
 builder.Services.AddHangfire(configuration => configuration
@@ -172,7 +175,7 @@ builder.Services.AddAuthorization(options =>
 #region Auto mapper
 builder.Services.AddSingleton(provider => new MapperConfiguration(options =>
 {
-    options.AddProfile(new MappingProfile(provider.GetService<IPasswordHasher>() ?? throw new InvalidOperationException("Service Not found!")));
+    options.AddProfile(new MappingProfile(provider.GetService<IPasswordHasher>(), provider.GetService<IS3Services>()));
 })
 .CreateMapper());
 

@@ -18,15 +18,22 @@ namespace ConJob.API.Policy
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, EmailVerifiedRequirement requirement)
         {
-            if (context.User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+            try
             {
-                string userid = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (context.User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+                {
+                    string userid = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                var user =  _context.users.FirstOrDefault(x => x.id == int.Parse(userid));
-                if(user.is_email_confirmed)
-                    context.Succeed(requirement); // User's email is verified, so the requirement is met
+                    var user = _context.users.FirstOrDefault(x => x.id == int.Parse(userid));
+                    if (user.is_email_confirmed)
+                        context.Succeed(requirement);
+                }
+                return Task.CompletedTask;
             }
-            return Task.CompletedTask;
+            catch
+            {
+                return Task.CompletedTask;
+            }
         }
     }
 }

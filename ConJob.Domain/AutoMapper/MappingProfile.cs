@@ -8,19 +8,23 @@ using ConJob.Domain.DTOs.Role;
 using ConJob.Domain.DTOs.Skill;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Encryption;
+using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 namespace ConJob.Domain.AutoMapper
 {
     public class MappingProfile : Profile
     {
         private readonly IPasswordHasher _pwdHasher;
-        public MappingProfile(IPasswordHasher pwdHasher)
+        private readonly IS3Services _s3Services;
+        public MappingProfile(IPasswordHasher pwdHasher, IS3Services s3Services)
         {
             _pwdHasher = pwdHasher;
+            _s3Services = s3Services;
             CreateMap<SkillDTO, SkillModel>().ReverseMap();
             CreateMap<UserRegisterDTO, UserModel>().ForMember(dest=>dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.password)));
             CreateMap<UserModel, UserDTO>()
-                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())); 
+                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()))
+                 .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url));
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.md5(src.Token)));
             CreateMap<UserInfoDTO, UserModel>();
             CreateMap<UserModel, UserInfoDTO>().ReverseMap();
@@ -31,8 +35,11 @@ namespace ConJob.Domain.AutoMapper
                 .ForMember(dest => dest.skills, opt => opt.MapFrom(src => src.personal_skills))
                 .ForMember(dest => dest.followers, opt => opt.MapFrom(src => src.followers.Select(l => l.to_user_id).Count()))
                 .ForMember(dest => dest.following, opt => opt.MapFrom(src => src.following.Select(l => l.from_user_id).Count()))
-                .ForMember(dest => dest.roles, opt => opt.MapFrom(src => src.user_roles.Select(y => y.role).ToList()));
-            CreateMap<UserModel, CredentialDTO>().ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())).ReverseMap();
+                .ForMember(dest => dest.roles, opt => opt.MapFrom(src => src.user_roles.Select(y => y.role).ToList()))
+                .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url));
+            CreateMap<UserModel, CredentialDTO>()
+                .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()))
+                .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url));
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
             CreateMap<FollowModel, FollowDTO>()
                .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.from_user_follow.id))
