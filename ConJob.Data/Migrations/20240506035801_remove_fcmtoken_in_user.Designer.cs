@@ -4,6 +4,7 @@ using ConJob.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240506035801_remove_fcmtoken_in_user")]
+    partial class remove_fcmtoken_in_user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,9 +50,6 @@ namespace ConJob.Data.Migrations
 
                     b.Property<int>("job_id")
                         .HasColumnType("int");
-
-                    b.Property<string>("rocket_room_id")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("status")
                         .IsRequired()
@@ -1924,12 +1924,6 @@ namespace ConJob.Data.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
-                    b.Property<string>("rocket_auth_token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("rocket_user_id")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("updated_at")
                         .HasColumnType("datetime2");
 
@@ -1955,7 +1949,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Dat",
-                            password = "$2a$11$yHH.QrjXkgJ7S66EiQmbC.W53KHP.3pwihxg3H43MUrjME1MsBFAK",
+                            password = "$2a$11$da5z5tr/NqsqTiPtGSnr7u2lST0exk6M.d7OqrV63MT9YxAuhlwWG",
                             phone_number = "0335487991"
                         },
                         new
@@ -1972,7 +1966,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Alexandros",
-                            password = "$2a$11$wNC0Z5sxKP/FaElwwacrmOg5Lhr8iLMVo.oGkUXfPwwEzPhieIUpq",
+                            password = "$2a$11$UgT7FsEtDvoZLqEhyFKrl.2dsQmTIS31f2ePqDPD1yP0rYZ3O5wny",
                             phone_number = "0354579415"
                         },
                         new
@@ -1989,7 +1983,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Pancoast",
-                            password = "$2a$11$lJdBgTU6zqivkxLA0LDt5ORs2/QBoQDdWPumuCWtrws1lmdZ3VWqS",
+                            password = "$2a$11$rlxKZc1.agGyGuJiqCU8iuhaoNJO4cuGgbny3LBALdUjP2uUzCpe6",
                             phone_number = "0354596415"
                         },
                         new
@@ -2006,7 +2000,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "Dat",
-                            password = "$2a$11$yNLMVIP5mPwNSTUiy.RHc.jbWzB5FL4stsa7cWhBWDyKCpzr9kqLi",
+                            password = "$2a$11$xhjRELpRiUiOO/DcbqsxyOASJ9kcqGEVeDAj8jzPZh2eF4bzJJ6Fi",
                             phone_number = "0354579415"
                         },
                         new
@@ -2023,7 +2017,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             is_email_confirmed = true,
                             last_name = "khong chin",
-                            password = "$2a$11$Ldv/pX6aZmx.DlsXXc2BLue.VanHyLkeEJG/T2dB4mEvzdgr6pvJa",
+                            password = "$2a$11$Ovc4ZRhrhCxugj/iV5WPOeT59kamtFL8pQx40TMK8eg0vi9PzxCfG",
                             phone_number = "0354579415"
                         });
                 });

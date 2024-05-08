@@ -6,6 +6,7 @@ using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Encryption;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
+using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
@@ -142,7 +143,6 @@ namespace ConJob.Domain.Services
                     _context.SaveChanges();
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Activate Success.";
-                    
                 }
             }
             catch (Exception ex)

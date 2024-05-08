@@ -10,6 +10,7 @@ namespace ConJob.Domain.Services
         Task<ServiceResponse<UserDTO>> RegisterAsync(UserRegisterDTO user);
         Task<ServiceResponse<UserInfoDTO>> updateUserInfo(UserInfoDTO updateUser, string? id);
         Task<ServiceResponse<UserDetailsDTO>> GetUserInfoAsync(int id);
+        UserDTO GetUserByIdAsync(int id);
         Task<ServiceResponse<UserDetailsDTO?>> GetUserByIdAsync(int user_id, int currentUser_id);
         Task<ServiceResponse<UserDTO>> SelectRole(SelectRoleDTO role,string? userid);
         Task<ServiceResponse<object>> changePassword(UPasswordDTO passwordDTO, string? id);

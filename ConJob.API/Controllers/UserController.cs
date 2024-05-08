@@ -20,21 +20,24 @@ namespace ConJob.API.Controllers
         private readonly ILogger _logger;
         private readonly IUserServices _userServices;
         private readonly IS3Services _w3Services;
-        public UserController(ILogger<UserController> logger, IUserServices userService, IS3Services w3Services)
+        private readonly IRocketChatServices _rocketChatServices;
+
+        public UserController(ILogger<UserController> logger, IUserServices userService, IS3Services w3Services, IRocketChatServices rocketChatServices)
         {
             _logger = logger;
             _userServices = userService;
             _w3Services = w3Services;
+            _rocketChatServices = rocketChatServices;
         }
 
         [Route("update-profile")]
         [Produces("application/json")]
-        [HttpPost]
+        [HttpPut]
         public async Task<ActionResult> updateUserProfile(UserInfoDTO userdata)
         {
-            var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
-            string? userid = claims == null ? null : claims.Value.ToString();
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _userServices.updateUserInfo(userdata, userid);
+            await _rocketChatServices.UpdateUserAccount(int.Parse(userid));
             return Ok(serviceResponse.getMessage());
         }
 
@@ -43,8 +46,7 @@ namespace ConJob.API.Controllers
         [HttpPost]
         public async Task<ActionResult> changePassword(UPasswordDTO passwordDTO)
         {
-            var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
-            string? userid = claims == null ? null : claims.Value.ToString();
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _userServices.changePassword(passwordDTO, userid);
             return Ok(serviceResponse.getMessage());
         }

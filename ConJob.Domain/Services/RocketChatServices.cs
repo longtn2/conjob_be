@@ -1,27 +1,26 @@
-﻿using BCrypt.Net;
+﻿using Azure;
 using ConJob.Domain.DTOs.User;
-using ConJob.Domain.Encryption;
+using ConJob.Domain.Repository;
+using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Services.Interfaces;
+using ConJob.Entities;
 using ConJob.Entities.Config;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ConJob.Domain.Services
 {
     public class RocketChatServices : IRocketChatServices
     {
         private readonly RocketChatSettings _rocketSettings;
+        private readonly IUserRepository _userRepository;
         private readonly ILogger _logger;
-        public RocketChatServices(IOptions<RocketChatSettings> rocketSettings, ILogger<UserServices> logger)
+
+        public RocketChatServices(IOptions<RocketChatSettings> rocketSettings, IUserRepository userRepository, ILogger<UserServices> logger)
         {
             _rocketSettings = rocketSettings.Value;
+            _userRepository = userRepository;
             _logger = logger;
         }
 
@@ -51,6 +50,7 @@ namespace ConJob.Domain.Services
                 throw;
             }
         }
+
         private IDictionary<string, string> RocketAuth()
         {
             IDictionary<string, string> headers = new Dictionary<string, string>();
@@ -58,6 +58,7 @@ namespace ConJob.Domain.Services
             headers.Add("X-User-Id", _rocketSettings.UserID);
             return headers;
         }
+
         public async Task GetListGroup()
         {
             var headers = RocketAuth();
@@ -65,24 +66,73 @@ namespace ConJob.Domain.Services
             string body = await SendRequest(HttpMethod.Get, "api/v1/groups.list", headers, payload);
         }
 
-        public async Task CreateAccount(UserDTO u)
+        public async Task<string> CreateAccount(UserRegisterDTO user)
         {
             var headers = RocketAuth();
-
             var payload = new
             {
-                name = u.first_name + " " + u.last_name,
-                email = u.email,
+                name = user.first_name + " " + user.last_name,
+                email = user.email,
                 password = "",
-                username = u.email.Split('@')[0] ,
+                username = user.email.Split('@')[0] ,
                 roles = new[]
                 {
                     "user"
                 },
                 setRandomPassword = true
             };
-            string body = await SendRequest(HttpMethod.Post, "api/v1/users.create", headers, JsonSerializer.Serialize(payload));
+            string body = await SendRequest(HttpMethod.Post, "api/v1/users.create", headers, JsonSerializer.Serialize(payload)); 
+            try
+            {
+                var responseJson = JsonDocument.Parse(body);
+                var userId = responseJson.RootElement.GetProperty("user").GetProperty("_id").GetString();
+                _logger.LogInformation(body);
+                return userId;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError("Error parsing JSON response from Rocket.Chat " + ex.Message);
+                throw;
+            }
+        }
+
+        public async Task UpdateUserAccount(int userId)
+        {
+            var user = _userRepository.GetById(userId);
+            var headers = RocketAuth();
+            headers.Add("x-2fa-code", "363-617");
+            var payload = new
+            {
+                userId = user.rocket_user_id,
+                data = new
+                {
+                    name = $"{user.first_name} {user.last_name}"
+                }
+            };
+            string body = await SendRequest(HttpMethod.Post, "api/v1/users.update", headers, JsonSerializer.Serialize(payload));
             _logger.LogInformation(body);
+        }
+
+        public async Task<string> CreateAuthToken(string userId)
+        {
+            var headers = RocketAuth();
+            var payload = new
+            {
+                userId = userId
+            };
+            string body = await SendRequest(HttpMethod.Post, "api/v1/users.createToken", headers, JsonSerializer.Serialize(payload));
+            try
+            {
+                var responseJson = JsonDocument.Parse(body);
+                var authToken = responseJson.RootElement.GetProperty("data").GetProperty("authToken").GetString();
+                _logger.LogInformation(body);
+                return authToken;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error parsing JSON response from Rocket.Chat " + ex.Message);
+                throw;
+            }
         }
     }
 }

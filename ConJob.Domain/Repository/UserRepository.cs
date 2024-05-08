@@ -49,11 +49,16 @@ namespace ConJob.Domain.Repository
             }
         }
 
-        public async Task<UserModel> updateAsync(UserInfoDTO userDTO, UserModel userModel)
+        public async Task updateAsync(UserModel user, UserInfoDTO updateUser)
         {
-            var user = _mapper.Map(userDTO, userModel);
+            user.first_name = updateUser.first_name;
+            user.last_name = updateUser.last_name;
+            user.phone_number = updateUser.phone_number;
+            user.address = updateUser.address;
+            user.avatar = updateUser.avatar;
+            user.dob = updateUser.dob;
+            user.gender = updateUser.gender;
             await _context.SaveChangesAsync();
-            return user;
         }
 
         public async Task<UserModel> findUserPostAsync(int user_id)

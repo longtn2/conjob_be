@@ -81,6 +81,11 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
+        public UserDTO GetUserByIdAsync(int id)
+        {
+            return _mapper.Map<UserDTO>(_userRepository.GetById(id));
+        }
+
         public async Task<ServiceResponse<UserDTO>> RegisterAsync(UserRegisterDTO user)
         {
             var serviceResponse = new ServiceResponse<UserDTO>();
@@ -143,10 +148,17 @@ namespace ConJob.Domain.Services
             try
             {
                 var user = _userRepository.GetById(int.Parse(id));
-                user = await _userRepository.updateAsync(updateUser, user);
-                serviceResponse.ResponseType = EResponseType.Success;
-                serviceResponse.Message = "Update user successfully!";
-                serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
+                if (user != null)
+                {
+                    await _userRepository.updateAsync(user, updateUser);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Message = "Update user successfully!";
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "User not found!";
+                }
             }
             catch (DbUpdateException)
             {
@@ -256,6 +268,5 @@ namespace ConJob.Domain.Services
             }
             return serviceResponse;
         }
-
     }
 }

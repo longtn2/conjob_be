@@ -2,6 +2,7 @@
 using ConJob.Domain.DTOs.Common;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Services;
+using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -19,11 +20,14 @@ namespace ConJob.API.Controllers
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private readonly IUserServices _userServices;
         private readonly IAuthenticationServices _authService;
-        public AuthController(ILogger<AuthController> logger, IUserServices userService, IAuthenticationServices authService)
+        private readonly IRocketChatServices _rocketChatServices;
+
+        public AuthController(ILogger<AuthController> logger, IUserServices userService, IAuthenticationServices authService, IRocketChatServices rocketChatServices)
         {
             _logger = logger;
             _userServices = userService;
             _authService = authService;
+            _rocketChatServices = rocketChatServices;
         }
         /// <summary>
         /// 
@@ -39,6 +43,10 @@ namespace ConJob.API.Controllers
         [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
         public async Task<ActionResult> Register(UserRegisterDTO userdata)
         {
+            var userId = await _rocketChatServices.CreateAccount(userdata);
+            var authToken = await _rocketChatServices.CreateAuthToken(userId);
+            userdata.rocket_user_id = userId;
+            userdata.rocket_auth_token = authToken;
             var serviceResponse = await _userServices.RegisterAsync(userdata);
             return CreatedAtAction(nameof(Register), new { version = "1" }, serviceResponse.getMessage());
         }

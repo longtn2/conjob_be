@@ -24,5 +24,6 @@ namespace ConJob.Entities
         public JobModel job { get; set; }
         public DateTime apply_date { get; set; }
         public string status { get; set; }
+        public string? rocket_room_id { get; set; }
     }
 }

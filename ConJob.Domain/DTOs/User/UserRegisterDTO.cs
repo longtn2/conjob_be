@@ -37,5 +37,9 @@ namespace ConJob.Domain.DTOs.User
 
         [Column(TypeName = "text")]
         public string? avatar { get; set; }
+        [JsonIgnore]
+        public string? rocket_user_id { get; set; }
+        [JsonIgnore]
+        public string? rocket_auth_token { get; set; }
     }
 }

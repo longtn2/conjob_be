@@ -22,8 +22,7 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<UserModel, UserDTO>()
                  .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList())); 
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.md5(src.Token)));
-            CreateMap<UserInfoDTO, UserModel>();
-            CreateMap<UserModel, UserInfoDTO>().ReverseMap();
+            CreateMap<UserInfoDTO, UserModel>().ReverseMap();
             CreateMap<UserModel, UserDetailsDTO>()
                 .ForMember(dest => dest.dob, opt => opt.MapFrom(src => src.dob))
                 .ForMember(dest => dest.posts, opt => opt.MapFrom(src => src.posts))

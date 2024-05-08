@@ -42,13 +42,14 @@ namespace ConJob.Entities
         public DateTime dob { get; set; }
         [Required]
         public string address { get; set; }
-        public string? fcm_token { get; set; }
         [Required]
         [RegularExpression(RegexUtils.PHONE_NUMBER, ErrorMessage = "Phone number is not valid format!")]
         [StringLength(11, MinimumLength = 9)]
         public string phone_number { get; set; }
         [Column(TypeName = "text")]
         public string? avatar { get; set; }
+        public string? rocket_user_id { get; set; }
+        public string? rocket_auth_token { get; set; }
         [JsonIgnore]
         public virtual ICollection<UserRoleModel> user_roles { get; set; }
         [JsonIgnore]

@@ -14,11 +14,10 @@ namespace ConJob.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
-
         [Required]
         [DataType(DataType.Text)]
         public string token_hash_value { get; set; }
-        public string fcm_token {  get; set; }
+        public string? fcm_token {  get; set; }
         [DataType(DataType.DateTime)]
         public DateTime expired_date { get; set; }
         public int user_id { get; set; }
