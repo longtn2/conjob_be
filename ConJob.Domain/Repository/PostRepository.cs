@@ -3,6 +3,8 @@ using ConJob.Data;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
+using Microsoft.EntityFrameworkCore;
+
 namespace ConJob.Domain.Repository
 {
     public class PostRepository : GenericRepository<PostModel>, IPostRepository
@@ -33,7 +35,7 @@ namespace ConJob.Domain.Repository
 
         public async Task DeleteAsync(int post_id)
         {
-            var post = _context.posts.Where(p => p.is_deleted == false && p.is_actived == false).FirstOrDefault(p => p.id == post_id);
+            var post = _context.posts.Where(p => p.is_deleted == false).FirstOrDefault(p => p.id == post_id);
             if (post != null)
             {
                 post.is_deleted = true;
@@ -58,13 +60,13 @@ namespace ConJob.Domain.Repository
 
         public IQueryable<PostModel> GetUserPosts(int userId)
         {
-            return _context.posts
+            return _context.posts.Where(p => p.is_deleted == false)
                 .Where(c => c.user.id == userId);
         }
 
         public IQueryable<PostModel> GetPosts()
         {
-            return _context.posts;
+            return _context.posts.Where(p => p.is_deleted == false);
         }
 
         public IQueryable<PostModel> GetPostNotDeleted()
@@ -84,6 +86,22 @@ namespace ConJob.Domain.Repository
         public async Task addJobToPostAsync(int jobId, PostModel post)
         {
             post.job_id = jobId;
+            await _context.SaveChangesAsync();
+        }
+
+        public PostModel getDeletedPost(int id)
+        {
+            var post = _context.posts.IgnoreQueryFilters().Where(p => p.id == id).FirstOrDefault();
+            if (post != null && post.is_deleted)
+            {
+                return post;
+            }
+            return null;
+        }
+
+        public async Task UndoDeletedAsync(PostModel post)
+        {
+            post.is_deleted = false;
             await _context.SaveChangesAsync();
         }
 

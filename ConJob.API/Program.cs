@@ -1,32 +1,31 @@
-using ConJob.Data;
-using ConJob.Domain.Authentication;
-using ConJob.Domain.Encryption;
-using ConJob.Domain.Repository.Interface;
-using ConJob.Domain.Repository;
-using ConJob.Domain.Services;
-using ConJob.Entities.Config;
-using DataLayer.Email;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
-using ConJob.Domain.Repository.Interfaces;
-using AutoMapper;
-using ConJob.Domain.AutoMapper;
-using ConJob.API;
-using ConJob.API.Policy;
 using Microsoft.AspNetCore.Authorization;
-using ConJob.Domain.Services.Interfaces;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
-using ConJob.Domain.Filtering;
+using AutoMapper;
+using Hangfire;
+using System.Text;
+using DataLayer.Email;
+using ConJob.API;
+using ConJob.API.Middleware;
+using ConJob.API.Policy;
+using ConJob.Data;
+using ConJob.Domain.Authentication;
+using ConJob.Domain.AutoMapper;
 using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.DTOs.Post;
-using ConJob.API.Middleware;
-using Hangfire;
-using System.Net.Mime;
+using ConJob.Domain.Encryption;
+using ConJob.Domain.Filtering;
+using ConJob.Domain.Repository;
+using ConJob.Domain.Repository.Interface;
+using ConJob.Domain.Repository.Interfaces;
+using ConJob.Domain.Services;
+using ConJob.Domain.Services.Interfaces;
+using ConJob.Entities.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,14 +96,15 @@ builder.Services.AddControllers()
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 #endregion
+
 #region add Hangfire 
 builder.Services.AddHangfire(configuration => configuration
                     .UseSqlServerStorage(builder.Configuration.GetConnectionString("AppDbContext")));
 builder.Services.AddHangfireServer();
 #endregion
+
 #region  Paging & Sorting on Web-Request
 builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
-builder.Services.AddScoped<IFilterHelper<PostDTO>, FilterHelper<PostDTO>>();
 #endregion
 
 #region Repositories
@@ -120,7 +120,6 @@ builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 #endregion
-
 
 builder.Services.AddControllers();
 

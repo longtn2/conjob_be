@@ -22,7 +22,6 @@ namespace ConJob.API.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeletePost(int id)
         {
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _postService.DeleteAsync(id);
             return Ok(serviceResponse.getMessage());
         }
@@ -35,9 +34,17 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
+        [Route("post/undo/{id}")]
+        [HttpPut]
+        public async Task<ActionResult> UndoDeletedPost(int id)
+        {
+            var serviceResponse = await _postService.UndoDeletedAsync(id);
+            return Ok(serviceResponse.getMessage());
+        }
+
         [Route("post")]
         [HttpGet]
-        public async Task<ActionResult> FindUserProjects([FromQuery] FilterOptions? filter, string? statusFilter)
+        public async Task<ActionResult> FilterAllPosts([FromQuery] FilterOptions? filter, string? statusFilter)
         {
             var serviceResponse = await _postService.FilterAllAsync(filter, statusFilter);
             return Ok(serviceResponse.getData());

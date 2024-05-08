@@ -21,9 +21,8 @@ namespace ConJob.Domain.Services
         private readonly IJobRepository _jobRepository;
         private readonly IMapper _mapper;
         private readonly IFilterHelper<PostDetailsDTO> _filterHelper;
-        private readonly IFilterHelper<PostDTO> _filterHelper2;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper, IFilterHelper<PostDTO> filterHelper2) 
+        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostDetailsDTO> filterHelper) 
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -31,7 +30,6 @@ namespace ConJob.Domain.Services
             _jobRepository = jobRepository;
             _mapper = mapper;
             _filterHelper = filterHelper;
-            _filterHelper2 = filterHelper2;
         }
 
         public async Task<ServiceResponse<PostDTO>> SaveAsync(int userId, PostDTO newPost)
@@ -76,7 +74,7 @@ namespace ConJob.Domain.Services
             try
             {
                 var post = await _postRepository.GetUserPosts(userId)
-                    .FirstAsync(c => c.id == id);
+                    .FirstOrDefaultAsync(c => c.id == id);
                 if (post != null)
                 {
                     post = await _postRepository.UpdateAsync(id, postDTO);
@@ -103,10 +101,9 @@ namespace ConJob.Domain.Services
             try
             {
                 var post = await _postRepository.GetUserPosts(userId)
-                    .FirstAsync(c => c.id == id);
+                   .FirstOrDefaultAsync(c => c.id == id);
                 if (post != null)
                 {
-                    post = _postRepository.GetById(id);
                     await _postRepository.DeleteAsync(post.id);
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Delete post successfully!";
@@ -177,7 +174,33 @@ namespace ConJob.Domain.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions? filterParameters, string? statusFilter)
+        public async Task<ServiceResponse<object>> UndoDeletedAsync(int id)
+        {
+            var serviceResponse = new ServiceResponse<object>();
+            try
+            {
+                var post = _postRepository.getDeletedPost(id);
+                if (post != null)
+                {
+                    await _postRepository.UndoDeletedAsync(post);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Message = "Post has been undo delete successfully.";
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found";
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
+            }
+            catch { throw; }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> FilterAllAsync(FilterOptions filterParameters, string statusFilter)
         {
             var predicate = PredicateBuilder.New<PostDetailsDTO>();
             predicate = predicate.Or(p => p.title.Contains(filterParameters.SearchTerm));
@@ -271,5 +294,6 @@ namespace ConJob.Domain.Services
             catch { throw; }
             return serviceResponse;
         }
+
     }
 }
