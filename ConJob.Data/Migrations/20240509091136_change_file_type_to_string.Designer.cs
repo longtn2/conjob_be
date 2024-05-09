@@ -4,6 +4,7 @@ using ConJob.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240509091136_change_file_type_to_string")]
+    partial class change_file_type_to_string
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -398,9 +401,6 @@ namespace ConJob.Data.Migrations
 
                     b.Property<DateTime>("expired_date")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("fcm_token")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("is_deleted")
                         .HasColumnType("bit");
@@ -1891,6 +1891,9 @@ namespace ConJob.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70)
                         .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("fcm_token")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("first_name")
                         .IsRequired()

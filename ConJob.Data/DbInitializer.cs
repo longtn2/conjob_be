@@ -631,7 +631,7 @@ namespace ConJob.Data
 
                       name = "anh datvila",
 
-                      type = FileEnum.Img,
+                      type = "jpg",
 
                       url = "https://media.2dep.vn/upload/thucquyen/2022/05/19/dat-villa-la-ai-hot-tiktoker-9x-trieu-view-co-chuyen-tinh-xuyen-bien-gioi-voi-ban-gai-indonesia-social-1652941149.jpg",
 
@@ -644,7 +644,7 @@ namespace ConJob.Data
 
                       name = "anh thong soai ca",
 
-                      type = FileEnum.Img,
+                      type = "jpg",
 
                       url = "https://newsmd2fr.keeng.vn/tiin/archive/imageslead/2023/06/14/90_c373d5ac0433257417f21a0a5e07fa11.jpg",
 
@@ -655,7 +655,7 @@ namespace ConJob.Data
 
                       name = "justin",
 
-                      type = FileEnum.Video,
+                      type = "mp4",
 
                       url = "https://videos.pexels.com/video-files/6698049/6698049-uhd_3840_2160_25fps.mp4",
                   },
@@ -665,7 +665,7 @@ namespace ConJob.Data
 
                       name = "guiboss",
 
-                      type = FileEnum.Img,
+                      type = "jpg",
 
                       url = "https://cdn.eva.vn/upload/2-2020/images/2020-05-05/don-xin-viec-ba-dao-2-1588672247-395-width1214height806.jpg",
                   },
@@ -675,7 +675,7 @@ namespace ConJob.Data
 
                       name = "Xinnn",
 
-                      type = FileEnum.Img,
+                      type = "jpg",
 
                       url = "https://cdn.eva.vn/upload/2-2020/images/2020-05-05/don-xin-viec-ba-dao-1-1588672247-922-width610height813.jpg",
                   },
@@ -685,7 +685,7 @@ namespace ConJob.Data
 
                       name = "Xinviecti",
 
-                      type = FileEnum.Video,
+                      type = "mp4",
 
                       url = "https://videos.pexels.com/video-files/2084066/2084066-hd_1920_1080_24fps.mp4",
                   },
@@ -695,7 +695,7 @@ namespace ConJob.Data
 
                       name = "Diemyeu",
 
-                      type = FileEnum.Video,
+                      type = "mp4",
 
                       url = "https://videos.pexels.com/video-files/2795169/2795169-uhd_3840_2160_25fps.mp4",
                   },
@@ -705,7 +705,7 @@ namespace ConJob.Data
 
                       name = "DungDai",
 
-                      type = FileEnum.Video,
+                      type = "mp4",
 
                       url = "https://videos.pexels.com/video-files/3959712/3959712-uhd_4096_2160_25fps.mp4",
                   },
@@ -715,7 +715,7 @@ namespace ConJob.Data
 
                       name = "LonR",
 
-                      type = FileEnum.Img,
+                      type = "jpg",
 
                       url = "https://cdn.eva.vn/upload/2-2020/images/2020-05-05/don-xin-viec-ba-dao-6-1588672247-471-width1212height798.jpg",
                   },
@@ -725,7 +725,7 @@ namespace ConJob.Data
 
                       name = "NgonHonNYC",
 
-                      type = FileEnum.Img,
+                      type = "jpg",
 
                       url = "https://jobsgo.vn/blog/wp-content/uploads/2023/03/stt-tuyen-dung-hay-content-tuyen-dung-hai-huoc.png",
                   },
@@ -735,7 +735,7 @@ namespace ConJob.Data
 
                       name = "Bia",
 
-                      type = FileEnum.Img,
+                      type = "jpg",
 
                       url = "https://th.bing.com/th/id/OIP.HY0HMmxb_o1ri0wKsIq2jgHaHa?rs=1&pid=ImgDetMain",
 
@@ -744,42 +744,42 @@ namespace ConJob.Data
                    {
                        id = 12,
                        name = "Ảnh khỏa thân",
-                       type = FileEnum.Img,
+                       type = "jpg",
                        url = "https://th.bing.com/th/id/OIP.aVQAa1WSb_Ct4kzZpeCm7AHaHa?rs=1&pid=ImgDetMain",
                    },
                    new FileModel()
                    {
                        id = 13,
                        name = "Ngón giữa",
-                       type = FileEnum.Img,
+                       type = "jpg",
                        url = "https://toigingiuvedep.vn/wp-content/uploads/2021/12/anh-ngon-tay-giua-450x600.jpg",
                    },
                    new FileModel()
                    {
                        id = 14,
                        name = "Súng",
-                       type = FileEnum.Img,
+                       type = "jpg",
                        url = "https://videos.pexels.com/video-files/3223449/3223449-uhd_3840_2160_24fps.mp4",
                    },
                     new FileModel()
                     {
                         id = 15,
                         name = "Ảnh nhóm",
-                        type = FileEnum.Img,
+                        type = "jpg",
                         url = "https://th.bing.com/th/id/R.5f2c346baa2978dd9df6c4a2e093e00f?rik=VwvG7bfjVAc4bw&pid=ImgRaw&r=0",
                     },
                     new FileModel()
                     {
                         id = 16,
                         name = "Ảnh nữ",
-                        type = FileEnum.Img,
+                        type = "jpg",
                         url = "https://scontent.fdad3-4.fna.fbcdn.net/v/t39.30808-6/439864769_3640571656182795_4383749922632562270_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=x-BvE_1KWXMAb4mSMIZ&_nc_ht=scontent.fdad3-4.fna&oh=00_AfCr0ciTDobk0kNf6V8TLjSk1OQB5afqkW-526xvn0JPsw&oe=662E6F0F",
                     },
                      new FileModel()
                      {
                          id = 17,
                          name = "Ảnh nữ",
-                         type = FileEnum.Video,
+                         type = "mp4",
                          url = "https://videos.pexels.com/video-files/9335837/9335837-hd_1920_1080_25fps.mp4 ",
                      }
             );

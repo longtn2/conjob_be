@@ -11,6 +11,7 @@ using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
+using Microsoft.Extensions.Logging;
 using static ConJob.Domain.Response.EServiceResponseTypes;
 
 
@@ -24,9 +25,10 @@ namespace ConJob.Domain.Services
         private readonly IJobRepository _jobRepository;
         private readonly IMapper _mapper;
         private readonly IFilterHelper<PostValidatorDTO> _filterHelper;
-        private readonly IFilterHelper<PostDetailsDTO> _filterHelper2;
+        private readonly IFilterHelper<PostDetailsDTO> _filterHelper2; 
+        private readonly ILogger<PostService> _logger;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostValidatorDTO> filterHelper, IFilterHelper<PostDetailsDTO> filterHelper2) 
+        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostValidatorDTO> filterHelper, ILogger<PostService> logger, IFilterHelper<PostDetailsDTO> filterHelper2) 
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -34,6 +36,7 @@ namespace ConJob.Domain.Services
             _jobRepository = jobRepository;
             _mapper = mapper;
             _filterHelper = filterHelper;
+            _logger = logger;
             _filterHelper2 = filterHelper2;
         }
 
@@ -43,6 +46,7 @@ namespace ConJob.Domain.Services
             try
             {
                 var user = await _userRepository.findUserPostAsync(userId);
+                newPost.file_url = $"{userId}/{CJConstant.POST_PATH}/{newPost.file_name}";
                 var post = _mapper.Map<PostModel>(newPost);
                 post = await _postRepository.AddPostAsync(user, post);
                 serviceResponse.Data = _mapper.Map<PostDTO>(post);
@@ -52,6 +56,10 @@ namespace ConJob.Domain.Services
             catch (InvalidOperationException)
             {
                 throw new InvalidOperationException("Owner (User) of post not found.");
+            }
+            catch 
+            {
+                throw;
             }
             return serviceResponse;
         }
