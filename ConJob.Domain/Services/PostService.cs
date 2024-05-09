@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using LinqKit;
 using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Filtering;
+using ConJob.Domain.Helper;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using static ConJob.Domain.Response.EServiceResponseTypes;
+
 
 namespace ConJob.Domain.Services
 {
@@ -45,7 +48,8 @@ namespace ConJob.Domain.Services
                 serviceResponse.Data = _mapper.Map<PostDTO>(post);
                 serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Message = "Add post successfully";
-            } catch (InvalidOperationException)
+            }
+            catch (InvalidOperationException)
             {
                 throw new InvalidOperationException("Owner (User) of post not found.");
             }
@@ -317,7 +321,7 @@ namespace ConJob.Domain.Services
 
         public async Task<ServiceResponse<object>> AddJobToPost(int userId, int jobId, int postId)
         {
-            var serviceResponse = new ServiceResponse<object>(); 
+            var serviceResponse = new ServiceResponse<object>();
             try
             {
                 var post = await _postRepository.GetUserPosts(userId)
@@ -351,6 +355,56 @@ namespace ConJob.Domain.Services
             catch { throw; }
             return serviceResponse;
         }
-
+        public async Task<ServiceResponse<PagingReturnModel<PostDetailsDTO>>> suggestPost(int userid, FilterJobs filter)
+        {
+            var serviceResponse = new ServiceResponse<PagingReturnModel<PostDetailsDTO>>();
+            var predicate = PredicateBuilder.New<PostDetailsDTO>();
+            predicate = predicate.Or(p => p.title.Contains(filter.search_term));
+            predicate = predicate.Or(p => p.caption.Contains(filter.search_term));
+            predicate = predicate.Or(p => p.author.Contains(filter.search_term));
+            predicate = predicate.And(p => p.job!.location.ToLower().Contains(filter.location.ToLower()));
+            try
+            {
+                var user = _userRepository.GetById(userid);
+                if (user == null)
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "user not found.";
+                    return serviceResponse;
+                }
+                var Skills = await _userRepository.GetSkillsAsync(userid).Select(e => e.description.ToLower())
+                                                  .ToListAsync();
+                var posts = await _mapper.ProjectTo<PostDetailsDTO>(_postRepository.GetAllAsync())
+                                       .AsNoTracking()
+                                       .ToListAsync();
+                if (filter.search_term.IsNullOrEmpty() && filter.location.IsNullOrEmpty())
+                    posts = posts.OrderByDescending(post => TFIDFhelp.TFIDFScore(post.job!.description.ToLower(), Skills))
+                                 .ToList();
+                else
+                {
+                    posts = posts.Where(predicate)
+                                 .OrderByDescending(post => TFIDFhelp.TFIDFScore(post.job!.description.ToLower(), Skills))
+                                 .ToList();
+                }
+                var result = await _filterHelper2.ApplyPaging(posts, filter.page, filter.limit);
+                if (result != null)
+                {
+                    serviceResponse.Data = result;
+                    serviceResponse.Message = "Get matching posts successfully!";
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found.";
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                serviceResponse.ResponseType = EResponseType.NotFound;
+                serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
+            }
+            catch { throw; }
+            return serviceResponse;
+        }
     }
 }

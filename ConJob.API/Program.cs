@@ -87,10 +87,6 @@ builder.Services.AddTransient<IEmailServices, EmailServices>();
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddSingleton<IS3Services,  S3Services>();
 builder.Services.AddScoped<IJobServices, JobSevices>();
-builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
-builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
-builder.Services.AddScoped<IFilterHelper<PostValidatorDTO>, FilterHelper<PostValidatorDTO>>();
-builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IReportServices, ReportServices>();
 builder.Services.AddScoped<IApplicantService, ApplicantService>();
@@ -107,6 +103,9 @@ builder.Services.AddHangfireServer();
 #endregion
 
 #region  Paging & Sorting on Web-Request
+builder.Services.AddScoped<IFilterHelper<JobDetailsDTO>, FilterHelper<JobDetailsDTO>>();
+builder.Services.AddScoped<IFilterHelper<JobDTO>, FilterHelper<JobDTO>>();
+builder.Services.AddScoped<IFilterHelper<PostValidatorDTO>, FilterHelper<PostValidatorDTO>>();
 builder.Services.AddScoped<IFilterHelper<PostDetailsDTO>, FilterHelper<PostDetailsDTO>>();
 #endregion
 
