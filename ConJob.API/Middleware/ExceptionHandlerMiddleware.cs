@@ -48,6 +48,14 @@ namespace ConJob.API.Middleware
                 {
                     ResponseErrorAsync(context, ex.Message, 401);
                 }
+                else if (ex is ArgumentOutOfRangeException)
+                {
+                    ResponseErrorAsync(context, ex.Message, 400);
+                }
+                else if (ex is ArgumentNullException)
+                {
+                    ResponseErrorAsync(context, ex.Message, 400);
+                }
                 else
                 {
                     ResponseErrorAsync(context, "Internal Server Error", 500);

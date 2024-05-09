@@ -41,7 +41,6 @@ namespace ConJob.Entities
         public DateOnly dob { get; set; }
         [Required]
         public string address { get; set; }
-        public string? fcm_token { get; set; }
         [Required]
         [RegularExpression(RegexUtils.PHONE_NUMBER, ErrorMessage = "Phone number is not valid format!")]
         [StringLength(11, MinimumLength = 9)]

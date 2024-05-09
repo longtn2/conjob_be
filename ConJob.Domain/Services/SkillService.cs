@@ -5,7 +5,6 @@ using ConJob.Domain.Response;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
 using Microsoft.EntityFrameworkCore;
-
 using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.Domain.Services
@@ -14,6 +13,7 @@ namespace ConJob.Domain.Services
     {
         private readonly ISkillRepository _skillRepository;
         private readonly IMapper _mapper;
+
         public SkillService(ISkillRepository skillRepository, IMapper mapper)
         {
             _skillRepository = skillRepository;

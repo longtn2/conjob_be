@@ -56,17 +56,26 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<JobModel, JobDetailsDTO>().ForMember(dto => dto.create_by, opt => opt.MapFrom(x => x.user.last_name))
                                                 .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => x.user.avatar))
                                                 .ReverseMap();
+            CreateMap<JobModel, JobMatchDTO>().ForMember(dto => dto.user_id, opt => opt.MapFrom(x => x.user.id));
             CreateMap<PostModel, PostDTO>().ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
                                            .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
                                            .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
                                            .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
-            CreateMap<PostModel, PostDetailsDTO>()
+            CreateMap<PostModel, PostValidatorDTO>()
+                                            .ForMember(dto => dto.job_title, opt => opt.MapFrom(x => x.job.title))
+                                            .ForMember(dto => dto.job_type, opt => opt.MapFrom(x => x.job.job_type))
                                             .ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
                                             .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
                                             .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
-                                            .ForMember(dto => dto.avatar_author, opt => opt.MapFrom(x => x.user.avatar))
+                                            .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.first_name + " " + x.user.last_name)).ReverseMap();
+            CreateMap<PostModel, PostDetailsDTO>()
+                                            .ForMember(dto => dto.job, opt => opt.MapFrom(x => x.job))
+                                            .ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
+                                            .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
+                                            .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => x.file.url))
                                             .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
-                                            .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
+                                            .ForMember(dto => dto.avatar_author, opt => opt.MapFrom(x => x.user.avatar))
+                                            .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.first_name + " " + x.user.last_name)).ReverseMap();
             CreateMap<ReportModel, ReportDTO>()
                  .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.post.id))
                  .ForMember(dest => dest.user_id, opt => opt.MapFrom(src => src.user.id))

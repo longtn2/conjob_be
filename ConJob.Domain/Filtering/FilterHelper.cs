@@ -2,12 +2,13 @@
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ConJob.Domain.Filtering
 {
     public class FilterHelper<T> : IFilterHelper<T>
 	{
-		public IQueryable<T> ApplySorting(IQueryable<T> source, string orderByQueryString)
+		public IQueryable<T> ApplySorting(IQueryable<T> source, string? orderByQueryString)
 		{
 			if (!source.Any() || string.IsNullOrWhiteSpace(orderByQueryString))
 				return source;
@@ -40,12 +41,21 @@ namespace ConJob.Domain.Filtering
 			return source.OrderBy(orderQuery);
 		}
 
-		public async Task<PagingReturnModel<T>> ApplyPaging(IQueryable<T> source, int pageNumber, int pageSize)
+		public async Task<PagingReturnModel<T>> ApplyPaging(IQueryable<T>? source, int pageNumber, int pageSize)
 		{
-			if (source == null || pageNumber < 1 || pageSize < 1)
-				return null;
-
-			var count = source.Count();
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            if (pageNumber < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than or equal to 1.");
+            }
+            if (pageSize < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pageSize), "Page limit must be greater than or equal to 1.");
+            }
+            var count = source.Count();
 			var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 
 			return new PagingReturnModel<T>(items, count, pageNumber, pageSize);

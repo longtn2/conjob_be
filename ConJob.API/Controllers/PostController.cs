@@ -26,7 +26,7 @@ namespace ConJob.API.Controllers
         [HttpGet]
         public async Task<ActionResult> getAllPosts([FromQuery] FilterOptions? filter)
         {
-            var serviceResponse = await _postService.FilterAllAsync(filter, null);
+            var serviceResponse = await _postService.GetAllAsync(filter);
             return Ok(serviceResponse.getData());
         }
 
