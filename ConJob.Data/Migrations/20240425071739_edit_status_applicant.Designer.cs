@@ -4,6 +4,7 @@ using ConJob.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConJob.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240425071739_edit_status_applicant")]
+    partial class edit_status_applicant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,7 +141,7 @@ namespace ConJob.Data.Migrations
                             is_deleted = false,
                             name = "anh datvila",
                             type = 1,
-                            url = "https://cdn.eva.vn/upload/2-2020/images/2020-05-05/don-xin-viec-ba-dao-6-1588672247-471-width1212height798.jpg"
+                            url = "https://media.2dep.vn/upload/thucquyen/2022/05/19/dat-villa-la-ai-hot-tiktoker-9x-trieu-view-co-chuyen-tinh-xuyen-bien-gioi-voi-ban-gai-indonesia-social-1652941149.jpg"
                         },
                         new
                         {
@@ -1880,8 +1883,8 @@ namespace ConJob.Data.Migrations
                     b.Property<int>("created_by")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("dob")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("dob")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("email")
                         .IsRequired()
@@ -1938,7 +1941,7 @@ namespace ConJob.Data.Migrations
                             avatar = "https://i.pinimg.com/originals/27/0c/be/270cbeb639f6d0ed64f3106daaeccc1d.jpg",
                             changed_by = 0,
                             created_by = 0,
-                            dob = new DateOnly(1, 1, 1),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "admin@com.com",
                             first_name = "Admin",
                             gender = 0,
@@ -1955,7 +1958,7 @@ namespace ConJob.Data.Migrations
                             avatar = "https://th.bing.com/th/id/OIP.MbAE6jT-VnWsVr9ANrkYNwHaKw?rs=1&pid=ImgDetMain",
                             changed_by = 0,
                             created_by = 0,
-                            dob = new DateOnly(1, 1, 1),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "apeacocke1@google.ca",
                             first_name = "Fawnia",
                             gender = 0,
@@ -1972,7 +1975,7 @@ namespace ConJob.Data.Migrations
                             avatar = "https://th.bing.com/th/id/R.47e446cab641c16b2a6f8c9db520ee19?rik=0vd8lTgoDpgUzQ&pid=ImgRaw&r=0",
                             changed_by = 0,
                             created_by = 0,
-                            dob = new DateOnly(1, 1, 1),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "cpancoast2@wsj.com",
                             first_name = "Cazzie",
                             gender = 0,
@@ -1989,7 +1992,7 @@ namespace ConJob.Data.Migrations
                             avatar = "https://th.bing.com/th/id/OIP.-Xu8PRNaVrwqZ1J-f4E16wHaHa?w=1200&h=1200&rs=1&pid=ImgDetMain",
                             changed_by = 0,
                             created_by = 0,
-                            dob = new DateOnly(1, 1, 1),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "datmarri@google.ca",
                             first_name = "Marri",
                             gender = 0,
@@ -2006,7 +2009,7 @@ namespace ConJob.Data.Migrations
                             avatar = "https://th.bing.com/th/id/OIP.-q9JRr6eAAyyBL3s-3g1PgHaKt?rs=1&pid=ImgDetMain",
                             changed_by = 0,
                             created_by = 0,
-                            dob = new DateOnly(1, 1, 1),
+                            dob = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "datkhongchin@google.ca",
                             first_name = "Dat",
                             gender = 0,

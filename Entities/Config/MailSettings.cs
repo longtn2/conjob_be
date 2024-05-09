@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConJob.Entities.Config
+﻿namespace ConJob.Entities.Config
 {
     public class MailSettings
     {
