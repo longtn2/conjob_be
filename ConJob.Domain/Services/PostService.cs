@@ -386,12 +386,12 @@ namespace ConJob.Domain.Services
                                        .AsNoTracking()
                                        .ToListAsync();
                 if (filter.search_term.IsNullOrEmpty() && filter.location.IsNullOrEmpty())
-                    posts = posts.OrderByDescending(post => TFIDFhelp.TFIDFScore(post.job!.description.ToLower(), Skills))
+                    posts = posts.OrderByDescending(post => TFIDFhelp.TFIDFScore(post.caption.ToLower(), Skills))
                                  .ToList();
                 else
                 {
                     posts = posts.Where(predicate)
-                                 .OrderByDescending(post => TFIDFhelp.TFIDFScore(post.job!.description.ToLower(), Skills))
+                                 .OrderByDescending(post => TFIDFhelp.TFIDFScore(post.caption.ToLower(), Skills))
                                  .ToList();
                 }
                 var result = await _filterHelper2.ApplyPaging(posts, filter.page, filter.limit);

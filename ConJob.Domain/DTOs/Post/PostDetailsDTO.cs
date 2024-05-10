@@ -3,6 +3,11 @@ using ConJob.Entities;
 
 namespace ConJob.Domain.DTOs.Post
 {
+    public enum FileEnum
+    {
+        Video,
+        Img
+    }
     public class PostDetailsDTO
     {
         public int id { get; set; }
@@ -13,6 +18,7 @@ namespace ConJob.Domain.DTOs.Post
         public string file_url { get; set; }
         public DateTime? created_at { get; set; }
         public int likes { get; set; }
+        public FileEnum file_type { get; set; }
         public JobMatchDTO? job { get; set; }
     }
 }
