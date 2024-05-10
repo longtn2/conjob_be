@@ -15,5 +15,6 @@
         public const string ACCEPT_TYPE = "mp3|mp4|mov|jpg|png|jpeg|avi";
         public const string AVATAR_PATH = "avatar";
         public const string POST_PATH = "post";
+        public const int MIN_AGE = 15;
     }
 }

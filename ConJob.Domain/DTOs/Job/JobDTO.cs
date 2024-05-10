@@ -1,5 +1,6 @@
 ﻿using ConJob.Entities;
 using ConJob.Domain.DTOs.Post;
+using ConJob.Entities.Validation;
 
 namespace ConJob.Domain.DTOs.Job
 {
@@ -14,6 +15,7 @@ namespace ConJob.Domain.DTOs.Job
         public string create_by { get; set; }
         public string avatar { get; set; } = "";
         public string location { get; set; }
+        [DateInTheFuture]
         public DateTime expired_day { get; set; }
         public int quanlity { get; set; }
         public int status { get; set; }

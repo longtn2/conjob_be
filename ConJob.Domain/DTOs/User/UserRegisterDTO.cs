@@ -1,6 +1,8 @@
-﻿using ConJob.Domain.DTOs.Authentication;
+﻿using ConJob.Domain.Constant;
+using ConJob.Domain.DTOs.Authentication;
 using ConJob.Entities;
 using ConJob.Entities.Utils.Variable;
+using ConJob.Entities.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -31,6 +33,7 @@ namespace ConJob.Domain.DTOs.User
         public Gender gender { get; set; }
         [Required]
         [DataType(DataType.Date)]
+        [AgeRequirementAttribure(CJConstant.MIN_AGE)]
         public DateOnly dob { get; set; }
         [Required]
         public string address { get; set; }
