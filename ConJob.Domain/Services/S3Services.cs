@@ -85,8 +85,7 @@ namespace ConJob.Domain.Services
             ServiceResponse<S3ResponseDTO> serviceResponse = new ServiceResponse<S3ResponseDTO>();
             if (!IsTypeAccepted(file_type))
             {
-                serviceResponse.ResponseType = EServiceResponseTypes.EResponseType.BadRequest;
-                serviceResponse.Message = "File type is not Supported!";
+                throw new BadHttpRequestException("File type not supported!");
             }
             else
             {

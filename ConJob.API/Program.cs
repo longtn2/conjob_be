@@ -61,6 +61,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = false,
@@ -195,6 +197,7 @@ if (app.Environment.IsDevelopment())
 #region some sort of Middleware
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseMiddleware<ValidationExceptionHandlerMiddleware>();
+app.UseMiddleware<ExpiredTokenMiddleware>();
 #endregion
 
 app.UseHttpsRedirection();

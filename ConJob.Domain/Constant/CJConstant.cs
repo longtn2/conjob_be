@@ -12,7 +12,8 @@
         public const string IS_DELETED = "is_deleted";
         public const string IS_ACTIVED = "is_actived";
         public const string NOT_YET_APPROVED = "not_yet_approved";
-        public const string ACCEPT_TYPE = "mp3|mp4|mov|jpg|png";
+        public const string ACCEPT_TYPE = "mp3|mp4|mov|jpg|png|jpeg|avi";
         public const string AVATAR_PATH = "avatar";
+        public const string POST_PATH = "post";
     }
 }

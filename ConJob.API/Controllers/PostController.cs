@@ -1,4 +1,5 @@
 ﻿using ConJob.Domain.DTOs.Common;
+using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.DTOs.Report;
 using ConJob.Domain.Filtering;
@@ -18,10 +19,12 @@ namespace ConJob.API.Controllers
     {
         private readonly IReportServices _reportServices;
         private readonly IPostService _postService;
-        public PostController(IReportServices reportServices, IPostService postService)
+        private readonly IS3Services _s3Services;
+        public PostController(IReportServices reportServices, IPostService postService, IS3Services s3Services)
         {
             _reportServices = reportServices;
             _postService = postService;
+            _s3Services = s3Services;
         }
 
         [HttpGet]
@@ -35,8 +38,9 @@ namespace ConJob.API.Controllers
         public async Task<ActionResult> addPost(PostDTO newPost)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var serviceResponse = await _postService.SaveAsync(int.Parse(userid), newPost);
-            return CreatedAtAction(nameof(addPost), new { version = "1" }, serviceResponse.getMessage());
+            var serviceResponse = _s3Services.PresignedUpload(newPost.file_name, newPost.file_type, CJConstant.POST_PATH, userid);
+            var data = await _postService.SaveAsync(int.Parse(userid), newPost);
+            return CreatedAtAction(nameof(addPost), new { version = "1" }, serviceResponse.getData());
         }
 
         [HttpGet("{id}")]
