@@ -56,21 +56,23 @@ namespace ConJob.Domain.AutoMapper
                                          .ReverseMap();
             CreateMap<JobModel, JobDetailsDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x=> x.posts))
                                                 .ReverseMap();
+            CreateMap<JobModel, JobMatchDTO>().ForMember(dto => dto.user_id, opt => opt.MapFrom(x => x.user.id));
             CreateMap<PostModel, PostDTO>().ForMember(dto => dto.file_name, opt => opt.MapFrom(x => x.file.name))
                                            .ForMember(dto => dto.file_type, opt => opt.MapFrom(x => x.file.type))
-                                           .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name))
                                            .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
-                                           .ReverseMap();
+                                           .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
+            CreateMap<PostModel, PostValidatorDTO>()
+                                            .ForMember(dto => dto.job_title, opt => opt.MapFrom(x => x.job.title))
+                                            .ForMember(dto => dto.job_type, opt => opt.MapFrom(x => x.job.job_type))
+                                            .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
+                                            .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
             CreateMap<PostModel, PostDetailsDTO>()
                                             .ForMember(dto => dto.job, opt => opt.MapFrom(x => x.job))
-                                            .ForMember(dto => dto.name_file, opt => opt.MapFrom(x => x.file.name))
-                                            .ForMember(dto => dto.type_file, opt => opt.MapFrom(x => x.file.type))
-                                            .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
+                                            .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
                                             .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
                                             .ForMember(dto => dto.avatar_author, opt => opt.MapFrom(x => s3Services.PresignedGet(x.user.avatar).Data.url))
                                             .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
                                             .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name))
-                                            .ForMember(dto => dto.url_file, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
                                             .ReverseMap();
             CreateMap<ReportModel, ReportDTO>()
                                            .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.post.id))
