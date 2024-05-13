@@ -10,5 +10,7 @@ namespace ConJob.Domain.Services.Interfaces
         Task<ServiceResponse<ApplicantDTO>> applyJobAsync(int userid, int jobid);
         Task<ServiceResponse<ApplicantDTO>> rejectJobAsync(int userid, int jobid);
         Task<ServiceResponse<ApplicantDTO>> updateStatusAsync(int userid, int jobid, int status);
+        Task<ServiceResponse<IEnumerable<UserInfoDTO>>> getByJobAsync(int userid, int jobid);
+        Task<ServiceResponse<IEnumerable<JobDTO>>> getByUserAsync(int jobid);
     }
 }

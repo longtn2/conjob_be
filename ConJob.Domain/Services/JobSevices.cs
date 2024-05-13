@@ -96,10 +96,10 @@ namespace ConJob.Domain.Services
                 else
                 {
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Data = await _mapper.ProjectTo<JobDetailsDTO>(_jobRepository.GetAllAsync())
+                    serviceResponse.Data =  _mapper.ProjectTo<JobDetailsDTO>(_jobRepository.GetAllAsync())
                                                       .Where(e => e.id == id)
                                                       .AsNoTracking()
-                                                      .FirstAsync()!;
+                                                      .FirstOrDefault()!;
                 }
             }
             catch (DbException ex)

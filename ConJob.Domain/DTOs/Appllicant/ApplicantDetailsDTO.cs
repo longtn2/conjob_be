@@ -1,5 +1,6 @@
 ﻿using ConJob.Domain.DTOs.Job;
 using ConJob.Domain.DTOs.User;
+using ConJob.Entities;
 
 namespace ConJob.Domain.DTOs.Apllicant
 {
@@ -9,6 +10,6 @@ namespace ConJob.Domain.DTOs.Apllicant
         public UserInfoDTO user { get; set; }
         public JobDTO job { get; set; }
         public DateTime apply_date { get; set; }
-        public string status { get; set; }
+        public status_applicants status { get; set; }
     }
 }
