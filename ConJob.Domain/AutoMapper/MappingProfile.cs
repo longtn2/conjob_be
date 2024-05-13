@@ -11,6 +11,7 @@ using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Encryption;
 using ConJob.Domain.Services.Interfaces;
 using ConJob.Entities;
+using ConJob.Domain.Helper;
 namespace ConJob.Domain.AutoMapper
 {
     public class MappingProfile : Profile
@@ -67,6 +68,7 @@ namespace ConJob.Domain.AutoMapper
                                             .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
                                             .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
             CreateMap<PostModel, PostDetailsDTO>()
+                                            .ForMember(dto => dto.file_type, opt=> opt.MapFrom(opt => ConvertFileType.Convert(opt.file.type)))
                                             .ForMember(dto => dto.job, opt => opt.MapFrom(x => x.job))
                                             .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
                                             .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
