@@ -51,5 +51,20 @@ namespace ConJob.API.Controllers
             var serviceResponse = await _postService.FilterAllAsync(int.Parse(user_id), filter, date_filter, status_filter);
             return Ok(serviceResponse.getData());
         }
+        [Route("post/active-list")]
+        [HttpPut]
+        public async Task<ActionResult> ActiveAllPost([FromQuery] List<int> id)
+        {
+            var serviceResponse = await _postService.ActiveAsync(id);
+
+            return Ok(serviceResponse.getMessage());
+        }
+        [Route("post/delete-range")]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAllPost([FromQuery] List<int> id)
+        {
+            var serviceResponse = await _postService.DeleteAsync(id);
+            return Ok(serviceResponse.getMessage());
+        }
     }
 }

@@ -17,7 +17,6 @@ namespace ConJob.Domain.DTOs.Job
         public DateTime expired_day { get; set; }
         public int quantity { get; set; }
         public int status { get; set; }
-        public virtual ICollection<PostViewDTO> posts { get; set; }
-        public virtual ICollection<ApplicantDTO> applicants { get; set; }
+        public virtual ICollection<PostDTO> posts { get; set; }
     }
 }

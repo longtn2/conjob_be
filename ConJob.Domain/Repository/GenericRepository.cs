@@ -88,5 +88,12 @@ namespace ConJob.Domain.Repository
         {
             return _context.Set<T>().IgnoreQueryFilters().Where(e => EF.Property<bool>(e, "is_deleted"));
         }
+        public async Task SoftDeleteRange(IEnumerable<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                await SoftDelete(entity);
+            }
+        }
     }
 }
