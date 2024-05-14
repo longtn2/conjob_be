@@ -19,6 +19,7 @@ namespace ConJob.API.Controllers
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private readonly IUserServices _userServices;
         private readonly IAuthenticationServices _authService;
+
         public AuthController(ILogger<AuthController> logger, IUserServices userService, IAuthenticationServices authService)
         {
             _logger = logger;

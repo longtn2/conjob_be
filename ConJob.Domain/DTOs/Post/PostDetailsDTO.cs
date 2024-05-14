@@ -1,5 +1,4 @@
 ﻿using ConJob.Domain.DTOs.Job;
-using ConJob.Entities;
 
 namespace ConJob.Domain.DTOs.Post
 {
@@ -13,6 +12,7 @@ namespace ConJob.Domain.DTOs.Post
         public int id { get; set; }
         public string title { get; set; }
         public string caption { get; set; }
+        public int user_id { get; set; }
         public string author { get; set; }
         public string avatar_author { get; set; }
         public string file_url { get; set; }

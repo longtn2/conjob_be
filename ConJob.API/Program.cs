@@ -34,6 +34,7 @@ builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("C
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.Configure<S3Settings>(builder.Configuration.GetSection("S3Settings"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<RocketChatSettings>(builder.Configuration.GetSection("RocketChatSettings"));
 #endregion
 
 #region add Version
@@ -92,6 +93,7 @@ builder.Services.AddScoped<IJobServices, JobSevices>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IReportServices, ReportServices>();
 builder.Services.AddScoped<IApplicantService, ApplicantService>();
+builder.Services.AddScoped<IRocketChatServices, RocketChatServices>();
 builder.Services.AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
@@ -131,7 +133,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 #region config Swagger 

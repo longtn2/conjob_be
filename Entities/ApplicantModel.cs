@@ -30,5 +30,6 @@ namespace ConJob.Entities
         public DateTime apply_date { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public status_applicants status { get; set; }
+        public string? rocket_room_id { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace ConJob.API.Controllers
         private readonly ILogger _logger;
         private readonly IUserServices _userServices;
         private readonly IS3Services _s3Services;
+
         public UserController(ILogger<UserController> logger, IUserServices userService, IS3Services s3Services)
         {
             _logger = logger;
@@ -31,11 +32,10 @@ namespace ConJob.API.Controllers
 
         [Route("update-profile")]
         [Produces("application/json")]
-        [HttpPost]
+        [HttpPut]
         public async Task<ActionResult> updateUserProfile(UserInfoDTO userdata)
         {
-            var claims = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
-            string? userid = claims == null ? null : claims.Value.ToString();
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var serviceResponse = await _userServices.updateUserInfo(userdata, userid);
             return Ok(serviceResponse.getMessage());
         }

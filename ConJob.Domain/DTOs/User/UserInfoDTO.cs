@@ -1,7 +1,7 @@
 ﻿using ConJob.Entities;
 using ConJob.Entities.Utils.Variable;
-using ConJob.Entities.Validation;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ConJob.Domain.DTOs.User
 {
@@ -14,10 +14,11 @@ namespace ConJob.Domain.DTOs.User
         [RegularExpression(RegexUtils.PHONE_NUMBER, ErrorMessage = "Phone number is not valid format!")]
         [StringLength(11, MinimumLength = 9)]
         public string? phone_number { get; set; }
-        public Gender? gender { get; set; }
+        public Gender gender { get; set; }
         [DataType(DataType.Date)]
         public DateOnly dob { get; set; }
         public string? address { get; set; }
+        [JsonIgnore]
         public string? avatar { get; set; }
     }
 }

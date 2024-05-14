@@ -105,6 +105,7 @@ namespace ConJob.Domain.Services
                     }
                     else
                     {
+                        serviceResponse.ResponseType = EResponseType.Success;
                         TokenDTO _tokendto = new TokenDTO();
                         _tokendto.Token = token;
                         serviceResponse.Data = _tokendto;

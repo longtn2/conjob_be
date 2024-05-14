@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ConJob.Data;
+using ConJob.Domain.Constant;
 using ConJob.Domain.DTOs.Post;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
@@ -22,15 +23,19 @@ namespace ConJob.Domain.Repository
             return post;
         }
 
-        public async Task<PostModel> UpdateAsync(int id, PostDTO postDTO)
+        public async Task UpdateAsync(int userId, PostModel postModel, PostDTO postDTO)
         {
-            var post = _context.posts.FirstOrDefault(p => p.id == id);
-            if (post != null)
+            var file = postModel.file;
+            _mapper.Map(postDTO, postModel);
+            if (postDTO.file_type == null || postDTO.file_name == null)
             {
-                post = _mapper.Map(postDTO, post);
-                await _context.SaveChangesAsync();
+                postModel.file = file;
             }
-            return post;
+            else
+            {
+                postModel.file.url = $"{userId}/{CJConstant.POST_PATH}/{postDTO.file_name}";
+            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int post_id)
@@ -39,6 +44,7 @@ namespace ConJob.Domain.Repository
             if (post != null)
             {
                 post.is_deleted = true;
+                post.is_actived = false;
                 await _context.SaveChangesAsync();
             }
         }
@@ -67,20 +73,6 @@ namespace ConJob.Domain.Repository
         public IQueryable<PostModel> GetPosts()
         {
             return _context.posts.Where(p => p.is_deleted == false);
-        }
-
-        public IQueryable<PostModel> GetPostNotDeleted()
-        {
-            var posts = _context.posts.AsQueryable();
-            posts = _context.posts.Where(p => p.is_deleted == false);
-            return posts;
-        }
-
-        public IQueryable<PostModel> GetPostNotApproved()
-        {
-            var posts = _context.posts.AsQueryable();
-            posts = _context.posts.Where(p => p.is_deleted == false).Where(p => p.is_actived == false);
-            return posts;
         }
 
         public async Task addJobToPostAsync(int jobId, PostModel post)
