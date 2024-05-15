@@ -56,13 +56,12 @@ namespace ConJob.API.Controllers
         }
 
         [HttpPost("create")]
-        [ProducesResponseType(typeof(CommonResponseDataDTO<JobDetailsDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CommonResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(CommonResponseDTO), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Create([FromBody] JobDetailsDTO jobDTO)
+        public async Task<IActionResult> Create([FromBody] JobDTO jobDTO)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var serviceResponse = new ServiceResponse<JobDetailsDTO>();
+            var serviceResponse = new ServiceResponse<JobDTO>();
             serviceResponse = await _jobServices.AddJobAsync(int.Parse(userid!), jobDTO);
             return Ok(serviceResponse.getMessage());
         }

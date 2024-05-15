@@ -50,8 +50,6 @@ namespace ConJob.Domain.AutoMapper
 
             CreateMap<SkillModel, SkillDTO>().ReverseMap();
             CreateMap<JobModel, JobDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x => x.posts))
-                                         .ForMember(dto => dto.create_by, opt => opt.MapFrom(x => x.user.last_name))
-                                         .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.user.avatar).Data.url))
                                          .ReverseMap();
             CreateMap<JobModel, JobDetailsDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x => x.posts))
                                                 .ReverseMap();

@@ -27,9 +27,9 @@ namespace ConJob.Domain.Services
             _filterHelper = filterHelper;
         }
 
-        public async Task<ServiceResponse<JobDetailsDTO>> AddJobAsync(int userid, JobDetailsDTO job)
+        public async Task<ServiceResponse<JobDTO>> AddJobAsync(int userid, JobDTO job)
         {
-            var serviceResponse = new ServiceResponse<JobDetailsDTO>();
+            var serviceResponse = new ServiceResponse<JobDTO>();
             try
             {
                 var user = _userRepository.GetById(userid);
@@ -40,7 +40,7 @@ namespace ConJob.Domain.Services
                     toAddjob.posts = null!;
                     await _jobRepository.AddAsync(toAddjob);
                     serviceResponse.ResponseType = EResponseType.Success;
-                    serviceResponse.Data = _mapper.Map<JobDetailsDTO>(toAddjob);
+                    serviceResponse.Data = _mapper.Map<JobDTO>(toAddjob);
                 }
                 else
                 {

@@ -25,10 +25,10 @@ namespace ConJob.Domain.Services
         private readonly IJobRepository _jobRepository;
         private readonly IMapper _mapper;
         private readonly IFilterHelper<PostValidatorDTO> _filterHelper;
-        private readonly IFilterHelper<PostDetailsDTO> _filterHelper2; 
+        private readonly IFilterHelper<PostDetailsDTO> _filterHelper2;
         private readonly ILogger<PostService> _logger;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository , IMapper mapper, IFilterHelper<PostValidatorDTO> filterHelper, ILogger<PostService> logger, IFilterHelper<PostDetailsDTO> filterHelper2) 
+        public PostService(IPostRepository postRepository, IUserRepository userRepository, ILikeRepository likeRepository, IJobRepository jobRepository, IMapper mapper, IFilterHelper<PostValidatorDTO> filterHelper, ILogger<PostService> logger, IFilterHelper<PostDetailsDTO> filterHelper2)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -57,7 +57,7 @@ namespace ConJob.Domain.Services
             {
                 throw new InvalidOperationException("Owner (User) of post not found.");
             }
-            catch 
+            catch
             {
                 throw;
             }
@@ -167,7 +167,7 @@ namespace ConJob.Domain.Services
             var serviceResponse = new ServiceResponse<object>();
             try
             {
-                var post = _postRepository.GetById(id); 
+                var post = _postRepository.GetById(id);
                 if (post != null && post.is_actived == false)
                 {
                     await _postRepository.ActiveAsync(post.id);
@@ -411,6 +411,67 @@ namespace ConJob.Domain.Services
             {
                 serviceResponse.ResponseType = EResponseType.NotFound;
                 serviceResponse.Message = CJConstant.SOMETHING_WENT_WRONG;
+            }
+            catch { throw; }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<object>> DeleteAsync(List<int> ids)
+        {
+            var serviceResponse = new ServiceResponse<object>();
+            try
+            {
+                var posts = _postRepository.GetAllAsync().Where(p => p.is_actived == false && ids.Contains(p.id)).ToList();
+                if (posts != null)
+                {
+                    await _postRepository.SoftDeleteRange(posts);
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Message = "Delete posts successfully!";
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post not found";
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
+            }
+            catch { throw; }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<object>> ActiveAsync(List<int> ids)
+        {
+            var serviceResponse = new ServiceResponse<object>();
+            try
+            {
+                var posts = _postRepository.GetAllAsync().Where(p => p.is_actived == false);
+                if (posts != null)
+                {
+                    foreach (var item in ids)
+                    {
+                        var post = posts.Where(p=>p.id == item).FirstOrDefault();
+
+                        if (post != null)
+                        {
+                            post.is_actived = true;
+                            await _postRepository.UpdateAsync(post);
+                        }
+                    }
+                    serviceResponse.ResponseType = EResponseType.Success;
+                    serviceResponse.Message = "Posts has been successfully approved.";
+                }
+                else
+                {
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "All posts have been approved";
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException(CJConstant.SOMETHING_WENT_WRONG);
             }
             catch { throw; }
             return serviceResponse;
