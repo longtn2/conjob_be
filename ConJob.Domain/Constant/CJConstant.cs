@@ -18,5 +18,6 @@
         public const int MIN_AGE = 15;
         public const string ROCKET_CHAT_USER = "user";
         public const string ROCKET_CHAT_DATA = "data";
+        public const string ROCKET_CHAT_TEAM = "team";
     }
 }

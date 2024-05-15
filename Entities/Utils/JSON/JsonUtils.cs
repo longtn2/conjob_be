@@ -9,7 +9,7 @@ namespace ConJob.Entities.Utils.JSON
 {
     public static class JsonUtils
     {
-        public static string GetData(String data, string field)
+        public static string GetData(string data, string field)
         {
             var parsedObject = JObject.Parse(data);
             if(parsedObject == null)

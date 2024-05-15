@@ -118,5 +118,26 @@ namespace ConJob.Domain.Services
                 throw;
             }
         }
+        public async Task<string> CreateNewRoom(string RoomName, List<string> Users)
+        {
+            try
+            {
+                var headers = RocketAuth();
+                var payload = new
+                {
+                    name = RoomName,
+                    members = Users,
+                    type = 1
+                };
+                string body = await SendRequest(HttpMethod.Post, "api/v1/teams.create", headers, JsonConvert.SerializeObject(payload));
+
+                TeamCreateDTO? data = JsonConvert.DeserializeObject<TeamCreateDTO>(JsonUtils.GetData(body, CJConstant.ROCKET_CHAT_TEAM));
+                return data!._id;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
