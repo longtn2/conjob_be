@@ -49,8 +49,8 @@ namespace ConJob.Entities
         public string phone_number { get; set; }
         [Column(TypeName = "text")]
         public string? avatar { get; set; }
-        public string? rocket_user_id { get; set; }
-        public string? rocket_auth_token { get; set; }
+        public string rocket_user_id { get; set; } = "";
+        public string rocket_auth_token { get; set; } = "";
         [JsonIgnore]
         public virtual ICollection<UserRoleModel> user_roles { get; set; }
         [JsonIgnore]
