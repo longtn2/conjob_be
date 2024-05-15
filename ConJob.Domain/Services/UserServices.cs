@@ -12,6 +12,7 @@ using ConJob.Domain.DTOs.Follow;
 using ConJob.Domain.Constant;
 using Microsoft.AspNetCore.Http;
 using ConJob.Domain.DTOs.File;
+using ConJob.Domain.Services.Interfaces;
 
 namespace ConJob.Domain.Services
 {
@@ -25,8 +26,9 @@ namespace ConJob.Domain.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IFollowRepository _followRepository;
+        private readonly IRocketChatServices _rocketChatServices;
 
-        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IEmailServices emailServices, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, IFollowRepository followRepository)
+        public UserServices(ILogger<UserServices> logger, IMapper mapper, IPasswordHasher pwhasher, IEmailServices emailServices, IRocketChatServices rocketChatServices, IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, IFollowRepository followRepository)
         {
             _logger = logger;
             _mapper = mapper;
@@ -36,6 +38,7 @@ namespace ConJob.Domain.Services
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
             _followRepository = followRepository;
+            _rocketChatServices = rocketChatServices;
         }
 
         public async Task<ServiceResponse<UserDetailsDTO?>> GetUserByIdAsync(int user_id, int currentUser_id)
@@ -92,6 +95,7 @@ namespace ConJob.Domain.Services
                     role = role,
                     user = toAdd
                 });
+                await _rocketChatServices.ObtainCredentialToken(toAdd);
                 serviceResponse.Data = _mapper.Map<UserDTO>(toAdd);
                 serviceResponse.ResponseType = EResponseType.Created;
                 serviceResponse.Message = "Register Successfully! Please check your email to confirm account!";
@@ -142,10 +146,9 @@ namespace ConJob.Domain.Services
             try
             {
                 var user = _userRepository.GetById(int.Parse(id));
-                user = await _userRepository.updateAsync(updateUser, user);
+                await _userRepository.updateAsync(user, updateUser);
                 serviceResponse.ResponseType = EResponseType.Success;
                 serviceResponse.Message = "Update user successfully!";
-                serviceResponse.Data = _mapper.Map<UserInfoDTO>(user);
             }
             catch (DbUpdateException)
             {
@@ -163,6 +166,7 @@ namespace ConJob.Domain.Services
                 var checkPassword = _pwHasher.verify(passwordDTO.oldPassword, userModel.password);
                 if (checkPassword)
                 {
+                    serviceResponse.ResponseType = EResponseType.Success;
                     await _userRepository.changPasswordAsync(_pwHasher.Hash(passwordDTO.newPassword), userModel);
                     serviceResponse.Message = "Change password successfully!";
                 }

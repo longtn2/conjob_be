@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ConJob.Data;
+using ConJob.Domain.DTOs.Rocketchat;
 using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Repository.Interfaces;
 using ConJob.Entities;
@@ -56,11 +57,15 @@ namespace ConJob.Domain.Repository
             }
         }
 
-        public async Task<UserModel> updateAsync(UserInfoDTO userDTO, UserModel userModel)
+        public async Task updateAsync(UserModel user, UserInfoDTO updateUser)
         {
-            var user = _mapper.Map(userDTO, userModel);
+            user.first_name = updateUser.first_name;
+            user.last_name = updateUser.last_name;
+            user.phone_number = updateUser.phone_number;
+            user.address = updateUser.address;
+            user.dob = updateUser.dob;
+            user.gender = updateUser.gender;
             await _context.SaveChangesAsync();
-            return user;
         }
 
         public async Task<UserModel> findUserPostAsync(int user_id)
@@ -101,6 +106,28 @@ namespace ConJob.Domain.Repository
         public IQueryable<SkillModel> GetSkillsAsync(int userid)
         {
              return _context.persional_skills.Where(e=>e.user_id==userid).Select(e=>e.skill);
+        }
+        public async Task<bool> updateRocketChatToken(string userid, CreateTokenDTO token)
+        {
+            try
+            {
+                var user = await _context.users.FirstOrDefaultAsync(x => x.id == int.Parse(userid));
+                if (user != null)
+                {
+                    user.rocket_auth_token = token.authToken;
+                    user.rocket_user_id = token.userId;
+                }
+                else
+                {
+                    return false;
+                }
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

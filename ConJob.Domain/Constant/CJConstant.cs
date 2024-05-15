@@ -16,5 +16,7 @@
         public const string AVATAR_PATH = "avatar";
         public const string POST_PATH = "post";
         public const int MIN_AGE = 15;
+        public const string ROCKET_CHAT_USER = "user";
+        public const string ROCKET_CHAT_DATA = "data";
     }
 }

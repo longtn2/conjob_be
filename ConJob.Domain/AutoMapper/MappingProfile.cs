@@ -25,8 +25,7 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<SkillDTO, SkillModel>().ReverseMap();
             CreateMap<UserRegisterDTO, UserModel>().ForMember(dest => dest.password, opt => opt.MapFrom(scr => _pwdHasher.Hash(scr.password)));
             CreateMap<UserModel, UserDTO>()
-                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()))
-                 .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url));
+                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()));
             CreateMap<JwtDTO, JWTModel>().ForMember(dest => dest.token_hash_value, opt => opt.MapFrom(src => _pwdHasher.md5(src.Token)));
             CreateMap<UserInfoDTO, UserModel>();
             CreateMap<UserModel, UserInfoDTO>().ReverseMap();
@@ -40,8 +39,7 @@ namespace ConJob.Domain.AutoMapper
                 .ForMember(dest => dest.roles, opt => opt.MapFrom(src => src.user_roles.Select(y => y.role).ToList()))
                 .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url));
             CreateMap<UserModel, CredentialDTO>()
-                .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()))
-                .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url));
+                .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()));
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
             CreateMap<FollowModel, FollowDTO>()
                .ForMember(dest => dest.FromUserID, opt => opt.MapFrom(src => src.from_user_follow.id))
@@ -55,21 +53,30 @@ namespace ConJob.Domain.AutoMapper
                                          .ForMember(dto => dto.create_by, opt => opt.MapFrom(x => x.user.last_name))
                                          .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.user.avatar).Data.url))
                                          .ReverseMap();
-            CreateMap<JobModel, JobDetailsDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x=> x.posts))
+            CreateMap<JobModel, JobDetailsDTO>().ForMember(dto => dto.posts, opt => opt.MapFrom(x => x.posts))
                                                 .ReverseMap();
             CreateMap<JobModel, JobMatchDTO>().ForMember(dto => dto.user_id, opt => opt.MapFrom(x => x.user.id));
             CreateMap<PostModel, PostDTO>().ForMember(dto => dto.file_name, opt => opt.MapFrom(x => x.file.name))
                                            .ForMember(dto => dto.file_type, opt => opt.MapFrom(x => x.file.type))
-                                           .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
-                                           .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
+                                           .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url)).ReverseMap();
             CreateMap<PostModel, PostValidatorDTO>()
+                                            .ForMember(dto => dto.file_type, opt => opt.MapFrom(opt => ConvertFileType.Convert(opt.file.type)))
                                             .ForMember(dto => dto.job_title, opt => opt.MapFrom(x => x.job.title))
                                             .ForMember(dto => dto.job_type, opt => opt.MapFrom(x => x.job.job_type))
                                             .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
+                                            .ForMember(dto => dto.avatar_author, opt => opt.MapFrom(x => s3Services.PresignedGet(x.user.avatar).Data.url))
                                             .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name)).ReverseMap();
             CreateMap<PostModel, PostDetailsDTO>()
-                                            .ForMember(dto => dto.file_type, opt=> opt.MapFrom(opt => ConvertFileType.Convert(opt.file.type)))
+                                            .ForMember(dto => dto.file_type, opt => opt.MapFrom(opt => ConvertFileType.Convert(opt.file.type)))
                                             .ForMember(dto => dto.job, opt => opt.MapFrom(x => x.job))
+                                            .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
+                                            .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
+                                            .ForMember(dto => dto.avatar_author, opt => opt.MapFrom(x => s3Services.PresignedGet(x.user.avatar).Data.url))
+                                            .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
+                                            .ForMember(dto => dto.author, opt => opt.MapFrom(x => x.user.last_name))
+                                            .ReverseMap();
+            CreateMap<PostModel, PostViewDTO>()
+                                            .ForMember(dto => dto.file_type, opt => opt.MapFrom(opt => ConvertFileType.Convert(opt.file.type)))
                                             .ForMember(dto => dto.file_url, opt => opt.MapFrom(x => s3Services.PresignedGet(x.file.url).Data.url))
                                             .ForMember(dto => dto.likes, opt => opt.MapFrom(x => x.likes.Select(l => l.post_id).Count()))
                                             .ForMember(dto => dto.avatar_author, opt => opt.MapFrom(x => s3Services.PresignedGet(x.user.avatar).Data.url))
@@ -83,7 +90,7 @@ namespace ConJob.Domain.AutoMapper
             CreateMap<ReportModel, ReportByUserDTO>()
                                               .ForMember(dest => dest.post_id, opt => opt.MapFrom(src => src.post.id))
                                               .ReverseMap();
-            CreateMap<ApplicantModel,ApplicantDTO>().ReverseMap();
+            CreateMap<ApplicantModel, ApplicantDTO>().ReverseMap();
             CreateMap<ApplicantModel, ApplicantDetailsDTO>().ReverseMap();
         }
     }

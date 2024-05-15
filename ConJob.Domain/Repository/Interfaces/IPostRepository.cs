@@ -9,7 +9,7 @@ namespace ConJob.Domain.Repository.Interfaces
         IQueryable<PostModel> GetPosts();
         PostModel GetPostById(int id);
         Task<PostModel> AddPostAsync(UserModel userpost, PostModel post);
-        Task<PostModel> UpdateAsync(int post_id, PostDTO post);
+        Task UpdateAsync(int userId, PostModel postModel, PostDTO postDTO);
         Task DeleteAsync(int post_id);
         Task ActiveAsync(int post_id);
         int CountLikePost(int post_id);

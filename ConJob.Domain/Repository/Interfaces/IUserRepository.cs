@@ -1,4 +1,5 @@
-﻿using ConJob.Domain.DTOs.User;
+﻿using ConJob.Domain.DTOs.Rocketchat;
+using ConJob.Domain.DTOs.User;
 using ConJob.Domain.Repository.Interface;
 using ConJob.Entities;
 
@@ -9,11 +10,12 @@ namespace ConJob.Domain.Repository.Interfaces
         Task<UserModel> getUserByEmail(string email);
         Task<bool> updateAvatar(string? userid, string avatar);
         Task<bool> changPasswordAsync(string newPassword, UserModel user);
-        Task<UserModel> updateAsync(UserInfoDTO userDTO, UserModel userModel);
+        Task updateAsync(UserModel user, UserInfoDTO updateUser);
         Task<UserModel> findUserPostAsync(int user_id);
         Task<UserModel> GetDetailsUserAsync(int id);
         Task<UserModel> GetUserNotIsAdminAsync(int id);
         IQueryable<SkillModel> GetSkillsAsync(int userid);
         public int GetRoleByUserId(int id);
+        Task<bool> updateRocketChatToken(string userid, CreateTokenDTO token);
     }
 }

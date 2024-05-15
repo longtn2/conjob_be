@@ -4,7 +4,6 @@ using ConJob.Entities;
 using ConJob.Entities.Utils.Variable;
 using ConJob.Entities.Validation;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace ConJob.Domain.DTOs.User
@@ -37,8 +36,9 @@ namespace ConJob.Domain.DTOs.User
         public DateOnly dob { get; set; }
         [Required]
         public string address { get; set; }
-
-        [Column(TypeName = "text")]
-        public string? avatar { get; set; }
+        [JsonIgnore]
+        public string? rocket_user_id { get; set; }
+        [JsonIgnore]
+        public string? rocket_auth_token { get; set; }
     }
 }

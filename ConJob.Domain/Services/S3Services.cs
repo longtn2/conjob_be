@@ -89,6 +89,7 @@ namespace ConJob.Domain.Services
             }
             else
             {
+                serviceResponse.ResponseType = EServiceResponseTypes.EResponseType.Success;
                 serviceResponse.Data = new S3ResponseDTO()
                 {
                     url = GetURL(GetPath(file_name, action, user_id), HttpVerb.PUT),

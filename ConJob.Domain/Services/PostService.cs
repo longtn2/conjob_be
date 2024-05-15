@@ -46,8 +46,8 @@ namespace ConJob.Domain.Services
             try
             {
                 var user = await _userRepository.findUserPostAsync(userId);
-                newPost.file_url = $"{userId}/{CJConstant.POST_PATH}/{newPost.file_name}";
                 var post = _mapper.Map<PostModel>(newPost);
+                newPost.file_url = $"{userId}/{CJConstant.POST_PATH}/{newPost.file_name}";
                 post = await _postRepository.AddPostAsync(user, post);
                 serviceResponse.Data = _mapper.Map<PostDTO>(post);
                 serviceResponse.ResponseType = EResponseType.Success;
@@ -91,7 +91,7 @@ namespace ConJob.Domain.Services
                     .FirstOrDefaultAsync(c => c.id == id);
                 if (post != null)
                 {
-                    post = await _postRepository.UpdateAsync(id, postDTO);
+                    await _postRepository.UpdateAsync(userId, post, postDTO);
                     serviceResponse.ResponseType = EResponseType.Success;
                     serviceResponse.Message = "Update post successfully!";
                 }
@@ -353,7 +353,8 @@ namespace ConJob.Domain.Services
                 }
                 else
                 {
-                    throw new DbUpdateException("Post and/or Job and/or Owner (User) not found.");
+                    serviceResponse.ResponseType = EResponseType.NotFound;
+                    serviceResponse.Message = "Post and/or Job and/or Owner (User) not found.";
                 }
             }
             catch (InvalidOperationException)
