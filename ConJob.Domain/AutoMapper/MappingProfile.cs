@@ -39,6 +39,7 @@ namespace ConJob.Domain.AutoMapper
                 .ForMember(dest => dest.roles, opt => opt.MapFrom(src => src.user_roles.Select(y => y.role).ToList()))
                 .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url));
             CreateMap<UserModel, CredentialDTO>()
+                .ForMember(dto => dto.avatar, opt => opt.MapFrom(x => s3Services.PresignedGet(x.avatar).Data.url))
                 .ForMember(dto => dto.roles, opt => opt.MapFrom(x => x.user_roles.Select(y => y.role).ToList()));
             CreateMap<RoleModel, RolesDTO>().ReverseMap();
             CreateMap<FollowModel, FollowDTO>()

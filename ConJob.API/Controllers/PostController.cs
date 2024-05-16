@@ -8,6 +8,7 @@ using ConJob.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using static ConJob.Domain.Response.EServiceResponseTypes;
 
 namespace ConJob.API.Controllers
 {
@@ -27,6 +28,18 @@ namespace ConJob.API.Controllers
             _s3Services = s3Services;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <response code="200">Get all post successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
         [HttpGet]
         public async Task<ActionResult> getAllPosts([FromQuery] FilterOptions? filter)
         {
@@ -34,6 +47,18 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getData());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newPost"></param>
+        /// <response code="200">Add post successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
         [HttpPost]
         public async Task<ActionResult> addPost(PostDTO newPost)
         {
@@ -43,14 +68,37 @@ namespace ConJob.API.Controllers
             return CreatedAtAction(nameof(addPost), new { version = "1" }, serviceResponse.getData());
         }
 
-        [HttpGet("{id}")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">Get post by id successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
+        [HttpGet("{id}")]
         public async Task<ActionResult> getPostById(int id)
         {
             var serviceResponse = await _postService.FindByIdAsync(id);
             return Ok(serviceResponse.getData());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="post"></param>
+        /// <response code="200">Update post successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
         [HttpPut("{id}")]
         public async Task<ActionResult> updatePost(int id, PostDTO post)
         {
@@ -59,6 +107,18 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">Delete post successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> deletePost(int id)
         {
@@ -67,6 +127,18 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="post_id"></param>
+        /// <response code="200">Like post successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
         [Route("like")]
         [HttpPost]
         public async Task<ActionResult> likePost(int post_id)
@@ -76,6 +148,18 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="post_id"></param>
+        /// <response code="200">Add job to post successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
         [Route("add-job")]
         [HttpPost]
         public async Task<ActionResult> addJobToPost(int job_id, int post_id)
@@ -85,6 +169,18 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reportPost"></param>
+        /// <response code="200">Report post successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
         [Route("report")]
         [HttpPost]
         public async Task<IActionResult> reportPost([FromBody] ReportByUserDTO reportPost)
@@ -101,9 +197,20 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <response code="200">Recommend post successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
         [Route("matching")]
         [HttpGet]
-        [ProducesResponseType(typeof(CommonResponseDataDTO<PagingReturnModel<PostDetailsDTO>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> recommendPost([FromQuery]FilterJobs filter)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

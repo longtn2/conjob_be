@@ -1,4 +1,5 @@
 ﻿using ConJob.Domain.Constant;
+using ConJob.Domain.DTOs.Common;
 using ConJob.Domain.DTOs.File;
 using ConJob.Domain.DTOs.Follow;
 using ConJob.Domain.DTOs.User;
@@ -30,8 +31,19 @@ namespace ConJob.API.Controllers
             _s3Services = s3Services;
         }
 
-        [Route("update-profile")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userdata"></param>
+        /// <response code="200">Update user profile successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
+        [Route("update-profile")]
         [HttpPut]
         public async Task<ActionResult> updateUserProfile(UserInfoDTO userdata)
         {
@@ -40,8 +52,19 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
-        [Route("change-password")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="passwordDTO"></param>
+        /// <response code="200">Change password successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
+        [Route("change-password")]
         [HttpPost]
         public async Task<ActionResult> changePassword(UPasswordDTO passwordDTO)
         {
@@ -51,8 +74,18 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
-        [Route("profile")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <response code="200">Get profile user successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
+        [Route("profile")]
         [HttpGet]
         public async Task<ActionResult> getProfileUser()
         {
@@ -68,8 +101,19 @@ namespace ConJob.API.Controllers
             }
         }
 
-        [Route("info/{id}")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">Get user info by id successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
+        [Route("info/{id}")]
         [HttpGet]
         public async Task<ActionResult> getUserInfoById(int id)
         {
@@ -78,8 +122,19 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse);
         }
 
-        [Route("upload-avatar")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="file"></param>
+        /// <response code="200">Upload avatar successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
+        [Route("upload-avatar")]
         [HttpPost]
         public async Task<ActionResult> uploadAvatar(FileDTO file)
         {
@@ -89,8 +144,19 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getData());
         }
 
-        [Route("follow")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="toUserid"></param>
+        /// <response code="200">Follow user successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
+        [Route("follow")]
         [HttpPost]
         public async Task<ActionResult> followUser(int toUserid)
         {
@@ -103,8 +169,19 @@ namespace ConJob.API.Controllers
             return Ok(serviceResponse.getMessage());
         }
 
-        [Route("unfollow")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="toUserid"></param>
+        /// <response code="200">Unfollow user successful!</response>
+        /// <response code="401">Token is invalid or has been expired.</response>
+        /// <exception cref="NotImplementedException"></exception>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Success)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), (int)EResponseType.BadRequest)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.InternalError)]
+        [ProducesResponseType(typeof(CommonResponseDTO), (int)EResponseType.Unauthorized)]
+        [Route("unfollow")]
         [HttpPost]
         public async Task<ActionResult> unfollowUser(int toUserid)
         {
