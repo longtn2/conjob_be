@@ -47,7 +47,6 @@ namespace ConJob.Domain.Services
             {
                 var user = await _userRepository.findUserPostAsync(userId);
                 var post = _mapper.Map<PostModel>(newPost);
-                newPost.file_url = $"{userId}/{CJConstant.POST_PATH}/{newPost.file_name}";
                 post = await _postRepository.AddPostAsync(user, post);
                 serviceResponse.Data = _mapper.Map<PostDTO>(post);
                 serviceResponse.ResponseType = EResponseType.Success;

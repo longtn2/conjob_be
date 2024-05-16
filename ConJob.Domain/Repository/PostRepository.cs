@@ -18,6 +18,7 @@ namespace ConJob.Domain.Repository
         {
             if (userpost.posts == null)
                 userpost.posts = new List<PostModel>();
+            post.file.url = $"{userpost.id}/{CJConstant.POST_PATH}/{post.file.name}";
             userpost.posts.Add(post);
             await _context.SaveChangesAsync();
             return post;

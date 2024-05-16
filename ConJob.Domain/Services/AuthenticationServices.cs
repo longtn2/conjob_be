@@ -41,7 +41,7 @@ namespace ConJob.Domain.Services
                 if (user != null && _pwHasher.verify(userdata.password, user.password))
                 {
                     var userDTO = _mapper.Map<UserModel, UserDTO>(user);
-                    string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
+                    string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddHours(8), userDTO);
                     string? refreshToken = await _jWTHelper.GenerateJWTRefreshToken(user.id, DateTime.UtcNow.AddMonths(6));
                     await _jwtServices.InsertJWTToken(new JwtDTO()
                     {
@@ -96,7 +96,7 @@ namespace ConJob.Domain.Services
 
                     var userDTO = _mapper.Map<UserModel, UserDTO>(user);
 
-                    string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddMinutes(10), userDTO);
+                    string? token = await _jWTHelper.GenerateJWTToken(user.id, DateTime.UtcNow.AddHours(8), userDTO);
 
                     if (token == null)
                     {
